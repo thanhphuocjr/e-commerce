@@ -1,0 +1,235 @@
+.navCartPart1 {
+  background-color: transparent !important;
+  justify-content: center;
+  .cartWrapper {
+    position: relative;
+    z-index: 100;
+    .allCartTab {
+      padding: 8px 20px;
+      border-radius: 30px;
+      justify-content: center;
+      background-color: var(--color_black);
+      .text {
+        color: white;
+        font-weight: 550;
+        font-size: 12px;
+      }
+      svg {
+        color: white !important;
+        font-size: 11px;
+      }
+    }
+    .sideBarNav {
+      height: auto;
+      position: absolute;
+      top: 100%;
+      background-color: white;
+      width: 155px;
+      border-radius: 0 0 15px 0px;
+      opacity: 0;
+      transition: all 0.4s;
+      visibility: hidden;
+      justify-content: space-between;
+      ul {
+        li {
+          width: 100%;
+          padding: 5px 0px;
+          list-style: none;
+          position: relative;
+          a {
+            display: block;
+            border-radius: 0px;
+            width: 100%;
+            svg {
+              font-size: 15px;
+              margin-right: 10px;
+              color: rgba(0, 0, 0, 0.7);
+            }
+            button {
+              width: 100%;
+              position: relative;
+              font-size: 12px;
+              font-weight: 600;
+              color: rgba(0, 0, 0, 0.7);
+              background-color: white !important;
+              justify-content: flex-start;
+              .icon {
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                right: 0;
+                font-size: 13px;
+              }
+            }
+            button:hover {
+              background-color: transparent;
+              color: var(--color_black);
+            }
+          }
+          a:hover {
+            background-color: white;
+
+            color: var(--color_black);
+            svg {
+              color: var(--color_black);
+            }
+          }
+          .submenu {
+            padding: 10px 5px;
+            position: absolute;
+            background: #ffffff;
+            width: 180px;
+            height: auto;
+            top: 200%;
+            left: 150%;
+            z-index: 100;
+            border-radius: 0 0 15px 0;
+            visibility: hidden;
+            transition: all 0.4s ease-in-out;
+            opacity: 0;
+            a {
+              display: block;
+              border-radius: 0px;
+              width: 100%;
+              padding: 3px;
+              button {
+                width: 100%;
+                font-size: 12px;
+                font-weight: 600;
+                padding: 10px 20px;
+                color: rgba(0, 0, 0, 0.7);
+                justify-content: flex-start;
+              }
+              button:hover {
+                background-color: transparent;
+                color: var(--color_black);
+              }
+            }
+          }
+        }
+        li:hover {
+          .submenu {
+            opacity: 1;
+            visibility: inherit;
+            left: 101%;
+            top: 0;
+          }
+          .icon-right {
+            visibility: visible;
+          }
+          .icon-down {
+            visibility: hidden;
+          }
+        }
+        li:hover > a {
+          color: var(--color_black);
+          background-color: white;
+          svg {
+            color: var(--color_black);
+          }
+        }
+      }
+    }
+    .sideBarNav.open {
+      opacity: 1;
+      visibility: visible;
+      top: 120%;
+    }
+  }
+}
+
+.navCartPart2 {
+  background-color: transparent !important;
+  padding: 0px 15px;
+  ul {
+    margin-bottom: 0px;
+    justify-content: space-between;
+    padding: 0px 20px;
+    flex-wrap: wrap;
+    li {
+      justify-content: flex-start;
+      position: relative;
+      padding: 15px 0;
+      a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        text-decoration: none;
+        padding: 5px 15px;
+        font-weight: 600;
+        color: rgba(0, 0, 0, 0.7);
+        text-transform: uppercase;
+        text-align: center;
+        transition: all 0.2s ease-in-out;
+        border-radius: 25px;
+
+        svg {
+          font-size: 15px;
+          margin-right: 3px;
+          color: rgba(0, 0, 0, 0.7);
+        }
+      }
+      a:hover {
+        background-color: white;
+        color: var(--color_black);
+        svg {
+          color: var(--color_black);
+        }
+      }
+      .submenu {
+        position: absolute;
+        top: 120%;
+        left: 0px;
+        min-width: 150px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        background-color: white;
+        border-radius: 0 0 15px 15px;
+        overflow: hidden;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease-in-out;
+        z-index: 100;
+        a {
+          display: block;
+          border-radius: 0px;
+          width: 100%;
+          padding: 5px 2px;
+          button {
+            width: 100%;
+            font-size: 12px;
+            font-weight: 600;
+            color: rgba(0, 0, 0, 0.7);
+            justify-content: flex-start;
+          }
+          button:hover {
+            background-color: transparent;
+            color: var(--color_black);
+          }
+        }
+      }
+    }
+    li:hover {
+      .submenu {
+        opacity: 1;
+        visibility: inherit;
+        top: 90%;
+      }
+    }
+    li:hover > a {
+      color: var(--color_black);
+      background-color: white;
+      svg {
+        color: var(--color_black);
+      }
+    }
+  }
+}
+.icon-right {
+  visibility: hidden;
+}
+.icon-down {
+  visibility: visible;
+}

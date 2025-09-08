@@ -1,0 +1,185 @@
+.cartPage {
+  .table {
+    thead {
+      //   background-color: #ececec;
+      overflow: hidden;
+      th {
+        border-top: 0px !important;
+        font-size: 12px;
+        text-align: left;
+      }
+    }
+    tbody {
+      td {
+        vertical-align: middle;
+        font-size: 14px;
+        text-align: left;
+        .product_thumbnail {
+          width: 70px;
+          height: 70px;
+          padding-left: 0;
+        }
+
+        .product_name {
+          display: flex;
+          align-items: center;
+          width: 200px;
+          h6 {
+            margin: 0;
+            color: #000;
+            font-size: 13px;
+            font-weight: 600;
+          }
+        }
+        .price {
+          font-size: 14px !important;
+          margin: 0 !important;
+        }
+
+        .amount {
+          width: 100px;
+          justify-content: space-between;
+          align-items: center;
+          .decrease,
+          .increase {
+            width: 30px !important;
+            height: 30px !important;
+          }
+          .quantity {
+            font-weight: 400 !important;
+            font-size: 14px !important;
+          }
+        }
+        .subTotal {
+          font-size: 14px !important;
+        }
+        .remove {
+          svg {
+            cursor: pointer;
+            font-size: 21px;
+            color: red;
+            &:hover {
+              color: var(--color_green);
+            }
+          }
+        }
+
+        &:first-child {
+          padding-left: 0;
+        }
+      }
+      td.actions {
+        font-size: 12px;
+        width: 100%;
+        padding: 20px 0;
+        border-top: 1px solid #ececec;
+
+        .actions-inner {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          width: 100%;
+          flex-direction: row;
+          Button {
+            padding: 8px 20px;
+            // background-color: var(--color_black);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            font-size: 12px;
+            color: black;
+            text-transform: capitalize;
+            border-radius: 10px;
+            font-weight: 600;
+            &.apply {
+              &:hover {
+                background-color: var(--color_green);
+                color: white;
+              }
+            }
+            &.remove_all {
+              &:hover {
+                background-color: var(--color_red2);
+                color: white;
+              }
+            }
+          }
+        }
+
+        .action_wrapper {
+          display: flex;
+          gap: 20px;
+          input {
+            width: 280px;
+            height: 40px;
+            padding: 0 15px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            font-weight: 700;
+            text-transform: uppercase;
+            border-radius: 10px;
+
+            &::placeholder {
+              text-transform: capitalize;
+              font-weight: 400;
+            }
+          }
+        }
+      }
+    }
+  }
+  .cart_details {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: bold;
+    h4 {
+      font-size: 16px !important;
+      text-transform: uppercase;
+      font-weight: 700;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      padding-bottom: 10px;
+    }
+    .sub {
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+    .ship {
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+
+      span:last-child {
+        color: red;
+        font-weight: 600;
+      }
+    }
+    .estimate {
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+    .total {
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+
+      span:last-child {
+        font-size: 17px;
+      }
+    }
+    Button {
+      width: 100%;
+      background-color: var(--color_red2);
+      color: white;
+      border-radius: 5px;
+      padding: 10px 10px;
+      font-size: 12px !important;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease-in-out;
+      overflow: hidden;
+      svg {
+        font-size: 14px;
+      }
+      &:hover {
+        background-color: var(--color_green);
+      }
+    }
+  }
+}

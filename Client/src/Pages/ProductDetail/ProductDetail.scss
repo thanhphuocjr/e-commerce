@@ -1,0 +1,94 @@
+.productDetail {
+  .container {
+    padding: 20px 0px;
+    .info {
+      h2 {
+        font-size: 28px;
+      }
+
+      .priceWrapper {
+        font-size: 14px;
+
+        font-weight: bold;
+        .oldPrice {
+          text-decoration: line-through;
+          color: var(--color_gray);
+        }
+        .newPrice {
+          font-size: 18px;
+        }
+      }
+      .status {
+        text-transform: uppercase;
+      }
+      .desc {
+        font-size: 13px;
+        width: 70%;
+        color: #717171;
+      }
+      .set {
+        .choice {
+          justify-content: space-between;
+          align-items: center;
+        }
+        .purchase {
+          color: white;
+          background-color: var(--color_black);
+          border-radius: 30px;
+
+          &:hover {
+            background-color: var(--color_green);
+          }
+        }
+        .other {
+          width: 30px;
+          height: 30px;
+          border-radius: 50%;
+          padding: 5px;
+          Button {
+            color: black;
+            background: #edeef5;
+            border: 1px solid #0000001a !important;
+            border-radius: 50% !important;
+
+            svg {
+              font-size: 23px;
+            }
+
+            &.whish_list:hover {
+              background-color: var(--color_red);
+              color: white;
+            }
+            &.compare:hover {
+              background-color: var(--color_black);
+              color: white;
+            }
+          }
+        }
+      }
+    }
+    .relatedProducts {
+      padding: 20px;
+      overflow: visible;
+      .swiper {
+        overflow-x: hidden;
+        overflow-y: visible;
+        padding: 20px 5px;
+      }
+    }
+    .recentlyViewed {
+      padding: 20px;
+      overflow: visible;
+      .swiper {
+        overflow-x: hidden;
+        overflow-y: visible;
+        padding: 20px 5px;
+      }
+    }
+  }
+}
+
+.productDetail .productSliderWrapper .mainImage .imageSlider {
+  width: 100%;
+  height: auto;
+}

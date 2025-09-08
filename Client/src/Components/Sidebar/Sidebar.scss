@@ -1,0 +1,100 @@
+.sidebar {
+  width: 20%;
+  flex: 0 0 20%;
+  .sticky {
+    position: sticky;
+    top: 20px;
+
+    .filterBox {
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 20px;
+      h6 {
+        text-transform: uppercase;
+        margin-bottom: 10px;
+        font-size: 14px;
+        font-weight: bold;
+      }
+      .rating {
+        li {
+          margin-bottom: 0;
+          width: 100%;
+          cursor: pointer;
+        }
+      }
+      .scroll {
+        padding-left: 0px;
+        width: 100%;
+        max-height: 180px;
+        overflow-y: scroll;
+        padding-right: 20px;
+        overflow-x: hidden;
+        ul {
+          margin-bottom: 0px;
+          li {
+            // margin-bottom: px;
+            width: 100%;
+          }
+        }
+      }
+      .scroll::-webkit-scrollbar {
+        width: 5px;
+        height: 5px;
+      }
+    }
+    .banner {
+      a {
+        border-radius: 10px;
+        overflow: hidden;
+        display: block;
+        img {
+          border-radius: 10px;
+        }
+      }
+    }
+  }
+}
+
+//Checkbox
+.css-rizt0-MuiTypography-root {
+  font-size: 13px !important;
+}
+.css-19opgx6-MuiFormControlLabel-root {
+  padding: 1px !important;
+  margin: 0 !important;
+  font-size: 12px !important;
+}
+.css-12xagqm-MuiSwitchBase-root {
+  width: 35px !important;
+  height: 35px !important;
+}
+
+.css-1umw9bq-MuiSvgIcon-root {
+  width: 15px !important;
+  height: 15px !important;
+  border-radius: 50% !important;
+}
+.css-vuhw6e-MuiButtonBase-root-MuiSwitchBase-root-MuiCheckbox-root.Mui-checked,
+.css-vuhw6e-MuiButtonBase-root-MuiSwitchBase-root-MuiCheckbox-root.MuiCheckbox-indeterminate {
+  color: var(--color_black) !important;
+}
+
+//Slider
+
+.range-slider {
+  height: 4px !important;
+}
+.range-slider .range-slider__range {
+  background-color: var(--color_black) !important;
+}
+
+.range-slider .range-slider__thumb {
+  width: 15px !important;
+  height: 15px !important;
+  background-color: var(--color_black) !important;
+}
+
+// Rating
+.css-i0l71t-MuiRating-root {
+  font-size: 20px !important;
+}

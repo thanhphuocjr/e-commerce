@@ -1,0 +1,104 @@
+@import url('https://fonts.googleapis.com/css2?family=Inria+Serif:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Outfit:wght@100..900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css');
+:root {
+  --color_blue: #242e9a;
+  /* --color_black: #684ba8; */
+  --color_black: #000000;
+  --color_gray: rgb(185, 185, 185);
+  --color_lightgreen: #e9f7ee;
+  --color_green: #55b563;
+  --color_red: rgb(248, 110, 110);
+  --color_red2: #e91d45;
+}
+/* $primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+$button-gradient: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); */
+* {
+  margin: 0px;
+  padding: 0px;
+}
+
+body {
+  font-family: 'Lato', sans-serif;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.8);
+}
+
+.bg-blue {
+  background-color: var(--color_blue);
+}
+.bg-purple {
+  background-color: var(--color_black);
+}
+
+@media (max-width: 1200px) {
+  .container,
+  .container-lg,
+  .container-md,
+  .container-sm,
+  .container-xl {
+    max-width: 1140px;
+  }
+}
+::-webkit-scrollbar {
+  width: 5px !important;
+  height: 5px !important;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 4px;
+  transition: background 0.3s ease;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color_black) !important;
+}
+.cursor {
+  cursor: pointer;
+}
+.text-light1 {
+  color: rgb(140, 140, 140) !important;
+}
+.text-sml {
+  font-size: 14px;
+}
+.productRow {
+  .hd {
+    font-size: 25px;
+    text-transform: uppercase;
+  }
+}
+.sticky {
+  position: sticky;
+  top: 10px;
+  z-index: 100;
+}
+.section {
+  padding: 45px 0 !important;
+}
+
+Button {
+  min-width: 0 !important;
+}
+li {
+  list-style: none !important;
+}
+.normal_text {
+  font-weight: 400;
+}
+
+.badge {
+  display: inline-block;
+  padding: 7px 10px;
+  border-radius: 20px;
+  &.bg-success {
+    background-color: #e5f8ed !important;
+    color: #16b858 !important;
+  }
+}
+
+.title {
+  font-size: 20px;
+  text-transform: uppercase;
+  font-weight: 600;
+}

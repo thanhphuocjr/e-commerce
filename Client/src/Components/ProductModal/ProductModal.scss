@@ -1,0 +1,101 @@
+// Dialog{
+//     background: transparent;
+// }
+.customDialogPaper {
+  width: 900px !important;
+  max-width: 900px !important;
+  padding: 30px 25px;
+  border-radius: 20px !important;
+}
+
+.MuiPaper-elevation {
+  padding: 25px;
+  position: relative;
+  // max-width: 90vw;
+  width: 90vw;
+  .close_ {
+    position: absolute;
+    color: #000;
+    top: 5px;
+    right: 5px;
+    width: 30px !important;
+    height: 30px !important;
+    border-radius: 50% !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 0;
+    svg {
+      font-size: 20px;
+    }
+  }
+  .close_:hover {
+    color: #7b7a7a;
+  }
+  h4 {
+    font-size: 22px;
+    color: rgba(0, 0, 0, 0.7);
+  }
+}
+
+.productDetailModal {
+  .col-md-7 {
+    padding: 30 10px;
+    display: flex;
+    flex-direction: column;
+    .price {
+      font-size: 14px;
+
+      font-weight: bold;
+      .oldPrice {
+        text-decoration: line-through;
+        color: var(--color_gray);
+      }
+      .newPrice {
+        font-size: 18px;
+      }
+    }
+    .status {
+      text-transform: uppercase;
+      width: 71px;
+    }
+    .desc {
+      font-size: 13px;
+      width: 90%;
+      color: #717171;
+    }
+
+    .set {
+      .choice {
+        justify-content: space-between;
+        align-items: center;
+      }
+      .purchase {
+        color: white;
+        background-color: var(--color_black);
+        border-radius: 30px;
+
+        &:hover {
+          background-color: var(--color_green);
+        }
+      }
+    }
+    .others {
+      // color: #000 !important;
+      Button {
+        border: 1px solid rgba(0, 0, 0, 0.2);
+        border-radius: 30px;
+        font-size: 10px;
+        color: #000;
+      }
+      Button.whish_list:hover {
+        background-color: var(--color_red);
+        color: white;
+      }
+      Button.compare:hover {
+        background-color: var(--color_black);
+        color: white;
+      }
+    }
+  }
+}

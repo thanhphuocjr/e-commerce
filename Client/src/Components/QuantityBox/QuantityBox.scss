@@ -1,0 +1,22 @@
+.decrease,
+.increase {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 50% !important;
+  background: #edeef5 !important;
+  border: 1px solid #0000001a !important;
+  padding: 5px;
+  color: black;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  font-size: 17px;
+  color: black !important;
+  &:hover {
+    background-color: rgb(221, 221, 221);
+  }
+}
+.quantity {
+  font-size: 16px;
+  font-weight: bold;
+}
