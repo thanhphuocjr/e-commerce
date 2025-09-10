@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 const { date } = require('joi');
 import nodemailer from 'nodemailer';
 import { env } from '~/config/environment';
-import * as userModel from '~/models/userModel';
+import * as userModel from '~/models/mongodb/userModel';
 import * as tokenHelper from '~/utils/TokenHelper';
 
 import crypto from 'crypto';

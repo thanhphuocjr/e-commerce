@@ -1,6 +1,6 @@
 // middlewares/auth.js
 const jwt = require('jsonwebtoken');
-const { userModel } = require('~/models/userModel');
+const { userModel } = require('~/models/mongodb/userModel');
 import AppError from '~/utils/AppError';
 const asyncHandler = require('../utils/asyncHandler');
 const { GET_DB } = require('../config/mongodb'); // Adjust the path as needed
@@ -52,7 +52,6 @@ const authenticate = asyncHandler(async (req, res, next) => {
     throw error;
   }
 });
-
 
 // Middleware phân quyền
 const authorize = (...roles) => {

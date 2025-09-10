@@ -7,7 +7,7 @@ import {
   USER_COLLECTION_NAME,
   validateBeforeCreate,
   hashPassword,
-} from '~/models/userModel';
+} from '~/models/mongodb/userModel';
 import { UserRepositoryInterface } from '../userRepositoryInterface';
 
 export class UserRepositoryMongo extends UserRepositoryInterface {

@@ -1,6 +1,6 @@
 // src/repositories/sql/userRepositorySQL.js
 import { UserRepositoryInterface } from '../userRepositoryInterface';
-import db from '~/models/userModel'; // Sequelize models
+import db from '~/models/mongodb/userModel'; // Sequelize models
 import AppError from '~/utils/AppError';
 
 export class UserRepositorySQL extends UserRepositoryInterface {

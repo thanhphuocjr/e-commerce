@@ -4,7 +4,7 @@ import AppError from '~/utils/AppError';
 import {
   REFRESH_TOKEN_COLLECTION_NAME,
   validateBeforeCreate,
-} from '~/models/refreshTokenModal';
+} from '~/models/mongodb/refreshTokenModal';
 
 export const createNew = async (data) => {
   try {
