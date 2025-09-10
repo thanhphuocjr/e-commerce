@@ -42,7 +42,6 @@ class UserController {
   changePassword = asyncHandler(async (req, res) => {
     const userId = req.user._id.toString();
     const updateData = req.body;
-    console.log(req.body);
 
     const { currentPassword, newPassword } = req.body;
     const result = await userService.changePassword(

@@ -6,12 +6,14 @@ const jwt = require('jsonwebtoken');
 const { date } = require('joi');
 import nodemailer from 'nodemailer';
 import { env } from '~/config/environment';
-import * as userRepository from '~/repositories/userRepository';
 import * as userModel from '~/models/userModel';
 import * as tokenHelper from '~/utils/TokenHelper';
 
 import crypto from 'crypto';
-import * as refreshTokenRepository from '~/repositories/refreshTokenRepository';
+import * as refreshTokenRepository from '~/repositories/user/mongodb/refreshTokenRepository';
+import { getUserRepository } from '~/factories/userRepoFactory';
+
+const userRepository = getUserRepository();
 
 class UserService {
   async register(userData) {
@@ -171,7 +173,6 @@ class UserService {
   async getProfile(userId) {
     try {
       const user = await userRepository.findOneById(userId);
-      console.log('user: ', user);
       if (!user) {
         throw new AppError('User not found', StatusCodes.NOT_FOUND);
       }

@@ -12,4 +12,5 @@ export const env = {
   EMAIL_USER: process.env.EMAIL_USER,
   EMAIL_PASS: process.env.EMAIL_PASS,
   CLIENT_URL: process.env.CLIENT_URL,
+  DATABASE_TYPE: process.env.DATABASE_TYPE,
 };
