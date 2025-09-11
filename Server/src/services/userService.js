@@ -8,10 +8,14 @@ import nodemailer from 'nodemailer';
 import { env } from '~/config/environment';
 import * as userModel from '~/models/mongodb/userModel';
 import * as tokenHelper from '~/utils/TokenHelper';
-
 import crypto from 'crypto';
 import * as refreshTokenRepository from '~/repositories/user/mongodb/refreshTokenRepository';
 import { getUserRepository } from '~/factories/userRepoFactory';
+import { LoginResponseDTO } from '~/dto/users/loginResponse.dto';
+import { ProfileResponseDTO } from '~/dto/users/profileResponse.dto';
+import { UserResponseDTO } from '~/dto/users/userResponse.dto';
+import { RefreshTokenDTO } from '~/dto/users/refreshAccessToken.dto';
+import { UserListResponseDTO } from '~/dto/users/userListResponse.dto';
 
 const userRepository = getUserRepository();
 
@@ -43,7 +47,7 @@ class UserService {
     }
   }
 
-  //Login
+  //Login DTO
   async login(email, password) {
     try {
       const user = await userRepository.findOneByEmail(email);
@@ -85,13 +89,12 @@ class UserService {
         expiresAt: refreshTokenExpiry,
       });
 
-      delete user.password;
-      return {
+      return new LoginResponseDTO(
         user,
         accessToken,
         refreshToken,
-        expiresIn: env.JWT_EXPIRE,
-      };
+        env.JWT_EXPIRE
+      );
     } catch (error) {
       console.log('Login error details: ', error);
       if (error instanceof AppError) throw error;
@@ -99,7 +102,7 @@ class UserService {
     }
   }
 
-  //RefreshToken
+  //RefreshToken DTO
   async refreshAccessToken(refreshToken) {
     try {
       if (!refreshToken) throw new AppError('Refresh token is required', 400);
@@ -133,12 +136,7 @@ class UserService {
         token: newRefreshToken,
         expiresAt: refreshTokenExpiry,
       });
-
-      return {
-        accessToken: newAccessToken,
-        refreshToken: newRefreshToken,
-        expiresIn: env.JWT_EXPIRE,
-      };
+      return RefreshTokenDTO(newAccessToken, newRefreshToken, env.JWT_EXPIRE);
     } catch (error) {
       if (error instanceof AppError) throw error;
       throw new AppError('Server error when refreshing token!', 500, error);
@@ -169,15 +167,14 @@ class UserService {
     }
   }
 
-  //Get profile
+  //Get profile DTO
   async getProfile(userId) {
     try {
       const user = await userRepository.findOneById(userId);
       if (!user) {
         throw new AppError('User not found', StatusCodes.NOT_FOUND);
       }
-      delete user.password;
-      return user;
+      return new ProfileResponseDTO(user);
     } catch (error) {
       if (error instanceof AppError) throw error;
       throw new AppError('Server error when get profile in', 500, error);
@@ -201,7 +198,7 @@ class UserService {
         throw new AppError('Mat khau hien tai khong dung', 400);
       }
       await userRepository.updateDataById(user._id, { password: newPassword });
-      return { message: 'Doi mat khau thanh cong' };
+      return { message: 'Change password successfully!' };
     } catch (error) {
       if (error instanceof AppError) throw error;
       throw new AppError('Loi server khi change password!');
@@ -210,8 +207,10 @@ class UserService {
 
   async getUsers(queryParams) {
     try {
-      return await userRepository.findUsersWithFilters(queryParams);
+      const users = await userRepository.findUsersWithFilters(queryParams);
+      return UserListResponseDTO.fromRepo(users); // ✅ trả về object chuẩn
     } catch (error) {
+      console.error('getUsers error: ', error);
       if (error instanceof AppError) throw error;
       throw new AppError('Loi server khi Get list users!');
     }
@@ -224,7 +223,9 @@ class UserService {
       if (existingUser) {
         throw new AppError('Email da duoc su dung', 400);
       }
-      return await userRepository.createNew(userData);
+      // return await userRepository.createNew(userData);
+      const user = await userRepository.createNew(userData);
+      return new UserResponseDTO(user);
     } catch (error) {
       if (error instanceof AppError) throw error;
       throw new AppError('Loi server khi Create new user!');
@@ -240,10 +241,11 @@ class UserService {
     }
   }
 
-  //Admin Get User
+  //Admin Get User DTO
   async getUserById(id) {
     try {
-      return await userRepository.findOneById(id);
+      const user = await userRepository.findOneById(id);
+      return UserResponseDTO(user);
     } catch (error) {
       throw new AppError('Server error while getting User', 500, error);
     }
@@ -278,11 +280,10 @@ class UserService {
   async updateUser(id, updateData) {
     try {
       const userId = await userRepository.findOneById(id);
-      // console.log('userId: ', userId);
-
       if (!userId) throw new AppError('Khong tim thay ID trong Database!', 404);
 
-      return await userRepository.updateDataById(id, updateData);
+      const updateUser = userRepository.updateDataById(id, updateData);
+      return UserResponseDTO(updateUser);
     } catch (error) {
       if (error instanceof AppError) throw error;
       throw new AppError('Loi server khi Update user!');
