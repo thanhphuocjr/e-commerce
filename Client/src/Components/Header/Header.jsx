@@ -3,7 +3,9 @@ import './Header.scss';
 import { useLocation, useNavigate } from 'react-router-dom';
 // import Logo from "../../assets/images/Logo.png";
 
-import Logo from '../../assets/images/Logo/Logo_ntp_store.jpg';
+// import Logo from '../../assets/images/Logo/Logo_ntp_store.jpg';
+// import Logo from '../../assets/images/Logo/Logo_ntp_name.png';
+import Logo from '../../assets/images/Logo/Logo_ntp_ecom.png';
 import { Link } from 'react-router-dom';
 import { FaSearch } from 'react-icons/fa';
 import { IoBagOutline } from 'react-icons/io5';
