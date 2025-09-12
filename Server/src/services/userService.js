@@ -245,19 +245,20 @@ class UserService {
   async getUserById(id) {
     try {
       const user = await userRepository.findOneById(id);
-      return UserResponseDTO(user);
+      return new UserResponseDTO(user);
     } catch (error) {
       throw new AppError('Server error while getting User', 500, error);
     }
   }
-  //Admin Get User
+//Admin Soft Delete
   async deleteUser(id) {
     try {
       const userId = await userRepository.findOneById(id);
       if (!userId) {
         throw new AppError('Không tìm thấy user', 404);
       }
-      return await userRepository.softDelete(id);
+      const user= await userRepository.softDelete(id);
+      return new UserResponseDTO(user)
     } catch (error) {
       if (error instanceof AppError) throw error;
       throw new AppError('Server error while deleting User', 500, error);
@@ -282,8 +283,9 @@ class UserService {
       const userId = await userRepository.findOneById(id);
       if (!userId) throw new AppError('Khong tim thay ID trong Database!', 404);
 
-      const updateUser = userRepository.updateDataById(id, updateData);
-      return UserResponseDTO(updateUser);
+      // return userRepository.updateDataById(id, updateData);
+      const updateUser = await userRepository.updateDataById(id, updateData);
+      return new UserResponseDTO(updateUser);
     } catch (error) {
       if (error instanceof AppError) throw error;
       throw new AppError('Loi server khi Update user!');

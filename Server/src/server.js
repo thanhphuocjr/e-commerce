@@ -22,7 +22,7 @@ const START_SERVER = () => {
   //Handle errors
   app.use(errorHandlingMiddleware);
 
-  app.listen(env.APP_PORT, env.APP_HOST, () => {
+  app.listen(env.APP_PORT, '0.0.0.0', () => {
     console.log(`🚀 Server running on port: ${env.APP_PORT}`);
     console.log(
       `3.Hello ${env.AUTHOR} Dev, I am running at http://${env.APP_HOST}:${env.APP_PORT}/`
