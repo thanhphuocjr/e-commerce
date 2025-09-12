@@ -3,7 +3,7 @@ const { ObjectId } = require('mongodb'); // Add this import
 const AppError = require('~/utils/AppError');
 const { GET_DB } = require('~/config/mongodb');
 const jwt = require('jsonwebtoken');
-const { date } = require('joi');
+const { date, valid } = require('joi');
 import nodemailer from 'nodemailer';
 import { env } from '~/config/environment';
 import * as userModel from '~/models/mongodb/userModel';
@@ -35,7 +35,6 @@ class UserService {
         password,
         fullName,
         role: 'user',
-        status: 'active',
       });
       return createdUser;
     } catch (error) {
@@ -52,7 +51,8 @@ class UserService {
     try {
       const user = await userRepository.findOneByEmail(email);
       if (!user) throw new AppError('Account does not exists!', 401);
-      if (user.status != 'active') throw new AppError('Account inactive', 401);
+      // console.log(user);
+      if (user._destroy) throw new AppError('Account has been deleted!', 401);
       const isValidPassword = await userModel.comparePassword(
         password,
         user.password
@@ -89,8 +89,10 @@ class UserService {
         expiresAt: refreshTokenExpiry,
       });
 
+      const updateUser = await userRepository.setActiveStatus(user._id);
+      console.log(updateUser);
       return new LoginResponseDTO(
-        user,
+        updateUser,
         accessToken,
         refreshToken,
         env.JWT_EXPIRE
@@ -147,8 +149,14 @@ class UserService {
   async logout(refreshToken) {
     try {
       if (refreshToken) {
-        await refreshTokenRepository.deleteByToken(refreshToken);
+        const tokenDoc = await refreshTokenRepository.findByToken(refreshToken);
+
+        if (tokenDoc) {
+          await userRepository.setInActiveStatus(tokenDoc.userId);
+          await refreshTokenRepository.deleteByToken(refreshToken);
+        }
       }
+
       return { message: 'Logged out Successfully!' };
     } catch (error) {
       if (error instanceof AppError) throw error;
@@ -160,6 +168,7 @@ class UserService {
   async logoutAllDevices(userId) {
     try {
       await refreshTokenRepository.deleteByUserId(userId);
+      await userRepository.setInActiveStatus(userId);
       return { message: 'Logged out from all devices successfully!' };
     } catch (error) {
       if (error instanceof AppError) throw error;
@@ -250,15 +259,15 @@ class UserService {
       throw new AppError('Server error while getting User', 500, error);
     }
   }
-//Admin Soft Delete
+  //Admin Soft Delete
   async deleteUser(id) {
     try {
       const userId = await userRepository.findOneById(id);
       if (!userId) {
         throw new AppError('Không tìm thấy user', 404);
       }
-      const user= await userRepository.softDelete(id);
-      return new UserResponseDTO(user)
+      const user = await userRepository.softDelete(id);
+      return new UserResponseDTO(user);
     } catch (error) {
       if (error instanceof AppError) throw error;
       throw new AppError('Server error while deleting User', 500, error);

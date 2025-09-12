@@ -227,4 +227,22 @@ export class UserRepositoryMongo extends UserRepositoryInterface {
         { $set: { resetPasswordToken: null, resetPasswordExpires: null } }
       );
   }
+  async setActiveStatus(id) {
+    return await GET_DB()
+      .collection(USER_COLLECTION_NAME)
+      .findOneAndUpdate(
+        { _id: new ObjectId(id) },
+        { $set: { status: 'active' } },
+        { returnDocument: 'after' }
+      );
+  }
+  async setInActiveStatus(id) {
+    return await GET_DB()
+      .collection(USER_COLLECTION_NAME)
+      .findOneAndUpdate(
+        { _id: new ObjectId(id) },
+        { $set: { status: 'inactive' } },
+        { returnDocument: 'after' }
+      );
+  }
 }

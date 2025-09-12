@@ -36,4 +36,10 @@ export class UserRepositoryInterface {
   async clearResetToken(id) {
     throw new Error('Not implemented');
   }
+  async setActiveStatus(id) {
+    throw new Error('Not implemented!');
+  }
+  async setInActiveStatus(id) {
+    throw new Error('Not implemented!');
+  }
 }

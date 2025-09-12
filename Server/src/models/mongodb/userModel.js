@@ -10,7 +10,9 @@ export const USER_COLLECTION_SCHEMA = Joi.object({
   password: Joi.string().min(6).max(100).required(),
   fullName: Joi.string().min(2).max(100).required().trim().strict(),
   role: Joi.string().valid('admin', 'user').default('user'),
-  status: Joi.string().valid('active', 'inactive', 'blocked').default('active'),
+  status: Joi.string()
+    .valid('active', 'inactive', 'blocked')
+    .default('inactive'),
   lastLogin: Joi.date().timestamp('javascript').default(null),
   createdAt: Joi.date().timestamp('javascript').default(Date.now),
   updatedAt: Joi.date().timestamp('javascript').default(null),
@@ -19,9 +21,6 @@ export const USER_COLLECTION_SCHEMA = Joi.object({
   deletedAt: Joi.date().timestamp('javascript').default(null),
   _destroy: Joi.boolean().default(false),
 });
-
-
-
 
 // Validate trước khi tạo user
 export const validateBeforeCreate = async (data) => {

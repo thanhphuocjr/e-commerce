@@ -1,4 +1,4 @@
-import { BrowserRouter, data, Route, Router, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import PrivateRoute from './Components/PrivateRoute/PrivateRoute';
 import { createContext, useEffect, useState } from 'react';
 import './App.css';
@@ -16,70 +16,140 @@ import ResetPassword from './Pages/ForgotPassword/ResetPassword';
 import ChangePassword from './Pages/ChangePassword/ChangePassword';
 import Profile from './Pages/Profile/Profile';
 import ScrollToTop from './Components/ScrollToTop/ScrollToTop';
+import AdminDashboard from './Pages/Admin/Admin';
 
 const MyContext = createContext();
+
 function App() {
   const [countryList, setCountryList] = useState([]);
+
   const getCountry = async (url) => {
     const responsive = await axios.get(url).then((res) => {
       setCountryList(res.data.data);
     });
   };
+
   useEffect(() => {
     getCountry('https://countriesnow.space/api/v0.1/countries/');
   }, []);
-  const values = {
-    countryList,
-  };
+
+  const values = { countryList };
+
+  // Layout cho user
+  function UserLayout({ children }) {
+    return (
+      <>
+        <Header />
+        {children}
+        <Footer />
+      </>
+    );
+  }
+
+  // Layout cho admin
+  function AdminLayout({ children }) {
+    return <div className="admin-layout">{children}</div>;
+  }
+
   return (
     <BrowserRouter>
       <ScrollToTop />
       <MyContext.Provider value={values}>
-        <Header />
         <Routes>
-          <Route path="/" exact={true} element={<Home />} />
-          <Route path="/cat/:id" exact={true} element={<Listing />} />
+          {/* User routes */}
+          <Route
+            path="/"
+            element={
+              <UserLayout>
+                <Home />
+              </UserLayout>
+            }
+          />
+          <Route
+            path="/cat/:id"
+            element={
+              <UserLayout>
+                <Listing />
+              </UserLayout>
+            }
+          />
           <Route
             path="/cart"
-            exact={true}
             element={
               <PrivateRoute>
-                <Cart />
+                <UserLayout>
+                  <Cart />
+                </UserLayout>
               </PrivateRoute>
             }
           />
           <Route
-            exact={true}
             path="/product/:id"
-            element={<ProductDetail />}
-          ></Route>
+            element={
+              <UserLayout>
+                <ProductDetail />
+              </UserLayout>
+            }
+          />
           <Route
             path="/profile"
             element={
               <PrivateRoute>
-                <Profile />
+                <UserLayout>
+                  <Profile />
+                </UserLayout>
               </PrivateRoute>
             }
           />
-
-          <Route path="/signIn" element={<SignIn />}></Route>
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route
+            path="/signIn"
+            element={
+              <UserLayout>
+                <SignIn />
+              </UserLayout>
+            }
+          />
+          <Route
+            path="/forgot-password"
+            element={
+              <UserLayout>
+                <ForgotPassword />
+              </UserLayout>
+            }
+          />
+          <Route
+            path="/reset-password"
+            element={
+              <UserLayout>
+                <ResetPassword />
+              </UserLayout>
+            }
+          />
           <Route
             path="/change-password"
             element={
               <PrivateRoute>
-                <ChangePassword />
+                <UserLayout>
+                  <ChangePassword />
+                </UserLayout>
               </PrivateRoute>
             }
           />
+
+          {/* Admin routes (không có Header/Footer) */}
+          <Route
+            path="/admin"
+            element={
+              <AdminLayout>
+                <AdminDashboard />
+              </AdminLayout>
+            }
+          />
         </Routes>
-        <Footer />
       </MyContext.Provider>
     </BrowserRouter>
   );
 }
 
 export default App;
-
 export { MyContext };
