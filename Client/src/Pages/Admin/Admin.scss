@@ -25,6 +25,19 @@
       width: 25%;
       border: 1px solid black;
       display: fixed;
+      font-weight: 800;
+      .MuiListItemButton-root {
+        &.active {
+          background-color: rgba(48, 139, 230, 0.12); // xanh nhạt
+          border-left: 4px solid #2e71b3; // line xanh
+          transition: all 0.2s ease;
+          color: #1976d2;
+
+          &:hover {
+            background-color: rgba(25, 118, 210, 0.2);
+          }
+        }
+      }
     }
     .mainContent {
       border: 1px solid black;

@@ -19,6 +19,11 @@ export const saveRefreshToken = (token) => {
 export const getToken = () => {
   return sessionStorage.getItem('accessToken');
 };
+export const getUserInformation = () => {
+  const user = sessionStorage.getItem('user');
+  return user ? JSON.parse(user) : null;
+};
+
 export const getRefreshToken = () => {
   return localStorage.getItem('refreshToken');
 };
@@ -65,7 +70,8 @@ export const apiLogin = async (email, password) => {
   try {
     console.log('Making login request to:', API_BASE_URL + '/users/login');
     const response = await api.post('/users/login', { email, password });
-    console.log('Login response:', response);
+    // console.log('Login response:', response);
+
     return response.data;
   } catch (error) {
     console.error('API Login error:', {

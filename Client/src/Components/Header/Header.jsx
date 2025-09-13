@@ -19,13 +19,14 @@ import SearchBox from './SearchBox/SearchBox';
 import Navigation from './Navigation/Navigation';
 import { MyContext } from '../../App';
 import { height } from '@mui/system';
+import { getUserInformation } from '../../Api/auth';
 
 const Header = () => {
   const context = useContext(MyContext);
   const navigate = useNavigate();
   const location = useLocation();
   const hideNavRoutes = ['/signIn', '/register', '/forgotPassword'];
-
+  const user = getUserInformation();
   return (
     <div className="headerWrapper">
       <div className="top-strip bg-purple">
@@ -70,23 +71,34 @@ const Header = () => {
                     <FaRegUser />
                   )}
                 </Button>
-                <div className="ml-auto cartTab d-flex align-items-center ">
-                  <span className="price">$143.97</span>
-                  <div className="position-relative ml-2">
-                    <Button
-                      className=" ml-2"
-                      onClick={() => {
-                        navigate('/cart/');
-                      }}
-                    >
-                      <IoBagOutline />
-                    </Button>
 
-                    <span className="count d-flex align-items-center justify-content-center">
-                      4
-                    </span>
+                {user?.role === 'admin' ? (
+                  <Button
+                    onClick={() => {
+                      navigate('/admin');
+                    }}
+                  >
+                    ADMIN
+                  </Button>
+                ) : (
+                  <div className="ml-auto cartTab d-flex align-items-center ">
+                    <span className="price">$143.97</span>
+                    <div className="position-relative ml-2">
+                      <Button
+                        className=" ml-2"
+                        onClick={() => {
+                          navigate('/cart/');
+                        }}
+                      >
+                        <IoBagOutline />
+                      </Button>
+
+                      <span className="count d-flex align-items-center justify-content-center">
+                        4
+                      </span>
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             </div>
           </div>

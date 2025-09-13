@@ -16,6 +16,9 @@ import StarBorder from '@mui/icons-material/StarBorder';
 import { MdDashboard } from 'react-icons/md';
 import { CiUser } from 'react-icons/ci';
 import { FiSettings } from 'react-icons/fi';
+import ListUser from '../../Components/Admin/Users/ListUser';
+import CreateNew from '../../Components/Admin/Users/CreateNew';
+import GetStats from '../../Components/Admin/Users/GetStats';
 
 const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
@@ -33,6 +36,18 @@ const AdminDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [activeMenu, setActiveMenu] = useState('users');
   const [expandedMenus, setExpandedMenus] = useState(['users']);
+
+  const contentMap = {
+    dashboard: <div>📊 Dashboard Overview</div>,
+    users: <div>👥 Manage Users (Parent)</div>,
+    'users-list': <ListUser />,
+    'users-create': <CreateNew />,
+    'users-stats': <GetStats />,
+    settings: <div>⚙️ Manage Settings (Parent)</div>,
+    'settings-general': <div>🔧 Cài đặt chung</div>,
+    'settings-email': <div>📨 Cài đặt Email</div>,
+    'settings-payment': <div>💳 Cài đặt Thanh toán</div>,
+  };
 
   const menuItems = [
     {
@@ -66,17 +81,17 @@ const AdminDashboard = () => {
       children: [
         {
           id: 'settings-general',
-          label: 'Cài đặt chung',
+          label: 'General Settings',
           path: '/admin/settings/general',
         },
         {
           id: 'settings-email',
-          label: 'Cài đặt email',
+          label: 'Email Setting',
           path: '/admin/settings/email',
         },
         {
           id: 'settings-payment',
-          label: 'Cài đặt thanh toán',
+          label: 'Payment Setting',
           path: '/admin/settings/payment',
         },
       ],
@@ -174,7 +189,7 @@ const AdminDashboard = () => {
   return (
     <div className="admin-dashboard d-flex">
       <div className="header d-flex w-100">
-        <div className="name">Hi, Thanh Phuoc</div>
+        <div className="name">Admin, Thanh Phuoc</div>
         <div className="text">Some Text Here</div>
       </div>
       <hr />
@@ -189,7 +204,14 @@ const AdminDashboard = () => {
             {menuItems.map((menu) => (
               <React.Fragment key={menu.id}>
                 <ListItemButton
-                  onClick={() => menu.children && handleToggle(menu.id)}
+                  onClick={() => {
+                    if (menu.children) {
+                      handleToggle(menu.id);
+                    } else {
+                      setActiveMenu(menu.id);
+                    }
+                  }}
+                  className={activeMenu === menu.id ? 'active' : ''}
                 >
                   <ListItemIcon>{menu.icon}</ListItemIcon>
                   <ListItemText primary={menu.label} />
@@ -205,7 +227,14 @@ const AdminDashboard = () => {
                   >
                     <List component="div" disablePadding>
                       {menu.children.map((child) => (
-                        <ListItemButton key={child.id} sx={{ pl: 4 }}>
+                        <ListItemButton
+                          key={child.id}
+                          sx={{ pl: 4 }}
+                          onClick={() => {
+                            setActiveMenu(child.id);
+                          }}
+                          className={activeMenu === child.id ? 'active' : ''}
+                        >
                           <ListItemIcon>
                             <StarBorder />
                           </ListItemIcon>
@@ -219,7 +248,9 @@ const AdminDashboard = () => {
             ))}
           </List>
         </div>
-        <div className="mainContent">content here</div>
+        <div className="mainContent">
+          {contentMap[activeMenu] || <div>Chọn menu để xem nội dung</div>}
+        </div>
       </div>
     </div>
   );
