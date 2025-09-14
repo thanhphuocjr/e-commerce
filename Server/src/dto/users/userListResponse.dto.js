@@ -1,14 +1,14 @@
 import { UserResponseDTO } from './userResponse.dto.js';
 
 export class UserListResponseDTO {
-  constructor({ data, pagination }) {
-    this.data = data.map((u) => new UserResponseDTO(u));
+  constructor({ list, pagination }) {
+    this.list = list.map((u) => new UserResponseDTO(u));
     this.pagination = pagination;
   }
 
   static fromRepo(usersFromRepo) {
     return new UserListResponseDTO({
-      data: usersFromRepo.users,
+      list: usersFromRepo.users,
       pagination: usersFromRepo.pagination,
     });
   }

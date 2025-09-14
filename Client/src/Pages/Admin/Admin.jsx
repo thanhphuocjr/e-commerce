@@ -38,15 +38,15 @@ const AdminDashboard = () => {
   const [expandedMenus, setExpandedMenus] = useState(['users']);
 
   const contentMap = {
-    dashboard: <div>📊 Dashboard Overview</div>,
-    users: <div>👥 Manage Users (Parent)</div>,
+    dashboard: <div>Dashboard Overview</div>,
+    users: <div>Manage Users (Parent)</div>,
     'users-list': <ListUser />,
     'users-create': <CreateNew />,
     'users-stats': <GetStats />,
-    settings: <div>⚙️ Manage Settings (Parent)</div>,
-    'settings-general': <div>🔧 Cài đặt chung</div>,
-    'settings-email': <div>📨 Cài đặt Email</div>,
-    'settings-payment': <div>💳 Cài đặt Thanh toán</div>,
+    settings: <div>Manage Settings (Parent)</div>,
+    'settings-general': <div>Cài đặt chung</div>,
+    'settings-email': <div>Cài đặt Email</div>,
+    'settings-payment': <div>Cài đặt Thanh toán</div>,
   };
 
   const menuItems = [

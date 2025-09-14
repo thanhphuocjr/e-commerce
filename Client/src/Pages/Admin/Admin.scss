@@ -33,6 +33,9 @@
           transition: all 0.2s ease;
           color: #1976d2;
 
+          svg {
+            color: #1976d2;
+          }
           &:hover {
             background-color: rgba(25, 118, 210, 0.2);
           }

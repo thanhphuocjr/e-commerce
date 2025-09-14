@@ -51,8 +51,6 @@ Router.patch(
 );
 Router.post('/logout-all', userController.logoutAllDevices);
 
-
-
 //Admin route
 Router.use(authorize('admin'));
 
