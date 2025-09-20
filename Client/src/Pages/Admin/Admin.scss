@@ -1,51 +1,62 @@
 .admin-dashboard {
-  flex-wrap: wrap;
+  display: flex;
+  flex-direction: column;
+  height: 100vh; // full màn hình
+
   .header {
-    text-align: center;
+    display: flex;
     align-items: center;
-    border: 1px solid black;
+    justify-content: space-between;
+    border-bottom: 1px solid #ddd;
     height: 60px;
-    padding: 5px;
+    padding: 0 15px;
+    background: #f9f9f9;
+
     .name {
       font-size: 16px;
       font-weight: bold;
-      width: 25%;
-      border: 1px solid black;
     }
     .text {
-      border: 1px solid black;
-      width: 75%;
-      display: flex;
-      justify-content: center;
+      font-size: 14px;
+      color: #555;
     }
   }
+
   .body {
-    padding: 5px;
+    display: flex;
+    flex: 1; // chiếm toàn bộ phần còn lại sau header
+
     .sideBar {
-      width: 25%;
-      border: 1px solid black;
-      display: fixed;
-      font-weight: 800;
+      width: 250px; // cố định sidebar
+      background: #fff;
+      border-right: 1px solid #ddd;
+      padding: 10px 0;
+      overflow-y: auto; // nếu menu dài sẽ cuộn
+      font-weight: 600;
+
       .MuiListItemButton-root {
         &.active {
-          background-color: rgba(48, 139, 230, 0.12); // xanh nhạt
-          border-left: 4px solid #2e71b3; // line xanh
+          background-color: rgba(48, 139, 230, 0.12);
+          border-left: 4px solid #2e71b3;
           transition: all 0.2s ease;
           color: #1976d2;
 
           svg {
             color: #1976d2;
           }
+
           &:hover {
             background-color: rgba(25, 118, 210, 0.2);
           }
         }
       }
     }
+
     .mainContent {
-      border: 1px solid black;
-      width: 75%;
-      height: 100%;
+      flex: 1; // chiếm toàn bộ phần còn lại
+      background: #fafafa;
+      padding: 15px;
+      overflow-y: auto; // nội dung cuộn độc lập
     }
   }
 }

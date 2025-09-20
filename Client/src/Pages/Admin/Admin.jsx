@@ -108,69 +108,6 @@ const AdminDashboard = () => {
         deletedUsers: 91,
       });
 
-      setUsers([
-        {
-          _id: '507f1f77bcf86cd799439011',
-          email: 'nguyenvanan@gmail.com',
-          fullName: 'Nguyễn Văn An',
-          role: 'user',
-          status: 'active',
-          createdAt: new Date('2024-01-15').getTime(),
-          lastLogin: new Date('2024-03-10').getTime(),
-          updatedAt: new Date('2024-03-10').getTime(),
-          _destroy: false,
-          deletedAt: null,
-        },
-        {
-          _id: '507f1f77bcf86cd799439012',
-          email: 'tranthibinh@gmail.com',
-          fullName: 'Trần Thị Bình',
-          role: 'admin',
-          status: 'active',
-          createdAt: new Date('2024-02-20').getTime(),
-          lastLogin: new Date('2024-03-09').getTime(),
-          updatedAt: new Date('2024-03-09').getTime(),
-          _destroy: false,
-          deletedAt: null,
-        },
-        {
-          _id: '507f1f77bcf86cd799439013',
-          email: 'levancuong@gmail.com',
-          fullName: 'Lê Văn Cường',
-          role: 'user',
-          status: 'inactive',
-          createdAt: new Date('2024-01-08').getTime(),
-          lastLogin: new Date('2024-02-15').getTime(),
-          updatedAt: new Date('2024-02-15').getTime(),
-          _destroy: false,
-          deletedAt: null,
-        },
-        {
-          _id: '507f1f77bcf86cd799439014',
-          email: 'phamthidung@gmail.com',
-          fullName: 'Phạm Thị Dung',
-          role: 'user',
-          status: 'blocked',
-          createdAt: new Date('2023-12-10').getTime(),
-          lastLogin: new Date('2024-01-20').getTime(),
-          updatedAt: new Date('2024-01-20').getTime(),
-          _destroy: false,
-          deletedAt: null,
-        },
-        {
-          _id: '507f1f77bcf86cd799439015',
-          email: 'hoangvannam@gmail.com',
-          fullName: 'Hoàng Văn Nam',
-          role: 'user',
-          status: 'active',
-          createdAt: new Date('2023-11-05').getTime(),
-          lastLogin: new Date('2024-01-10').getTime(),
-          updatedAt: new Date('2024-02-01').getTime(),
-          _destroy: true,
-          deletedAt: new Date('2024-02-01').getTime(),
-        },
-      ]);
-
       setLoading(false);
     }, 1000);
   }, []);
@@ -208,7 +145,7 @@ const AdminDashboard = () => {
                     if (menu.children) {
                       handleToggle(menu.id);
                     } else {
-                      setActiveMenu(menu.id);
+                      setActiveMenu(menu.id); 
                     }
                   }}
                   className={activeMenu === menu.id ? 'active' : ''}

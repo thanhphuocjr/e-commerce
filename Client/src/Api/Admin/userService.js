@@ -2,7 +2,7 @@
 import axios from 'axios';
 import { getToken } from '../auth';
 
-const API_URL = 'http://localhost:8000/api/v1/users';
+const API_URL = 'http://localhost:8000/v1/users';
 
 // Tạo instance axios có sẵn baseURL + token
 const axiosInstance = axios.create({
@@ -24,7 +24,7 @@ axiosInstance.interceptors.request.use(
 const userService = {
   getUsers: async (params = {}) => {
     const res = await axiosInstance.get('/', { params });
-    return res.data; // backend trả gì thì mình lấy đó
+    return res.data;
   },
 
   getStats: async () => {
