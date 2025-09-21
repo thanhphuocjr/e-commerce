@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './ListUser.scss';
 import { Chip, Tooltip } from '@mui/material';
+import { ArrowUpward, ArrowDownward, UnfoldMore } from '@mui/icons-material';
 import userService from '../../../Api/Admin/userService';
 import {
   Table,
@@ -16,12 +17,15 @@ import {
   CircularProgress,
   Box,
 } from '@mui/material';
-import EllipsisTooltip from '../../../Helper/EllipsisTooltip';
-import { ClassNames } from '@emotion/react';
 
 const ListUser = () => {
   const [users, setUsers] = useState([]);
   const [stats, setStats] = useState({});
+  const [sortConfig, setSortConfig] = useState({
+    sortBy: 'createdAt',
+    sortOrder: 'DESC',
+  });
+
   const [pagination, setPagination] = useState({
     currentPage: 1,
     totalPages: 1,
@@ -30,7 +34,15 @@ const ListUser = () => {
   });
   const [loadingUsers, setLoadingUsers] = useState(false);
   const [loadingStats, setLoadingStats] = useState(false);
-
+  const handleSort = (field) => {
+    setSortConfig((prev) => {
+      let newOrder = 'ASC';
+      if (prev.sortBy === field && prev.sortOrder === 'ASC') {
+        newOrder = 'DESC';
+      }
+      return { sortBy: field, sortOrder: newOrder };
+    });
+  };
   const fetchUsers = async (page = 1) => {
     try {
       setLoadingUsers(true);
@@ -38,8 +50,8 @@ const ListUser = () => {
         page,
         limit: pagination.itemsPerPage,
         search: '',
-        sortBy: 'createdAt',
-        sortOrder: 'DESC',
+        sortBy: sortConfig.sortBy,
+        sortOrder: sortConfig.sortOrder,
       });
       setUsers(res.data.list);
       setPagination(res.data.pagination);
@@ -66,6 +78,9 @@ const ListUser = () => {
     fetchUsers(1);
     fetchStats();
   }, []);
+  useEffect(() => {
+    fetchUsers(1);
+  }, [sortConfig]);
 
   const handleChangePage = (event, newPage) => {
     fetchUsers(newPage + 1);
@@ -101,14 +116,71 @@ const ListUser = () => {
               <TableHead>
                 <TableRow>
                   <TableCell sx={{ width: '5%' }}>ID</TableCell>
-                  <TableCell sx={{ width: '20%' }}>Email</TableCell>
-                  <TableCell sx={{ width: '15%' }}>FullName</TableCell>
+                  <TableCell
+                    sx={{ width: '20%' }}
+                    onClick={() => handleSort('email')}
+                  >
+                    Email
+                    {sortConfig.sortBy === 'email' ? (
+                      sortConfig.sortOrder === 'ASC' ? (
+                        <ArrowUpward fontSize="small" />
+                      ) : (
+                        <ArrowDownward fontSize="small" />
+                      )
+                    ) : (
+                      <UnfoldMore fontSize="small" />
+                    )}
+                  </TableCell>
+                  <TableCell
+                    sx={{ width: '15%' }}
+                    onClick={() => handleSort('fullName')}
+                  >
+                    FullName
+                    {sortConfig.sortBy === 'fullName' ? (
+                      sortConfig.sortOrder === 'ASC' ? (
+                        <ArrowUpward fontSize="small" />
+                      ) : (
+                        <ArrowDownward fontSize="small" />
+                      )
+                    ) : (
+                      <UnfoldMore fontSize="small" />
+                    )}
+                  </TableCell>
                   <TableCell sx={{ width: '10%' }}>Role</TableCell>
                   <TableCell sx={{ width: '10%' }}>Status</TableCell>
-                  <TableCell sx={{ width: '12.5%' }}>Created at</TableCell>
-                  <TableCell sx={{ width: '12.5%' }}>Updated at</TableCell>
+                  <TableCell
+                    sx={{ width: '12.5%' }}
+                    onClick={() => handleSort('createdAt')}
+                  >
+                    Created At
+                    {sortConfig.sortBy === 'createdAt' ? (
+                      sortConfig.sortOrder === 'ASC' ? (
+                        <ArrowUpward fontSize="small" />
+                      ) : (
+                        <ArrowDownward fontSize="small" />
+                      )
+                    ) : (
+                      <UnfoldMore fontSize="small" />
+                    )}
+                  </TableCell>
+                  <TableCell 
+                    sx={{ width: '12.5%' }}
+                    onClick={() => handleSort('updatedAt')}
+                  >
+                    Updated At
+                    {sortConfig.sortBy === 'updatedAt' ? (
+                      sortConfig.sortOrder === 'ASC' ? (
+                        <ArrowUpward fontSize="small" />
+                      ) : (
+                        <ArrowDownward fontSize="small" />
+                      )
+                    ) : (
+                      <UnfoldMore fontSize="small" />
+                    )}
+                  </TableCell>
                 </TableRow>
               </TableHead>
+
               <TableBody>
                 {users.map((user) => (
                   <TableRow key={user.id}>

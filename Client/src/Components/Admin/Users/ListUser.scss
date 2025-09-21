@@ -1,3 +1,7 @@
 .MuiTablePagination-displayedRows {
   margin: 0 !important;
 }
+.MuiTableCell-root {
+  cursor: pointer;
+  user-select: none;
+}

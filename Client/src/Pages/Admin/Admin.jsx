@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, use } from 'react';
 import './Admin.scss';
 import ListSubheader from '@mui/material/ListSubheader';
 import List from '@mui/material/List';
@@ -19,22 +19,18 @@ import { FiSettings } from 'react-icons/fi';
 import ListUser from '../../Components/Admin/Users/ListUser';
 import CreateNew from '../../Components/Admin/Users/CreateNew';
 import GetStats from '../../Components/Admin/Users/GetStats';
+import { Button } from '@mui/material';
 
 const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
-  const [stats, setStats] = useState({
-    totalUsers: 0,
-    activeUsers: 0,
-    blockedUsers: 0,
-    deletedUsers: 0,
-  });
+
   const [searchTerm, setSearchTerm] = useState('');
   const [filterRole, setFilterRole] = useState('all');
   const [filterStatus, setFilterStatus] = useState('all');
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [activeMenu, setActiveMenu] = useState('users');
+  const [activeMenu, setActiveMenu] = useState('users-list');
   const [expandedMenus, setExpandedMenus] = useState(['users']);
 
   const contentMap = {
@@ -98,20 +94,6 @@ const AdminDashboard = () => {
     },
   ];
 
-  // Mock data theo schema
-  useEffect(() => {
-    setTimeout(() => {
-      setStats({
-        totalUsers: 1247,
-        activeUsers: 1156,
-        blockedUsers: 45,
-        deletedUsers: 91,
-      });
-
-      setLoading(false);
-    }, 1000);
-  }, []);
-
   const [openMenus, setOpenMenus] = useState({
     user: false,
     settings: false,
@@ -145,7 +127,7 @@ const AdminDashboard = () => {
                     if (menu.children) {
                       handleToggle(menu.id);
                     } else {
-                      setActiveMenu(menu.id); 
+                      setActiveMenu(menu.id);
                     }
                   }}
                   className={activeMenu === menu.id ? 'active' : ''}
