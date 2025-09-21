@@ -7,7 +7,7 @@ function maskEmail(email) {
 export class UserResponseDTO {
   constructor(user) {
     this.id = user._id?.toString();
-    this.email = maskEmail(user.email);
+    this.email = user.email;
     this.fullName = user.fullName;
     this.role = user.role;
     this.status = user.status;

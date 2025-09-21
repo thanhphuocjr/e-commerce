@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import './ListUser.scss';
 import { Chip, Tooltip } from '@mui/material';
 import userService from '../../../Api/Admin/userService';
 import {
@@ -16,6 +17,7 @@ import {
   Box,
 } from '@mui/material';
 import EllipsisTooltip from '../../../Helper/EllipsisTooltip';
+import { ClassNames } from '@emotion/react';
 
 const ListUser = () => {
   const [users, setUsers] = useState([]);
@@ -26,11 +28,12 @@ const ListUser = () => {
     totalItems: 0,
     itemsPerPage: 10,
   });
-  const [loading, setLoading] = useState(false);
+  const [loadingUsers, setLoadingUsers] = useState(false);
+  const [loadingStats, setLoadingStats] = useState(false);
 
   const fetchUsers = async (page = 1) => {
     try {
-      setLoading(true);
+      setLoadingUsers(true);
       const res = await userService.getUsers({
         page,
         limit: pagination.itemsPerPage,
@@ -43,19 +46,19 @@ const ListUser = () => {
     } catch (error) {
       console.error('Fetch users error:', error);
     } finally {
-      setLoading(false);
+      setLoadingUsers(false);
     }
   };
 
   const fetchStats = async () => {
     try {
-      setLoading(true);
+      setLoadingStats(true);
       const res = await userService.getStats();
       setStats(res.data);
     } catch (error) {
       console.error('Fetch stats error:', error);
     } finally {
-      setLoading(false);
+      setLoadingStats(false);
     }
   };
 
@@ -70,7 +73,7 @@ const ListUser = () => {
 
   return (
     <Box p={2}>
-      {loading ? (
+      {loadingStats ? (
         <Box display="flex" justifyContent="center" alignItems="center" p={3}>
           <CircularProgress />
         </Box>
@@ -87,7 +90,7 @@ const ListUser = () => {
         </>
       )}
 
-      {loading ? (
+      {loadingUsers ? (
         <Box display="flex" justifyContent="center" alignItems="center" p={3}>
           <CircularProgress />
         </Box>
@@ -115,7 +118,7 @@ const ListUser = () => {
                       </Tooltip>
                     </TableCell>
                     <TableCell>
-                      <Tooltip title={user.id}>
+                      <Tooltip title={user.email}>
                         <span>{user.email}</span>
                       </Tooltip>
                     </TableCell>
@@ -133,15 +136,27 @@ const ListUser = () => {
               </TableBody>
             </Table>
           </TableContainer>
-
-          <TablePagination
-            component="div"
-            count={pagination.totalItems}
-            page={pagination.currentPage - 1}
-            onPageChange={handleChangePage}
-            rowsPerPage={pagination.itemsPerPage}
-            rowsPerPageOptions={[pagination.itemsPerPage]}
-          />
+          <Box
+            sx={{
+              position: 'sticky',
+              bottom: 0,
+              left: 0,
+              bgcolor: 'background.paper',
+              zIndex: 2,
+              borderTop: '1px solid #ddd',
+              display: 'flex',
+              justifyContent: 'flex-start',
+            }}
+          >
+            <TablePagination
+              component="div"
+              count={pagination.totalItems}
+              page={pagination.currentPage - 1}
+              onPageChange={handleChangePage}
+              rowsPerPage={pagination.itemsPerPage}
+              rowsPerPageOptions={[pagination.itemsPerPage]}
+            />
+          </Box>
         </Paper>
       )}
     </Box>
