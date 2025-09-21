@@ -4,6 +4,11 @@ import './ListUser.scss';
 import { Chip, Tooltip } from '@mui/material';
 import { ArrowUpward, ArrowDownward, UnfoldMore } from '@mui/icons-material';
 import userService from '../../../Api/Admin/userService';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import TabContext from '@mui/lab/TabContext';
+import TabList from '@mui/lab/TabList';
+import TabPanel from '@mui/lab/TabPanel';
 import {
   Table,
   TableBody,
@@ -34,6 +39,11 @@ const ListUser = () => {
   });
   const [loadingUsers, setLoadingUsers] = useState(false);
   const [loadingStats, setLoadingStats] = useState(false);
+  const [value, setValue] = React.useState('general');
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
   const handleSort = (field) => {
     setSortConfig((prev) => {
       let newOrder = 'ASC';
@@ -94,13 +104,32 @@ const ListUser = () => {
         </Box>
       ) : (
         <>
-          <Typography variant="h5" gutterBottom>
-            Total: {stats.total} Users
-          </Typography>
-          <Box display="flex" gap={2} mb={2}>
-            <Chip label={`Active: ${stats?.active ?? 0}`} color="success" />
-            <Chip label={`Inactive: ${stats?.inactive ?? 0}`} color="warning" />
-            <Chip label={`Blocked: ${stats?.blocked ?? 0}`} color="error" />
+          <Box sx={{ width: '100%', typography: 'body1' }}>
+            <TabContext value={value}>
+              <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                <TabList
+                  onChange={handleChange}
+                  aria-label="lab API tabs example"
+                >
+                  <Tab label="general" value="general" />
+                  <Tab label="active" value="active" />
+                  <Tab label="inactive" value="inactive" />
+                  <Tab label="blocked" value="blocked" />
+                </TabList>
+              </Box>
+              <TabPanel value="general">
+                <Typography>Total: {stats.total}</Typography>
+              </TabPanel>
+              <TabPanel value="active">
+                <Typography>Active: {stats.active}</Typography>
+              </TabPanel>
+              <TabPanel value="inactive">
+                <Typography>Inactive: {stats.inactive}</Typography>
+              </TabPanel>
+              <TabPanel value="blocked">
+                <Typography>Blocked: {stats.blocked}</Typography>
+              </TabPanel>
+            </TabContext>
           </Box>
         </>
       )}
@@ -163,7 +192,7 @@ const ListUser = () => {
                       <UnfoldMore fontSize="small" />
                     )}
                   </TableCell>
-                  <TableCell 
+                  <TableCell
                     sx={{ width: '12.5%' }}
                     onClick={() => handleSort('updatedAt')}
                   >
