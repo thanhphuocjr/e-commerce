@@ -186,7 +186,8 @@ export class UserRepositoryMongo extends UserRepositoryInterface {
       sort.split(',').forEach((field) => {
         const [key, order] = field.split(':');
         if (key) {
-          sortOptions[key.trim()] = order?.toUpperCase() === 'ASC' ? 1 : -1;
+          const cleanOrder = order?.trim().toUpperCase();
+          sortOptions[key.trim()] = cleanOrder === 'ASC' ? 1 : -1;
         }
       });
     } else {

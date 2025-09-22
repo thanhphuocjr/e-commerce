@@ -137,7 +137,6 @@ const userValidation = {
       email: Joi.string().email().optional().messages({
         'string.email': 'Email must be a valid email address',
       }),
-      phone: Joi.string().max(15).optional(),
 
       status: Joi.string()
         .valid('active', 'inactive', 'blocked')
