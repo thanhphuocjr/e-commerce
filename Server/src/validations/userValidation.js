@@ -129,25 +129,34 @@ const userValidation = {
         'number.min': 'Limit must be greater than 0',
         'number.max': 'Limit must not exceed 100',
       }),
-      search: Joi.string().max(100).optional().allow('').messages({
-        'string.max': 'Search keyword must not exceed 100 characters',
+
+      // Các field lọc riêng
+      fullName: Joi.string().max(100).optional().messages({
+        'string.max': 'Full name must not exceed 100 characters',
       }),
-      status: Joi.string().valid('active', 'inactive', 'blocked').messages({
-        'any.only': 'Status must be active, inactive, or blocked',
+      email: Joi.string().email().optional().messages({
+        'string.email': 'Email must be a valid email address',
       }),
-      role: Joi.string().valid('admin', 'user').messages({
+      phone: Joi.string().max(15).optional(),
+
+      status: Joi.string()
+        .valid('active', 'inactive', 'blocked')
+        .optional()
+        .messages({
+          'any.only': 'Status must be active, inactive, or blocked',
+        }),
+      role: Joi.string().valid('admin', 'user').optional().messages({
         'any.only': 'Role must be either admin or user',
       }),
-      sortBy: Joi.string()
-        .valid('createdAt', 'updatedAt', 'fullName', 'email')
-        .default('createdAt')
+
+      // sort = "fullName:DESC,createdAt:ASC"
+      sort: Joi.string()
+        .pattern(/^[a-zA-Z0-9]+:(ASC|DESC)(,[a-zA-Z0-9]+:(ASC|DESC))*$/)
+        .optional()
         .messages({
-          'any.only':
-            'SortBy must be one of createdAt, updatedAt, fullName, or email',
+          'string.pattern.base':
+            'Sort must be in format "field:ASC,field:DESC"',
         }),
-      sortOrder: Joi.string().valid('ASC', 'DESC').default('DESC').messages({
-        'any.only': 'SortOrder must be ASC or DESC',
-      }),
     }),
   },
 

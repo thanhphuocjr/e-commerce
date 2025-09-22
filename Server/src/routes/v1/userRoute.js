@@ -54,7 +54,11 @@ Router.post('/logout-all', userController.logoutAllDevices);
 //Admin route
 Router.use(authorize('admin'));
 
-Router.get('/', validate(userValidation.getUsersList), userController.getUsers);
+Router.get(
+  '/',
+  validate(userValidation.getUsersList),
+  userController.getUsersList
+);
 
 Router.post(
   '/',

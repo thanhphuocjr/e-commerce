@@ -56,16 +56,13 @@ class UserController {
     });
   });
 
-  getUsers = asyncHandler(async (req, res) => {
+  getUsersList = asyncHandler(async (req, res) => {
     const queryParams = req.query;
-    // console.log(req);
-    // console.log(queryParams);
-
-    const result = await userService.getUsers(queryParams);
+    const result = await userService.getUsersList(queryParams);
 
     res.status(200).json({
       success: true,
-      message: 'Get List User thanh cong!',
+      message: 'Get UserList successfully!',
       data: result,
     });
   });

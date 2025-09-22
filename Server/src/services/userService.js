@@ -214,10 +214,11 @@ class UserService {
     }
   }
 
-  async getUsers(queryParams) {
+  async getUsersList(queryParams) {
     try {
+      console.log('QueryParams: ', queryParams);
       const users = await userRepository.findUsersWithFilters(queryParams);
-      return UserListResponseDTO.fromRepo(users); // ✅ trả về object chuẩn
+      return UserListResponseDTO.fromRepo(users);
     } catch (error) {
       console.error('getUsers error: ', error);
       if (error instanceof AppError) throw error;

@@ -152,37 +152,60 @@ export class UserRepositoryMongo extends UserRepositoryInterface {
   }
 
   // Find with filters
+  // Find with filters
   async findUsersWithFilters({
     page = 1,
     limit = 10,
-    search,
+    fullName,
+    email,
+    phone,
     status,
     role,
-    sortBy = 'createdAt',
-    sortOrder = 'DESC',
+    sort = '',
+    ...otherFilters
   }) {
     const filter = {};
-    if (search) {
-      filter.$or = [
-        { fullName: { $regex: search, $options: 'i' } },
-        { email: { $regex: search, $options: 'i' } },
-      ];
-    }
+
+    // Lọc theo từng field riêng
+    if (fullName) filter.fullName = { $regex: fullName, $options: 'i' };
+    if (email) filter.email = { $regex: email, $options: 'i' };
+    if (phone) filter.phone = { $regex: phone, $options: 'i' };
     if (status) filter.status = status;
     if (role) filter.role = role;
-    const sortOptions = {};
-    sortOptions[sortBy] = sortOrder === 'ASC' ? 1 : -1;
+
+    // Filter động (VD: _destroy=false, deletedAt=null)
+    Object.keys(otherFilters).forEach((key) => {
+      if (otherFilters[key] !== undefined) {
+        filter[key] = otherFilters[key];
+      }
+    });
+
+    // Parse sort string thành object Mongo
+    let sortOptions = {};
+    if (sort) {
+      sort.split(',').forEach((field) => {
+        const [key, order] = field.split(':');
+        if (key) {
+          sortOptions[key.trim()] = order?.toUpperCase() === 'ASC' ? 1 : -1;
+        }
+      });
+    } else {
+      sortOptions = { createdAt: -1 };
+    }
+
     const usersCollection = GET_DB().collection(USER_COLLECTION_NAME);
+
     const [users, totalItems] = await Promise.all([
       usersCollection
         .find(filter)
         .sort(sortOptions)
         .skip((page - 1) * limit)
         .limit(parseInt(limit))
-        .project({ password: 0 })
+        .project({ password: 0 }) // ẩn password
         .toArray(),
       usersCollection.countDocuments(filter),
     ]);
+
     return {
       users,
       pagination: {
