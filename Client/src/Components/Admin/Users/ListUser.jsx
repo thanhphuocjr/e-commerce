@@ -18,6 +18,7 @@ import {
   TablePagination,
   CircularProgress,
   Box,
+  Button,
 } from '@mui/material';
 import { ArrowUpward, ArrowDownward, UnfoldMore } from '@mui/icons-material';
 import userService from '../../../Api/Admin/userService';
@@ -276,7 +277,33 @@ const ListUser = () => {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.3 }}
                     >
-                      <Typography>Total: {stats.total}</Typography>
+                      <Typography>
+                        <Box
+                          className="header-content"
+                          display="flex"
+                          justifyContent="space-between"
+                          alignItems="center"
+                          width="100%"
+                        >
+                          {/* Left */}
+                          <Box className="left-content">
+                            <Typography variant="h6">
+                              <b>{stats.total}</b> Users
+                            </Typography>
+                          </Box>
+
+                          {/* Right */}
+                          <Box className="right-content" display="flex" gap={1}>
+                            <Button variant="contained" color="black">
+                              Filters
+                            </Button>
+                            <Button variant="contained" color="black">
+                              Import
+                            </Button>
+                            <Button variant="contained">Add User</Button>
+                          </Box>
+                        </Box>
+                      </Typography>
                     </motion.div>
                   </TabPanel>
                   <TabPanel value="active">
