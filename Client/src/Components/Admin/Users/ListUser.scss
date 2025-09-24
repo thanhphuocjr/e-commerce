@@ -10,8 +10,7 @@
   background: linear-gradient(90deg, #f5f7fa 0%, #e9eff5 100%);
 }
 .MuiTabPanel-root {
-  padding: 25 !important;
-
+  padding: 10px 0 !important;
   margin: 5px 0px !important;
   background: linear-gradient(90deg, #f5f7fa 0%, #fcfeff 100%);
 }
@@ -50,7 +49,6 @@
 
 /* Icon sort */
 .MuiSvgIcon-root {
-  font-size: 13px !important;
   opacity: 0.8;
   margin-left: 3px;
   vertical-align: middle;
@@ -82,17 +80,29 @@
     color: #666;
   }
 }
+
+.MuiSvgIcon-root {
+  font-size: 20px !important;
+}
 hr {
   padding: 0;
   margin: 0;
 }
 .header-content {
   .left-content {
+    font-size: 20px;
   }
   .right-content {
     Button {
-
+      display: flex;
+      align-items: center;
+      display: block;
+      font-weight: 550;
       border: 0px;
+      svg {
+        font-size: 15px;
+        font-weight: 900;
+      }
     }
   }
 }

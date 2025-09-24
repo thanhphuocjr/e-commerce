@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './ListUser.scss';
-
+import CountUp from 'react-countup';
+import { CiImport } from 'react-icons/ci';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Chip,
@@ -20,13 +21,17 @@ import {
   Box,
   Button,
 } from '@mui/material';
+import { People, CheckCircle, PauseCircle, Block } from '@mui/icons-material';
 import { ArrowUpward, ArrowDownward, UnfoldMore } from '@mui/icons-material';
+import { CiFilter } from 'react-icons/ci';
+import { MdAdd } from 'react-icons/md';
 import userService from '../../../Api/Admin/userService';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
+import { StatCard } from '../StatCard';
 
 const MotionTableRow = motion(TableRow);
 
@@ -150,7 +155,7 @@ const ListUser = () => {
     currentPage: 1,
     totalPages: 1,
     totalItems: 0,
-    itemsPerPage: 10,
+    itemsPerPage: 20,
   });
   const [loadingUsers, setLoadingUsers] = useState(false);
   const [loadingStats, setLoadingStats] = useState(false);
@@ -287,20 +292,36 @@ const ListUser = () => {
                         >
                           {/* Left */}
                           <Box className="left-content">
-                            <Typography variant="h6">
-                              <b>{stats.total}</b> Users
-                            </Typography>
+                            <StatCard
+                              icon={<People />}
+                              color="primary"
+                              label="Total Users"
+                              value={stats.total}
+                            />
                           </Box>
 
                           {/* Right */}
                           <Box className="right-content" display="flex" gap={1}>
-                            <Button variant="contained" color="black">
+                            <Button
+                              variant="contained"
+                              color="black"
+                              className="filter"
+                            >
+                              <CiFilter className="mr-2" />
                               Filters
                             </Button>
-                            <Button variant="contained" color="black">
+                            <Button
+                              variant="contained"
+                              color="black"
+                              className="import"
+                            >
+                              <CiImport className="mr-2" />
                               Import
                             </Button>
-                            <Button variant="contained">Add User</Button>
+                            <Button variant="contained" className="add_user">
+                              <MdAdd className="mr-2 " />
+                              Add User
+                            </Button>
                           </Box>
                         </Box>
                       </Typography>
@@ -312,7 +333,49 @@ const ListUser = () => {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.3 }}
                     >
-                      <Typography>Active: {stats.active}</Typography>
+                      <Typography>
+                        <Box
+                          className="header-content"
+                          display="flex"
+                          justifyContent="space-between"
+                          alignItems="center"
+                          width="100%"
+                        >
+                          {/* Left */}
+                          <Box className="left-content">
+                            <StatCard
+                              icon={<CheckCircle />}
+                              color="success"
+                              label="Active Users"
+                              value={stats.active}
+                            />
+                          </Box>
+
+                          {/* Right */}
+                          <Box className="right-content" display="flex" gap={1}>
+                            <Button
+                              variant="contained"
+                              color="black"
+                              className="filter"
+                            >
+                              <CiFilter className="mr-2" />
+                              Filters
+                            </Button>
+                            <Button
+                              variant="contained"
+                              color="black"
+                              className="import"
+                            >
+                              <CiImport className="mr-2" />
+                              Import
+                            </Button>
+                            <Button variant="contained" className="add_user">
+                              <MdAdd className="mr-2 " />
+                              Add User
+                            </Button>
+                          </Box>
+                        </Box>
+                      </Typography>
                     </motion.div>
                   </TabPanel>
                   <TabPanel value="inactive">
@@ -321,7 +384,49 @@ const ListUser = () => {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.3 }}
                     >
-                      <Typography>Inactive: {stats.inactive}</Typography>
+                      <Typography>
+                        <Box
+                          className="header-content"
+                          display="flex"
+                          justifyContent="space-between"
+                          alignItems="center"
+                          width="100%"
+                        >
+                          {/* Left */}
+                          <Box className="left-content">
+                            <StatCard
+                              icon={<PauseCircle />}
+                              color="warning"
+                              label="Inactive Users"
+                              value={stats.inactive}
+                            />
+                          </Box>
+
+                          {/* Right */}
+                          <Box className="right-content" display="flex" gap={1}>
+                            <Button
+                              variant="contained"
+                              color="black"
+                              className="filter"
+                            >
+                              <CiFilter className="mr-2" />
+                              Filters
+                            </Button>
+                            <Button
+                              variant="contained"
+                              color="black"
+                              className="import"
+                            >
+                              <CiImport className="mr-2" />
+                              Import
+                            </Button>
+                            <Button variant="contained" className="add_user">
+                              <MdAdd className="mr-2 " />
+                              Add User
+                            </Button>
+                          </Box>
+                        </Box>
+                      </Typography>
                     </motion.div>
                   </TabPanel>
                   <TabPanel value="blocked">
@@ -330,7 +435,49 @@ const ListUser = () => {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.3 }}
                     >
-                      <Typography>Blocked: {stats.blocked}</Typography>
+                      <Typography>
+                        <Box
+                          className="header-content"
+                          display="flex"
+                          justifyContent="space-between"
+                          alignItems="center"
+                          width="100%"
+                        >
+                          {/* Left */}
+                          <Box className="left-content">
+                            <StatCard
+                              icon={<Block />}
+                              color="error"
+                              label="Blocked Users"
+                              value={stats.blocked}
+                            />
+                          </Box>
+
+                          {/* Right */}
+                          <Box className="right-content" display="flex" gap={1}>
+                            <Button
+                              variant="contained"
+                              color="black"
+                              className="filter"
+                            >
+                              <CiFilter className="mr-2" />
+                              Filters
+                            </Button>
+                            <Button
+                              variant="contained"
+                              color="black"
+                              className="import"
+                            >
+                              <CiImport className="mr-2" />
+                              Import
+                            </Button>
+                            <Button variant="contained" className="add_user">
+                              <MdAdd className="mr-2 " />
+                              Add User
+                            </Button>
+                          </Box>
+                        </Box>
+                      </Typography>
                     </motion.div>
                   </TabPanel>
                 </TabContext>
@@ -474,7 +621,6 @@ const ListUser = () => {
                             exit="exit"
                             custom={index}
                             whileHover={{
-                              backgroundColor: '#f9f9ff',
                               scale: 1.005,
                               transition: { duration: 0.2 },
                             }}
