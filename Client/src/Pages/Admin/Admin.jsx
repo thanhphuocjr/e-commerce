@@ -17,7 +17,6 @@ import { MdDashboard } from 'react-icons/md';
 import { CiUser } from 'react-icons/ci';
 import { FiSettings } from 'react-icons/fi';
 import ListUser from '../../Components/Admin/Users/ListUser';
-import CreateNew from '../../Components/Admin/Users/CreateNew';
 import GetStats from '../../Components/Admin/Users/GetStats';
 import { Button } from '@mui/material';
 
@@ -37,7 +36,7 @@ const AdminDashboard = () => {
     dashboard: <div>Dashboard Overview</div>,
     users: <div>Manage Users (Parent)</div>,
     'users-list': <ListUser />,
-    'users-create': <CreateNew />,
+    'users-create': <div>create</div>,
     'users-stats': <GetStats />,
     settings: <div>Manage Settings (Parent)</div>,
     'settings-general': <div>Cài đặt chung</div>,

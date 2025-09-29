@@ -84,6 +84,55 @@
 .MuiSvgIcon-root {
   font-size: 20px !important;
 }
+
+/* Menu dropdown */
+.MuiMenu-paper {
+  margin-top: 4px !important;
+  border-radius: 8px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+  max-height: 300px !important;
+}
+
+.MuiMenu-list {
+  padding: 4px 0 !important;
+  background-color: #fff !important;
+}
+
+/* Menu items */
+.MuiMenuItem-root {
+  font-size: 14px !important;
+  padding: 10px 16px !important;
+  color: #333 !important;
+  transition: background-color 0.2s ease !important;
+
+  &:hover {
+    background-color: #f5f5f5 !important;
+  }
+
+  &.Mui-selected {
+    background-color: #e3f2fd !important;
+
+    &:hover {
+      background-color: #bbdefb !important;
+    }
+  }
+}
+
+/* Select component */
+.MuiSelect-select {
+}
+
+.MuiOutlinedInput-root {
+  &:hover .MuiOutlinedInput-notchedOutline {
+    border-color: #999 !important;
+  }
+
+  &.Mui-focused .MuiOutlinedInput-notchedOutline {
+    border-color: #1976d2 !important;
+    border-width: 2px !important;
+  }
+}
+
 hr {
   padding: 0;
   margin: 0;

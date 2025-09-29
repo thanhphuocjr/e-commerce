@@ -4,6 +4,7 @@ import './ListUser.scss';
 import CountUp from 'react-countup';
 import { CiImport } from 'react-icons/ci';
 import { motion, AnimatePresence } from 'framer-motion';
+import CreateUserForm from './CreateUserForm';
 import {
   Chip,
   Tooltip,
@@ -245,6 +246,9 @@ const ListUser = () => {
     }
   };
 
+  // Form
+  const [openAddUser, setOpenAddUser] = useState(false);
+
   return (
     <motion.div initial="hidden" animate="visible" variants={containerVariants}>
       <Box p={2}>
@@ -318,7 +322,13 @@ const ListUser = () => {
                               <CiImport className="mr-2" />
                               Import
                             </Button>
-                            <Button variant="contained" className="add_user">
+                            <Button
+                              variant="contained"
+                              className="add_user"
+                              onClick={() => {
+                                setOpenAddUser(true);
+                              }}
+                            >
                               <MdAdd className="mr-2 " />
                               Add User
                             </Button>
@@ -737,6 +747,11 @@ const ListUser = () => {
           </Paper>
         </motion.div>
       </Box>
+      <CreateUserForm
+        open={openAddUser}
+        onClose={() => setOpenAddUser(false)}
+        onSuccess={() => fetchUsers(1)} // load lại danh sách
+      />
     </motion.div>
   );
 };
