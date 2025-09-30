@@ -9,8 +9,16 @@ import {
   Button,
 } from '@mui/material';
 import userService from '../../../Api/Admin/userService';
+import Alert from '@mui/material/Alert';
+import Stack from '@mui/material/Stack';
+import { showAlert } from '../../../Helper/alert';
 
 const CreateUserForm = ({ open, onClose, onSuccess }) => {
+  const [alert, setAlert] = useState({
+    show: false,
+    type: '',
+    message: '',
+  });
   const [newUser, setNewUser] = useState({
     email: '',
     password: '',
@@ -26,11 +34,11 @@ const CreateUserForm = ({ open, onClose, onSuccess }) => {
 
   const handleSubmit = async () => {
     try {
-      await userService.addUser(newUser);
+      await userService.createUser(newUser);
       onSuccess();
       onClose();
     } catch (error) {
-      console.error('Add user error:', error);
+      showAlert(setAlert, 'error', error.message || 'Failed to create user');
     }
   };
 
@@ -60,7 +68,6 @@ const CreateUserForm = ({ open, onClose, onSuccess }) => {
       <DialogContent
         dividers
         sx={{
-          // Fix overflow để menu không bị cắt
           overflow: 'visible',
         }}
       >
@@ -69,16 +76,15 @@ const CreateUserForm = ({ open, onClose, onSuccess }) => {
           label="Email"
           name="email"
           fullWidth
-          value={newUser.email}
+          // value={newUser.email}
           onChange={handleInputChange}
         />
         <TextField
           margin="dense"
           label="Password"
           name="password"
-          type="password"
           fullWidth
-          value={newUser.password}
+          // value={newUser.password}
           onChange={handleInputChange}
         />
         <TextField
@@ -86,7 +92,7 @@ const CreateUserForm = ({ open, onClose, onSuccess }) => {
           label="Full Name"
           name="fullName"
           fullWidth
-          value={newUser.fullName}
+          // value={newUser.fullName}
           onChange={handleInputChange}
         />
         <TextField
@@ -97,7 +103,7 @@ const CreateUserForm = ({ open, onClose, onSuccess }) => {
           fullWidth
           value={newUser.role}
           onChange={handleInputChange}
-          SelectProps={selectProps}
+          // SelectProps={selectProps}
         >
           <MenuItem value="admin">Admin</MenuItem>
           <MenuItem value="user">User</MenuItem>
@@ -110,7 +116,7 @@ const CreateUserForm = ({ open, onClose, onSuccess }) => {
           fullWidth
           value={newUser.status}
           onChange={handleInputChange}
-          SelectProps={selectProps}
+          // SelectProps={selectProps}
         >
           <MenuItem value="active">Active</MenuItem>
           <MenuItem value="inactive">Inactive</MenuItem>
