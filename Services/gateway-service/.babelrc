@@ -1,0 +1,23 @@
+{
+  "presets": ["@babel/preset-env"],
+  "plugins": [
+    "@babel/plugin-transform-runtime",
+    [
+      "module-resolver",
+      {
+        "alias": {
+          "@config": "./src/config",
+          "@middleware": "./src/middleware",
+          "@routes": "./src/routes",
+          "@utils": "./src/utils",
+          "@constants": "./src/constants"
+        }
+      }
+    ]
+  ],
+  "env": {
+    "dev": {
+      "sourceMaps": "inline"
+    }
+  }
+}
