@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
-import config from '@config/environment';
-import { HTTP_STATUS_CODES, ERROR_MESSAGES } from '@constants/httpStatus';
+import config from '../config/environment.js';
+import { HTTP_STATUS_CODES, ERROR_MESSAGES } from '../constants/httpStatus.js';
 
 export const authMiddleware = (req, res, next) => {
   try {

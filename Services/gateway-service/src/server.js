@@ -4,11 +4,12 @@ import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import asyncExitHook from 'async-exit-hook';
 
-import config from '@config/environment';
-import { rateLimiter } from '@middleware/rateLimiter';
-import { requestLogger } from '@middleware/requestLogger';
-import { errorHandler } from '@middleware/errorHandler';
-import { createUserRoutes } from '@routes/userRoutes';
+// Thay đổi này trong server.js
+import config from './config/environment.js';
+import { rateLimiter } from './middleware/rateLimiter.js';
+import { requestLogger } from './middleware/requestLogger.js';
+import { errorHandler } from './middleware/errorHandler.js';
+import { createUserRoutes } from './routes/userRoutes.js';
 // import { createProductRoutes } from '@routes/productRoutes';
 // import { createOrderRoutes } from '@routes/orderRoutes';
 

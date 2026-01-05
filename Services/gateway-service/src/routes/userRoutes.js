@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import { authMiddleware } from '@middleware/auth';
-import { ServiceClient } from '@utils/serviceClient';
-import config from '@config/environment';
+import { authMiddleware } from '../middleware/auth.js';
+import { ServiceClient } from '../utils/serviceClient.js';
+import config from '../config/environment.js';
 
 const router = Router();
 
