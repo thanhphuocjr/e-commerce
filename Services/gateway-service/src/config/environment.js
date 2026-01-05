@@ -1,14 +1,5 @@
 import dotenv from 'dotenv';
-import path from 'path';
-
-// cwd = Services/gateway-service (nơi npm run dev được gọi)
-const ROOT_ENV_PATH = path.resolve(process.cwd(), '../../.env');
-
-// Load .env ROOT
-dotenv.config({ path: ROOT_ENV_PATH });
-
-// DEBUG – xóa sau khi ổn
-console.log('ENV LOADED FROM:', ROOT_ENV_PATH);
+dotenv.config();
 console.log('ENV CHECK:', {
   GATEWAY_PORT: process.env.GATEWAY_PORT,
   USER_SERVICE_URL: process.env.USER_SERVICE_URL,
@@ -17,7 +8,7 @@ console.log('ENV CHECK:', {
 const config = {
   app: {
     nodeEnv: process.env.GATEWAY_NODE_ENV || process.env.NODE_ENV || 'dev',
-    port: Number(process.env.GATEWAY_PORT) || 5001,
+    port: Number(process.env.GATEWAY_PORT),
   },
   client: {
     url:
