@@ -1,15 +1,23 @@
 import dotenv from 'dotenv';
 import path from 'path';
 
-// Load .env from root directory
-dotenv.config({ path: path.resolve(process.cwd(), '../../.env') });
-// Fallback to local .env
-dotenv.config();
+// cwd = Services/gateway-service (nơi npm run dev được gọi)
+const ROOT_ENV_PATH = path.resolve(process.cwd(), '../../.env');
+
+// Load .env ROOT
+dotenv.config({ path: ROOT_ENV_PATH });
+
+// DEBUG – xóa sau khi ổn
+console.log('ENV LOADED FROM:', ROOT_ENV_PATH);
+console.log('ENV CHECK:', {
+  GATEWAY_PORT: process.env.GATEWAY_PORT,
+  USER_SERVICE_URL: process.env.USER_SERVICE_URL,
+});
 
 const config = {
   app: {
     nodeEnv: process.env.GATEWAY_NODE_ENV || process.env.NODE_ENV || 'dev',
-    port: parseInt(process.env.GATEWAY_PORT) || 5001,
+    port: Number(process.env.GATEWAY_PORT) || 5001,
   },
   client: {
     url:
@@ -18,22 +26,23 @@ const config = {
       'http://localhost:3000',
   },
   services: {
-    userService: process.env.USER_SERVICE_URL || 'http://localhost:8000',
-    productService: process.env.PRODUCT_SERVICE_URL || 'http://localhost:3002',
-    orderService: process.env.ORDER_SERVICE_URL || 'http://localhost:3003',
-    paymentService: process.env.PAYMENT_SERVICE_URL || 'http://localhost:3004',
+    userService: process.env.USER_SERVICE_URL,
+    productService: process.env.PRODUCT_SERVICE_URL,
+    orderService: process.env.ORDER_SERVICE_URL,
+    paymentService: process.env.PAYMENT_SERVICE_URL,
   },
   jwt: {
-    secretKey: process.env.JWT_SECRET_KEY || 'your_jwt_secret_key_here',
+    secretKey: process.env.JWT_SECRET_KEY,
     expireTime: process.env.JWT_EXPIRE_TIME || '7d',
   },
   rateLimit: {
-    windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS || '900000'),
-    maxRequests: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS || '100'),
+    windowMs: Number(process.env.RATE_LIMIT_WINDOW_MS) || 900000,
+    maxRequests: Number(process.env.RATE_LIMIT_MAX_REQUESTS) || 100,
   },
   logging: {
     level: process.env.LOG_LEVEL || 'debug',
   },
 };
+console.log(config);
 
 export default config;

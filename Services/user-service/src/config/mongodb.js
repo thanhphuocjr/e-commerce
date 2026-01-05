@@ -1,7 +1,7 @@
 // thanhphuocjr
 // 0ubZbJSbFBX7RzAy
 
-import { env } from './environment';
+import { env } from './environment.js';
 import { MongoClient, ServerApiVersion } from 'mongodb';
 
 let ecomDatabaseInstance = null;

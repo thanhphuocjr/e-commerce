@@ -1,7 +1,7 @@
 // src/models/userModel.js
 import Joi from 'joi';
 import bcrypt from 'bcryptjs';
-import { OBJECT_ID_RULE, OBJECT_ID_RULE_MESSAGE } from '~/utils/validators';
+// import { OBJECT_ID_RULE, OBJECT_ID_RULE_MESSAGE } from '../../utils/
 
 export const USER_COLLECTION_NAME = 'users';
 

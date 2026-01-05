@@ -2,10 +2,10 @@
 /* eslint-disable no-console */
 import express from 'express';
 import exitHook from 'async-exit-hook';
-import { CLOSE_DB, CONNECT_DB, GET_DB } from './config/mongodb';
-import { env } from './config/environment';
-import { APIs_V1 } from '~/routes/v1';
-import { errorHandlingMiddleware } from './middlewares/errorHandlingMiddleware.js.js';
+import { CLOSE_DB, CONNECT_DB, GET_DB } from './config/mongodb.js';
+import { env } from './config/environment.js';
+import { APIs_V1 } from './routes/v1/index.js';
+import { errorHandlingMiddleware } from './middlewares/errorHandlingMiddleware.js';
 import cors from 'cors';
 
 const START_SERVER = () => {
@@ -25,7 +25,7 @@ const START_SERVER = () => {
   app.listen(env.APP_PORT, '0.0.0.0', () => {
     console.log(`🚀 Server running on port: ${env.APP_PORT}`);
     console.log(
-      `3.Hello ${env.AUTHOR} Dev, I am running at http://${env.APP_HOST}:${env.APP_PORT}/`
+      `3.Hello ${env.AUTHOR} Dev, userService are running at http://${env.APP_HOST}:${env.APP_PORT}/`
     );
   });
 

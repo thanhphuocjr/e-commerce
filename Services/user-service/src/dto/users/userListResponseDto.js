@@ -1,4 +1,4 @@
-import { UserResponseDTO } from './userResponse.dto.js';
+import { UserResponseDTO } from './userResponseDto.js';
 
 export class UserListResponseDTO {
   constructor({ list, pagination }) {

@@ -1,7 +1,7 @@
-import AppError from '~/utils/AppError';
+import AppError from '../utils/AppError.js';
 import { StatusCodes } from 'http-status-codes';
-import asyncHandler from '~/utils/asyncHandler';
-import userService from '~/services/userService';
+import asyncHandler from '../utils/asyncHandler.js';
+import userService from '../services/userService.js';
 class UserController {
   register = asyncHandler(async (req, res) => {
     const userData = req.body;
@@ -223,4 +223,4 @@ class UserController {
   });
 }
 
-module.exports = new UserController();
+export default new UserController();

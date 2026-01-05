@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import { OBJECT_ID_RULE, OBJECT_ID_RULE_MESSAGE } from '~/utils/validators';
+import { OBJECT_ID_RULE, OBJECT_ID_RULE_MESSAGE } from '../utils/validators.js';
 
 const userValidation = {
   register: {
@@ -244,4 +244,4 @@ const userValidation = {
   },
 };
 
-module.exports = userValidation;
+export default userValidation;

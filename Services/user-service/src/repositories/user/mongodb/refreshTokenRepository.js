@@ -1,10 +1,10 @@
-import { GET_DB } from '~/config/mongodb';
-import AppError from '~/utils/AppError';
+import { GET_DB } from '../../../config/mongodb.js';
+import AppError from '../../../utils/AppError.js';
 
 import {
   REFRESH_TOKEN_COLLECTION_NAME,
   validateBeforeCreate,
-} from '~/models/mongodb/refreshTokenModal';
+} from '../../..//models/mongodb/refreshTokenModal.js';
 
 export const createNew = async (data) => {
   try {

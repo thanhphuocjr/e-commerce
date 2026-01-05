@@ -1,9 +1,9 @@
 import express from 'express';
 import { StatusCodes } from 'http-status-codes';
-import userValidation from '~/validations/userValidation';
-import validate from '~/middlewares/validation';
-import { authenticate, authorize } from '~/middlewares/auth';
-import userController from '~/controllers/userController';
+import userValidation from '../../validations/userValidation.js';
+import validate from '../../middlewares/validation.js';
+import { authenticate, authorize } from '../../middlewares/auth.js';
+import userController from '../../controllers/userController.js';
 const Router = express.Router();
 
 Router.get('/register', (req, res) => {

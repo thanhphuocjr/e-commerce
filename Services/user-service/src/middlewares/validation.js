@@ -1,14 +1,11 @@
-// middlewares/validation.js
-import AppError from '~/utils/AppError';
+import AppError from '../utils/AppError.js';
 
 // Middleware validation với Joi
 const validate = (schema) => {
   return (req, res, next) => {
     const validationErrors = {};
 
-    // Validate body
     if (schema.body) {
-      // console.log(schema.body);
       const { error, value } = schema.body.validate(req.body);
       if (error) {
         validationErrors.body = error.details.map((detail) => ({
@@ -16,11 +13,10 @@ const validate = (schema) => {
           message: detail.message,
         }));
       } else {
-        req.body = value; // Gán giá trị đã được validate và transform
+        req.body = value;
       }
     }
 
-    // Validate params
     if (schema.params) {
       const { error, value } = schema.params.validate(req.params);
       if (error) {
@@ -33,7 +29,6 @@ const validate = (schema) => {
       }
     }
 
-    // Validate query
     if (schema.query) {
       const { error, value } = schema.query.validate(req.query);
       if (error) {
@@ -46,7 +41,6 @@ const validate = (schema) => {
       }
     }
 
-    // Nếu có lỗi validation
     if (Object.keys(validationErrors).length > 0) {
       const firstErrorKey = Object.keys(validationErrors)[0];
       const firstError = validationErrors[firstErrorKey][0];
@@ -58,4 +52,4 @@ const validate = (schema) => {
   };
 };
 
-module.exports = validate;
+export default validate;

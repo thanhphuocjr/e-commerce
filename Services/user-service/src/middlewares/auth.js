@@ -1,16 +1,15 @@
 // middlewares/auth.js
-const jwt = require('jsonwebtoken');
-const { userModel } = require('~/models/mongodb/userModel');
-import AppError from '~/utils/AppError';
-const asyncHandler = require('../utils/asyncHandler');
-const { GET_DB } = require('../config/mongodb'); // Adjust the path as needed
-const { ObjectId } = require('mongodb');
+import jwt from 'jsonwebtoken';
+import { ObjectId } from 'mongodb';
 
-// Middleware xác thực JWT token
-const authenticate = asyncHandler(async (req, res, next) => {
-  //   console.log(req.headers);
-  // Lấy token từ header
+import AppError from '../utils/AppError.js';
+import asyncHandler from '../utils/asyncHandler.js';
+import { GET_DB } from '../config/mongodb.js';
+
+// Middleware xác thực JWT
+export const authenticate = asyncHandler(async (req, res, next) => {
   let token;
+
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith('Bearer')
@@ -23,23 +22,20 @@ const authenticate = asyncHandler(async (req, res, next) => {
   }
 
   try {
-    // Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    // console.log(decoded)
-    // Kiểm tra user còn tồn tại
+
     const user = await GET_DB()
       .collection('users')
       .findOne({ _id: new ObjectId(decoded._id) });
+
     if (!user) {
       throw new AppError('Token không hợp lệ, user không tồn tại', 401);
     }
 
-    // Kiểm tra user còn active
     if (user.status !== 'active') {
       throw new AppError('Tài khoản đã bị khóa hoặc không hoạt động', 401);
     }
 
-    // Gán user vào request
     req.user = user;
     next();
   } catch (error) {
@@ -54,7 +50,7 @@ const authenticate = asyncHandler(async (req, res, next) => {
 });
 
 // Middleware phân quyền
-const authorize = (...roles) => {
+export const authorize = (...roles) => {
   return (req, res, next) => {
     if (!req.user) {
       throw new AppError('Vui lòng đăng nhập trước', 401);
@@ -66,9 +62,4 @@ const authorize = (...roles) => {
 
     next();
   };
-};
-
-module.exports = {
-  authenticate,
-  authorize,
 };

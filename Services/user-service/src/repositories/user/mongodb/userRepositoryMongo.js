@@ -1,14 +1,15 @@
 // src/repositories/mongodb/userRepositoryMongo.js
 import { ObjectId } from 'mongodb';
 import crypto from 'crypto';
-import { GET_DB } from '~/config/mongodb';
-import AppError from '~/utils/AppError';
+import { GET_DB } from '../../../config/mongodb.js';
+import AppError from '../../../utils/AppError.js';
 import {
   USER_COLLECTION_NAME,
   validateBeforeCreate,
   hashPassword,
-} from '~/models/mongodb/userModel';
-import { UserRepositoryInterface } from '../userRepositoryInterface';
+  comparePassword,
+} from '../../../models/mongodb/userModel.js';
+import { UserRepositoryInterface } from '../userRepositoryInterface.js';
 
 export class UserRepositoryMongo extends UserRepositoryInterface {
   // Create new user

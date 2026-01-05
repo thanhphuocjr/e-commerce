@@ -1,21 +1,20 @@
-const { StatusCodes } = require('http-status-codes');
-const { ObjectId } = require('mongodb'); // Add this import
-const AppError = require('~/utils/AppError');
-const { GET_DB } = require('~/config/mongodb');
-const jwt = require('jsonwebtoken');
-const { date, valid } = require('joi');
+import { StatusCodes } from 'http-status-codes';
+import { ObjectId } from 'mongodb';
+import AppError from '../utils/AppError.js';
+import { GET_DB } from '../config/mongodb.js';
+import jwt from 'jsonwebtoken';
 import nodemailer from 'nodemailer';
-import { env } from '~/config/environment';
-import * as userModel from '~/models/mongodb/userModel';
-import * as tokenHelper from '~/utils/TokenHelper';
+import { env } from '../config/environment.js';
+import * as userModel from '../models/mongodb/userModel.js';
+import * as tokenHelper from '../utils/TokenHelper.js';
 import crypto from 'crypto';
-import * as refreshTokenRepository from '~/repositories/user/mongodb/refreshTokenRepository';
-import { getUserRepository } from '~/factories/userRepoFactory';
-import { LoginResponseDTO } from '~/dto/users/loginResponse.dto';
-import { ProfileResponseDTO } from '~/dto/users/profileResponse.dto';
-import { UserResponseDTO } from '~/dto/users/userResponse.dto';
-import { RefreshTokenDTO } from '~/dto/users/refreshAccessToken.dto';
-import { UserListResponseDTO } from '~/dto/users/userListResponse.dto';
+import * as refreshTokenRepository from '../repositories/user/mongodb/refreshTokenRepository.js';
+import { getUserRepository } from '../factories/userRepoFactory.js';
+import { LoginResponseDTO } from '../dto/users/loginResponseDto.js';
+import { ProfileResponseDTO } from '../dto/users/profileResponseDto.js';
+import { UserResponseDTO } from '../dto/users/userResponseDto.js';
+import { RefreshTokenDTO } from '../dto/users/refreshAccessTokenDto.js';
+import { UserListResponseDTO } from '../dto/users/userListResponseDto.js';
 
 const userRepository = getUserRepository();
 
@@ -356,4 +355,4 @@ class UserService {
     return { message: 'Successfully reset password!' };
   }
 }
-module.exports = new UserService();
+export default new UserService();

@@ -9,8 +9,8 @@ import { rateLimiter } from '@middleware/rateLimiter';
 import { requestLogger } from '@middleware/requestLogger';
 import { errorHandler } from '@middleware/errorHandler';
 import { createUserRoutes } from '@routes/userRoutes';
-import { createProductRoutes } from '@routes/productRoutes';
-import { createOrderRoutes } from '@routes/orderRoutes';
+// import { createProductRoutes } from '@routes/productRoutes';
+// import { createOrderRoutes } from '@routes/orderRoutes';
 
 const app = express();
 
@@ -47,8 +47,8 @@ app.get('/health', (req, res) => {
 
 // API routes
 app.use('/api/v1/users', createUserRoutes());
-app.use('/api/v1/products', createProductRoutes());
-app.use('/api/v1/orders', createOrderRoutes());
+// app.use('/api/v1/products', createProductRoutes());
+// app.use('/api/v1/orders', createOrderRoutes());
 
 // 404 handler
 app.use((req, res) => {
@@ -67,11 +67,11 @@ const startServer = async () => {
     const server = app.listen(config.app.port, () => {
       console.log(`
 ╔═══════════════════════════════════════════════════════════╗
-║            🚀 GATEWAY SERVICE IS RUNNING 🚀              ║
+║            🚀 GATEWAY SERVICE IS RUNNING 🚀               ║
 ╠═══════════════════════════════════════════════════════════╣
-║ Environment: ${config.app.nodeEnv.padEnd(47)}║
-║ Port:       ${config.app.port.toString().padEnd(47)}║
-║ Client URL: ${config.client.url.padEnd(47)}║
+║ Environment: ${config.app.nodeEnv.padEnd(47)}             ║
+║ Port:       ${config.app.port.toString().padEnd(47)}      ║
+║ Client URL: ${config.client.url.padEnd(47)}               ║
 ╠═══════════════════════════════════════════════════════════╣
 ║ Services:                                                 ║
 ║ - User Service:    ${config.services.userService.padEnd(39)}║
