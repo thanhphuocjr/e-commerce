@@ -8,38 +8,13 @@ const router = Router();
 export const createUserRoutes = () => {
   const userServiceClient = new ServiceClient(config.services.userService);
 
-  // Public routes
-  router.post('/auth/login', async (req, res, next) => {
-    try {
-      const response = await userServiceClient.post('/auth/login', req.body);
-      res.json(response);
-    } catch (error) {
-      next(error);
-    }
-  });
+  /* ===================== AUTH (PUBLIC) ===================== */
 
-  router.post('/auth/register', async (req, res, next) => {
-    try {
-      const response = await userServiceClient.post('/auth/register', req.body);
-      res.json(response);
-    } catch (error) {
-      next(error);
-    }
-  });
-
-  router.post('/auth/logout', async (req, res, next) => {
-    try {
-      const response = await userServiceClient.post('/auth/logout', {});
-      res.json(response);
-    } catch (error) {
-      next(error);
-    }
-  });
-
-  router.post('/auth/refresh-token', async (req, res, next) => {
+  // POST /api/v1/users/login
+  router.post('/login', async (req, res, next) => {
     try {
       const response = await userServiceClient.post(
-        '/auth/refresh-token',
+        '/v1/users/login',
         req.body
       );
       res.json(response);
@@ -48,35 +23,58 @@ export const createUserRoutes = () => {
     }
   });
 
-  // Protected routes
+  // POST /api/v1/users/register
+  router.post('/register', async (req, res, next) => {
+    try {
+      const response = await userServiceClient.post('/v1/users/register', req.body);
+      res.json(response);
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  // POST /api/v1/users/logout
+  router.post('/logout', async (req, res, next) => {
+    try {
+      const response = await userServiceClient.post('/v1/users/logout', {});
+      res.json(response);
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  // POST /api/v1/users/refresh
+  router.post('/refresh', async (req, res, next) => {
+    try {
+      const response = await userServiceClient.post('/v1/users/refresh', req.body);
+      res.json(response);
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  /* ===================== PROTECTED ===================== */
+
+  // GET /api/v1/users/profile
   router.get('/profile', authMiddleware, async (req, res, next) => {
     try {
       const token = req.headers.authorization?.replace('Bearer ', '');
       userServiceClient.setAuthToken(token);
-      const response = await userServiceClient.get('/profile');
+      const response = await userServiceClient.get('v1/users/profile');
       res.json(response);
     } catch (error) {
       next(error);
     }
   });
 
-  router.put('/profile', authMiddleware, async (req, res, next) => {
+  // PATCH /api/v1/users/change-password
+  router.patch('/change-password', authMiddleware, async (req, res, next) => {
     try {
       const token = req.headers.authorization?.replace('Bearer ', '');
       userServiceClient.setAuthToken(token);
-      const response = await userServiceClient.put('/profile', req.body);
-      res.json(response);
-    } catch (error) {
-      next(error);
-    }
-  });
 
-  router.post('/change-password', authMiddleware, async (req, res, next) => {
-    try {
-      const token = req.headers.authorization?.replace('Bearer ', '');
-      userServiceClient.setAuthToken(token);
-      const response = await userServiceClient.post(
-        '/change-password',
+      const response = await userServiceClient.patch(
+        '/v1/users/change-password',
         req.body
       );
       res.json(response);
