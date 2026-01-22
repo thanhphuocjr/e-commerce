@@ -47,9 +47,9 @@ app.get('/health', (req, res) => {
 });
 
 // API routes
-app.use('/api/v1/users', createUserRoutes());
-// app.use('/api/v1/products', createProductRoutes());
-// app.use('/api/v1/orders', createOrderRoutes());
+app.use('/api/users', createUserRoutes());
+// app.use('/api/products', createProductRoutes());
+// app.use('/api/orders', createOrderRoutes());
 
 // 404 handler
 app.use((req, res) => {
