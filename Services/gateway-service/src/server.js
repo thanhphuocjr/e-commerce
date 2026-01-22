@@ -10,8 +10,8 @@ import { rateLimiter } from './middleware/rateLimiter.js';
 import { requestLogger } from './middleware/requestLogger.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { createUserRoutes } from './routes/userRoutes.js';
-// import { createProductRoutes } from '@routes/productRoutes';
-// import { createOrderRoutes } from '@routes/orderRoutes';
+import { createProductRoutes } from '@routes/productRoutes';
+import { createOrderRoutes } from '@routes/orderRoutes';
 
 const app = express();
 
@@ -48,8 +48,8 @@ app.get('/health', (req, res) => {
 
 // API routes
 app.use('/api/users', createUserRoutes());
-// app.use('/api/products', createProductRoutes());
-// app.use('/api/orders', createOrderRoutes());
+app.use('/api/products', createProductRoutes());
+app.use('/api/orders', createOrderRoutes());
 
 // 404 handler
 app.use((req, res) => {
