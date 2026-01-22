@@ -6,82 +6,67 @@
 ![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2CA5E0?style=for-the-badge&logo=docker&logoColor=white)
 
-Một platform thương mại điện tử hiện đại được xây dựng với **MERN Stack** (MongoDB, Express.js, React.js, Node.js), cung cấp trải nghiệm mua sắm hoàn chỉnh cho khách hàng và công cụ quản lý mạnh mẽ cho admin.
----
-
-## ✨ Tính Năng Nổi Bật
-
-### 👤 Tính Năng Khách Hàng
-- ✅ **Xác thực người dùng**: Đăng ký, đăng nhập an toàn với JWT
-- ✅ **Duyệt sản phẩm**: Xem chi tiết sản phẩm với hình ảnh, mô tả, giá
-- ✅ **Tìm kiếm & Lọc**: Theo danh mục, giá, đánh giá
-- ✅ **Giỏ hàng**: Thêm, xóa, cập nhật số lượng sản phẩm
-- ✅ **Quản lý hồ sơ**: Xem và cập nhật thông tin cá nhân
-- ✅ **Đổi mật khẩu**: Đổi mật khẩu an toàn
-- ✅ **Giao diện responsive**: Hoạt động tốt trên tất cả thiết bị
-
-### 🛠️ Tính Năng Admin
-- ✅ **Quản lý sản phẩm (CRUD)**: Thêm, sửa, xóa, xem sản phẩm
-- ✅ **Quản lý người dùng**: Xem danh sách, khóa/mở khóa tài khoản
-- ✅ **Thống kê**: Xem số liệu thống kê người dùng (tổng, hoạt động, không hoạt động, bị khóa)
-- ✅ **Dashboard**: Hiển thị tổng quan hệ thống
-- ✅ **Cài đặt hệ thống**: Quản lý email, thanh toán, cài đặt chung
+A modern e-commerce platform built with **MERN Stack** (MongoDB, Express.js, React.js, Node.js), providing a complete shopping experience for customers and powerful management tools for administrators.
 
 ---
 
-## 🔧 Công Nghệ Sử Dụng
+## ✨ Key Features
+
+### 👤 Customer Features
+
+- **User Authentication**: Secure registration and login with JWT
+- **Browse Products**: View detailed product information with images, descriptions, and prices
+- **Search & Filter**: Filter by category, price, and ratings
+- **Shopping Cart**: Add, remove, and update product quantities
+- **Profile Management**: View and update personal information
+- **Change Password**: Securely change your password
+- **Responsive Design**: Works seamlessly on all devices
+
+### 🛠️ Admin Features
+
+- **Product Management (CRUD)**: Add, edit, delete, and view products
+- **User Management**: View user list, lock/unlock accounts
+- **Analytics**: View user statistics (total, active, inactive, locked)
+- **Dashboard**: System overview display
+- **System Settings**: Manage email, payment, and general settings
+
+---
+
+## 🔧 Technology Stack
 
 ### Frontend
-- **React 18**: Thư viện UI
-- **React Router v6**: Định tuyến
-- **Material-UI (MUI)**: Component UI
+
+- **React 18**: UI library
+- **React Router v6**: Routing
+- **Material-UI (MUI)**: UI components
 - **Axios**: HTTP client
 - **Swiper**: Carousel slider
-- **Framer Motion**: Animation
+- **Framer Motion**: Animations
 - **SCSS**: Styling
 
 ### Backend
+
 - **Node.js**: Runtime environment
 - **Express.js**: Web framework
 - **MongoDB**: Database
 - **Mongoose**: ODM
-- **JWT**: Xác thực
-- **Bcryptjs**: Mã hóa mật khẩu
-- **Nodemailer**: Gửi email
+- **JWT**: Authentication
+- **Bcryptjs**: Password hashing
+- **Nodemailer**: Email service
 - **Joi**: Validation
 
 ### DevOps
+
 - **Docker & Docker Compose**: Containerization
 - **API Gateway**: Microservices communication
 
 ---
 
-## 📂 Cấu Trúc Dự Án
+## 📂 Microservices Architecture
 
 ```
 e-commerce/
 ├── Client/                          # Frontend React
-│   ├── public/                      # Static files
-│   ├── src/
-│   │   ├── Api/                     # API calls
-│   │   ├── Components/              # Reusable components
-│   │   │   ├── Admin/               # Admin components
-│   │   │   ├── Header/
-│   │   │   ├── Footer/
-│   │   │   └── ...
-│   │   ├── Pages/                   # Page components
-│   │   │   ├── Home/
-│   │   │   ├── ProductDetail/
-│   │   │   ├── Cart/
-│   │   │   ├── SignIn/
-│   │   │   ├── Profile/
-│   │   │   ├── Admin/
-│   │   │   └── ...
-│   │   ├── Helper/                  # Utility functions
-│   │   ├── assets/                  # Images & static assets
-│   │   ├── App.js
-│   │   └── index.js
-│   └── package.json
 │
 ├── Services/                        # Backend services
 │   ├── gateway-service/             # API Gateway
@@ -115,13 +100,14 @@ e-commerce/
 
 ---
 
-## 🚀 Hướng Dẫn Cài Đặt
+## 🚀 Installation Guide
 
-### Yêu Cầu Tiên Quyết
+### Prerequisites
+
 - **Node.js** >= 18.0.0
 - **MongoDB** >= 5.0.0
 - **Docker & Docker Compose** (optional)
-- **npm** hoặc **yarn**
+- **npm** or **yarn**
 
 ### 1. Clone Repository
 
@@ -130,27 +116,27 @@ git clone <repository-url>
 cd e-commerce
 ```
 
-### 2. Cài Đặt Backend
+### 2. Install Backend
 
 ```bash
 cd Services/user-service
 npm install
 
-# Hoặc cho gateway-service
+# Or for gateway-service
 cd Services/gateway-service
 npm install
 ```
 
-### 3. Cài Đặt Frontend
+### 3. Install Frontend
 
 ```bash
 cd Client
 npm install
 ```
 
-### 4. Cấu Hình Environment
+### 4. Configure Environment
 
-Tạo file `.env` ở thư mục gốc:
+Create a `.env` file in the root directory:
 
 ```env
 # MongoDB
@@ -188,80 +174,88 @@ RATE_LIMIT_MAX_REQUESTS=100
 
 ---
 
-## 🏃 Hướng Dẫn Chạy
+## 🏃 Running the Application
 
-### Sử Dụng Docker Compose (Khuyến Nghị)
+### Using Docker Compose (Recommended)
 
 ```bash
-# Từ thư mục gốc
+# From root directory
 docker-compose up -d
 
-# Xem logs
+# View logs
 docker-compose logs -f
 
-# Dừng services
+# Stop services
 docker-compose down
 ```
 
-### Chạy Local
+### Running Locally
 
 **Terminal 1 - User Service:**
+
 ```bash
 cd Services/user-service
 npm run dev
-# Server chạy tại http://localhost:3001
+# Server runs at http://localhost:3001
 ```
 
 **Terminal 2 - Gateway Service:**
+
 ```bash
 cd Services/gateway-service
 npm run dev
-# Gateway chạy tại http://localhost:8000
+# Gateway runs at http://localhost:8000
 ```
 
 **Terminal 3 - Frontend:**
+
 ```bash
 cd Client
 npm start
-# App chạy tại http://localhost:3000
+# App runs at http://localhost:3000
 ```
 
 ---
 
 ## 🔐 API Endpoints
 
-### Xác Thực
-- `POST /v1/users/register` - Đăng ký tài khoản
-- `POST /v1/users/login` - Đăng nhập
-- `POST /v1/users/refresh` - Làm mới token
-- `POST /v1/users/logout` - Đăng xuất
+### Authentication
 
-### Người Dùng
-- `GET /v1/users/profile` - Lấy hồ sơ (Protected)
-- `PATCH /v1/users/change-password` - Đổi mật khẩu (Protected)
-- `POST /v1/users/forgot-password` - Quên mật khẩu
-- `POST /v1/users/reset-password` - Đặt lại mật khẩu
+- `POST /v1/users/register` - User registration
+- `POST /v1/users/login` - User login
+- `POST /v1/users/refresh` - Refresh token
+- `POST /v1/users/logout` - User logout
+
+### Users
+
+- `GET /v1/users/profile` - Get user profile (Protected)
+- `PATCH /v1/users/change-password` - Change password (Protected)
+- `POST /v1/users/forgot-password` - Forgot password
+- `POST /v1/users/reset-password` - Reset password
 
 ### Admin
-- `GET /v1/users` - Danh sách người dùng (Protected, Admin)
-- `GET /v1/users/:id` - Chi tiết người dùng (Protected, Admin)
-- `POST /v1/users` - Tạo người dùng (Protected, Admin)
-- `PATCH /v1/users/:id` - Cập nhật người dùng (Protected, Admin)
-- `DELETE /v1/users/:id` - Xóa người dùng mềm (Protected, Admin)
-- `DELETE /v1/users/permanent/:id` - Xóa vĩnh viễn (Protected, Admin)
-- `GET /v1/users/stats` - Thống kê (Protected, Admin)
+
+- `GET /v1/users` - List users (Protected, Admin)
+- `GET /v1/users/:id` - User details (Protected, Admin)
+- `POST /v1/users` - Create user (Protected, Admin)
+- `PATCH /v1/users/:id` - Update user (Protected, Admin)
+- `DELETE /v1/users/:id` - Soft delete user (Protected, Admin)
+- `DELETE /v1/users/permanent/:id` - Permanently delete user (Protected, Admin)
+- `GET /v1/users/stats` - User statistics (Protected, Admin)
 
 ---
 
 ## 🧪 Testing
 
 ### Backend
+
 ```bash
 cd Services/user-service
 npm test
 ```
 
 ### Frontend
+
 ```bash
 cd Client
 npm test
@@ -272,35 +266,40 @@ npm test
 ## 🐛 Troubleshooting
 
 ### MongoDB Connection Error
+
 ```
-Lỗi: connect ECONNREFUSED 127.0.0.1:27017
-Giải pháp: 
-1. Đảm bảo MongoDB đang chạy
-2. Kiểm tra MONGODB_URI trong .env
+Error: connect ECONNREFUSED 127.0.0.1:27017
+Solution:
+1. Ensure MongoDB is running
+2. Check MONGODB_URI in .env
 ```
 
 ### Token Expired
+
 ```
-Lỗi: Token đã hết hạn
-Giải pháp: Sử dụng refresh token để lấy token mới
+Error: Token has expired
+Solution: Use refresh token to get a new token
 ```
 
 ### CORS Error
+
 ```
-Lỗi: Access to XMLHttpRequest blocked by CORS policy
-Giải pháp: Kiểm tra CLIENT_URL trong .env
+Error: Access to XMLHttpRequest blocked by CORS policy
+Solution: Check CLIENT_URL in .env
 ```
 
 ---
 
-## 📝 Các Quy Tắc Phát Triển
+## 📝 Development Guidelines
 
-### Cấu Trúc Code
-- Sử dụng ES6+ modules
-- Tuân theo ESLint & Prettier
-- Viết meaningful commit messages
+### Code Structure
+
+- Use ES6+ modules
+- Follow ESLint & Prettier standards
+- Write meaningful commit messages
 
 ### Git Workflow
+
 ```bash
 # Create feature branch
 git checkout -b feature/your-feature
@@ -315,6 +314,7 @@ git push origin feature/your-feature
 ```
 
 ### Commit Message Format
+
 ```
 feat: add new feature
 fix: fix a bug
@@ -327,19 +327,20 @@ chore: maintenance tasks
 
 ---
 
-## 🤝 Đóng Góp
+## 🤝 Contributing
 
-Chúng tôi hoan nghênh các pull requests! Vui lòng:
+We welcome pull requests! Please:
 
-1. Fork repository
-2. Tạo branch feature (`git checkout -b feature/AmazingFeature`)
-3. Commit changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to branch (`git push origin feature/AmazingFeature`)
-5. Mở Pull Request
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
 ---
 
-## 👨‍💻 Tác Giả
+## 👨‍💻 Author
 
 **Nguyễn Thanh Phước**
+
 **Happy Coding! 🚀**
