@@ -18,13 +18,15 @@ const config = {
   },
   services: {
     userService: process.env.USER_SERVICE_URL,
+    authService: process.env.AUTH_SERVICE_URL,
     productService: process.env.PRODUCT_SERVICE_URL,
     orderService: process.env.ORDER_SERVICE_URL,
     paymentService: process.env.PAYMENT_SERVICE_URL,
   },
   jwt: {
     secretKey: process.env.JWT_SECRET_KEY,
-    expireTime: process.env.JWT_EXPIRE_TIME || '7d',
+    accessTokenExpiry: process.env.JWT_ACCESS_TOKEN_EXPIRY || '15m',
+    refreshTokenExpiry: process.env.JWT_REFRESH_TOKEN_EXPIRY || '7d',
   },
   rateLimit: {
     windowMs: Number(process.env.RATE_LIMIT_WINDOW_MS) || 900000,

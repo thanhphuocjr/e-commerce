@@ -7,15 +7,47 @@ const router = Router();
 
 export const createUserRoutes = () => {
   const userServiceClient = new ServiceClient(config.services.userService);
+  const authServiceClient = new ServiceClient(config.services.authService);
 
   /* ===================== AUTH (PUBLIC) ===================== */
 
-  // POST /api/v1/users/login
+  // POST /api/users/login
+  // Quy trình: Gateway -> User Service (xác thực) -> Auth Service (tạo token)
   router.post('/login', async (req, res, next) => {
     try {
-      const response = await userServiceClient.post(
+      // Gọi User Service để xác thực user
+      const userResponse = await userServiceClient.post(
         '/v1/users/login',
-        req.body
+        req.body,
+      );
+
+      // Gọi Auth Service để tạo token
+      const tokenResponse = await authServiceClient.post(
+        '/v1/auth/create-tokens',
+        {
+          user: userResponse.data,
+        },
+      );
+
+      res.json({
+        success: userResponse.success,
+        message: userResponse.message,
+        data: {
+          user: userResponse.data,
+          ...tokenResponse.data,
+        },
+      });
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  // POST /api/users/register
+  router.post('/register', async (req, res, next) => {
+    try {
+      const response = await userServiceClient.post(
+        '/v1/users/register',
+        req.body,
       );
       res.json(response);
     } catch (error) {
@@ -23,31 +55,52 @@ export const createUserRoutes = () => {
     }
   });
 
-  // POST /api/v1/users/register
-  router.post('/register', async (req, res, next) => {
-    try {
-      const response = await userServiceClient.post('/v1/users/register', req.body);
-      res.json(response);
-    } catch (error) {
-      next(error);
-    }
-  });
-
-  // POST /api/v1/users/logout
+  // POST /api/users/logout
   router.post('/logout', async (req, res, next) => {
     try {
-      const response = await userServiceClient.post('/v1/users/logout', {});
+      const { refreshToken } = req.body;
+      const response = await authServiceClient.post('/v1/auth/revoke-token', {
+        refreshToken,
+      });
       res.json(response);
     } catch (error) {
       next(error);
     }
   });
 
-  // POST /api/v1/users/refresh
+  // POST /api/users/refresh
+  // Làm mới access token bằng refresh token
   router.post('/refresh', async (req, res, next) => {
     try {
-      const response = await userServiceClient.post('/v1/users/refresh', req.body);
-      res.json(response);
+      const { refreshToken } = req.body;
+
+      if (!refreshToken) {
+        return res.status(400).json({
+          success: false,
+          message: 'Refresh token is required',
+        });
+      }
+
+      // Validate refresh token và lấy user info từ User Service
+      const userResponse = await userServiceClient.post(
+        '/v1/users/validate-refresh-token',
+        { refreshToken },
+      );
+
+      // Gọi Auth Service để tạo access token mới
+      const tokenResponse = await authServiceClient.post(
+        '/v1/auth/refresh-token',
+        {
+          refreshToken,
+          user: userResponse.data,
+        },
+      );
+
+      res.json({
+        success: true,
+        message: 'Token refreshed successfully',
+        data: tokenResponse.data,
+      });
     } catch (error) {
       next(error);
     }
@@ -55,7 +108,7 @@ export const createUserRoutes = () => {
 
   /* ===================== PROTECTED ===================== */
 
-  // GET /api/v1/users/profile
+  // GET /api/users/profile
   router.get('/profile', authMiddleware, async (req, res, next) => {
     try {
       const token = req.headers.authorization?.replace('Bearer ', '');
@@ -67,7 +120,7 @@ export const createUserRoutes = () => {
     }
   });
 
-  // PATCH /api/v1/users/change-password
+  // PATCH /api/users/change-password
   router.patch('/change-password', authMiddleware, async (req, res, next) => {
     try {
       const token = req.headers.authorization?.replace('Bearer ', '');
@@ -75,7 +128,7 @@ export const createUserRoutes = () => {
 
       const response = await userServiceClient.patch(
         '/v1/users/change-password',
-        req.body
+        req.body,
       );
       res.json(response);
     } catch (error) {
