@@ -3,10 +3,10 @@ services:
     image: mysql:8.0
     container_name: mysql-auth
     environment:
-      MYSQL_ROOT_PASSWORD: root_password
-      MYSQL_DATABASE: ecommerce_auth
+      MYSQL_ROOT_PASSWORD: Anhphuoc1@
+      MYSQL_DATABASE: auth-service
     ports:
-      - '3306:3306'
+      - '3307:3306'
     volumes:
       - mysql-auth-data:/var/lib/mysql
     networks:
@@ -27,7 +27,9 @@ services:
     environment:
       MYSQL_HOST: mysql-auth
       MYSQL_USER: root
-      MYSQL_PASSWORD: root_password
+      MYSQL_PASSWORD: Anhphuoc1@
+      MYSQL_DATABASE: auth-service
+
     depends_on:
       mysql-auth:
         condition: service_healthy

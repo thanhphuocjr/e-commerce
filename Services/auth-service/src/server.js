@@ -3,7 +3,13 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import config from './config/environment.js';
-import { testConnection, syncDatabase } from './config/database.js';
+import {
+  testConnection,
+  initDatabase,
+  createDatabase,
+  createRefreshTokenTable,
+  closePool,
+} from './config/database.js';
 import { createAuthRoutes } from './routes/authRoutes.js';
 import errorHandler from './middleware/errorHandler.js';
 
@@ -23,6 +29,11 @@ app.use(
 );
 
 // Body parsing
+app.use((req, res, next) => {
+  console.log(`[Middleware] ${req.method} ${req.path}`);
+  next();
+});
+
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(cookieParser());
@@ -33,6 +44,12 @@ app.get('/health', (req, res) => {
     status: 'ok',
     timestamp: new Date().toISOString(),
   });
+});
+
+// Test endpoint
+app.post('/test', (req, res) => {
+  console.log('[Test] Received request:', req.body);
+  res.json({ success: true, message: 'Test received' });
 });
 
 // API routes
@@ -59,8 +76,20 @@ const startServer = async () => {
       process.exit(1);
     }
 
-    // Sync database
-    await syncDatabase(false);
+    // Initialize database (create pool)
+    await initDatabase();
+
+    // Create database if not exists
+    await createDatabase();
+
+    // Create tables
+    await createRefreshTokenTable();
+
+    console.log('[Server] Config values:', {
+      port: config.app.port,
+      host: config.app.host,
+      portType: typeof config.app.port,
+    });
 
     const server = app.listen(config.app.port, config.app.host, () => {
       console.log(`
@@ -72,7 +101,7 @@ const startServer = async () => {
 ║ Database:   MySQL at ${config.database.host}:${config.database.port}${' '.repeat(37 - config.database.host.length - config.database.port.toString().length)}║
 ╠═══════════════════════════════════════════════════════════╣
 ║ Endpoints:                                                ║
-║ - POST /v1/auth/create-tokens                             ║
+║ - POST /v1/auth/create-tokens                         ║
 ║ - POST /v1/auth/verify-token                              ║
 ║ - POST /v1/auth/refresh-token                             ║
 ║ - POST /v1/auth/revoke-token                              ║
@@ -83,10 +112,12 @@ const startServer = async () => {
     });
 
     // Graceful shutdown
-    process.on('SIGTERM', () => {
+    process.on('SIGTERM', async () => {
       console.log('[Server] SIGTERM signal received: closing HTTP server');
-      server.close(() => {
+      server.close(async () => {
         console.log('[Server] HTTP server closed');
+        await closePool();
+        console.log('[Server] Database pool closed');
         process.exit(0);
       });
     });
@@ -97,5 +128,16 @@ const startServer = async () => {
 };
 
 startServer();
+
+// Global error handlers
+process.on('uncaughtException', (error) => {
+  console.error('[Server] Uncaught Exception:', error);
+  process.exit(1);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('[Server] Unhandled Rejection at:', promise, 'reason:', reason);
+  process.exit(1);
+});
 
 export default app;

@@ -35,7 +35,7 @@ export const createRefreshToken = () => {
 export const createAndSaveRefreshToken = async (userId) => {
   try {
     const token = createRefreshToken();
-    const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
+    const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
 
     const savedToken = await refreshTokenRepository.createRefreshToken(
       userId,

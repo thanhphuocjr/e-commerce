@@ -1,17 +1,38 @@
-import RefreshToken from '../models/refreshTokenModel.js';
+import { getPool } from '../config/database.js';
+import { v4 as uuidv4 } from 'uuid';
 
 /**
  * Create new refresh token record
  */
 export const createRefreshToken = async (userId, token, expiresAt) => {
   try {
-    const refreshToken = await RefreshToken.create({
+    const pool = getPool();
+    const id = uuidv4();
+    const now = Date.now();
+
+    const sql = `
+      INSERT INTO refresh_tokens (id, userId, token, expiresAt, isRevoked, createdAt, updatedAt)
+      VALUES (?, ?, ?, ?, false, ?, ?)
+    `;
+
+    const [result] = await pool.execute(sql, [
+      id,
+      userId,
+      token,
+      expiresAt,
+      now,
+      now,
+    ]);
+
+    return {
+      id,
       userId,
       token,
       expiresAt,
       isRevoked: false,
-    });
-    return refreshToken;
+      createdAt: now,
+      updatedAt: now,
+    };
   } catch (error) {
     throw new Error(`Failed to create refresh token: ${error.message}`);
   }
@@ -22,11 +43,17 @@ export const createRefreshToken = async (userId, token, expiresAt) => {
  */
 export const findByToken = async (token) => {
   try {
-    const refreshToken = await RefreshToken.findOne({
-      where: { token, isRevoked: false },
-      raw: true,
-    });
-    return refreshToken;
+    const pool = getPool();
+
+    const sql = `
+      SELECT * FROM refresh_tokens
+      WHERE token = ? AND isRevoked = false
+      LIMIT 1
+    `;
+
+    const [rows] = await pool.execute(sql, [token]);
+
+    return rows.length > 0 ? rows[0] : null;
   } catch (error) {
     throw new Error(`Failed to find refresh token: ${error.message}`);
   }
@@ -37,12 +64,17 @@ export const findByToken = async (token) => {
  */
 export const findByUserId = async (userId) => {
   try {
-    const tokens = await RefreshToken.findAll({
-      where: { userId, isRevoked: false },
-      order: [['createdAt', 'DESC']],
-      raw: true,
-    });
-    return tokens;
+    const pool = getPool();
+
+    const sql = `
+      SELECT * FROM refresh_tokens
+      WHERE userId = ? AND isRevoked = false
+      ORDER BY createdAt DESC
+    `;
+
+    const [rows] = await pool.execute(sql, [userId]);
+
+    return rows || [];
   } catch (error) {
     throw new Error(`Failed to find tokens for user: ${error.message}`);
   }
@@ -53,14 +85,18 @@ export const findByUserId = async (userId) => {
  */
 export const revokeToken = async (token) => {
   try {
-    const result = await RefreshToken.update(
-      {
-        isRevoked: true,
-        updatedAt: Date.now(),
-      },
-      { where: { token } },
-    );
-    return result;
+    const pool = getPool();
+
+    const sql = `
+      UPDATE refresh_tokens
+      SET isRevoked = true, updatedAt = ?
+      WHERE token = ?
+    `;
+
+    const now = Date.now();
+    const [result] = await pool.execute(sql, [now, token]);
+
+    return result.affectedRows;
   } catch (error) {
     throw new Error(`Failed to revoke token: ${error.message}`);
   }
@@ -71,14 +107,18 @@ export const revokeToken = async (token) => {
  */
 export const revokeAllUserTokens = async (userId) => {
   try {
-    const result = await RefreshToken.update(
-      {
-        isRevoked: true,
-        updatedAt: Date.now(),
-      },
-      { where: { userId } },
-    );
-    return result;
+    const pool = getPool();
+
+    const sql = `
+      UPDATE refresh_tokens
+      SET isRevoked = true, updatedAt = ?
+      WHERE userId = ?
+    `;
+
+    const now = Date.now();
+    const [result] = await pool.execute(sql, [now, userId]);
+
+    return result.affectedRows;
   } catch (error) {
     throw new Error(`Failed to revoke user tokens: ${error.message}`);
   }
@@ -89,31 +129,60 @@ export const revokeAllUserTokens = async (userId) => {
  */
 export const deleteToken = async (tokenId) => {
   try {
-    const result = await RefreshToken.destroy({
-      where: { id: tokenId },
-    });
-    return result;
+    const pool = getPool();
+
+    const sql = `
+      DELETE FROM refresh_tokens
+      WHERE id = ?
+    `;
+
+    const [result] = await pool.execute(sql, [tokenId]);
+
+    return result.affectedRows;
   } catch (error) {
     throw new Error(`Failed to delete token: ${error.message}`);
   }
 };
 
 /**
- * Clean expired tokens (cron job)
+ * Clean expired tokens
  */
 export const cleanExpiredTokens = async () => {
   try {
-    const result = await RefreshToken.destroy({
-      where: {
-        expiresAt: {
-          [require('sequelize').Op.lt]: new Date(),
-        },
-      },
-    });
-    console.log(`[AuthService] Cleaned ${result} expired tokens`);
-    return result;
+    const pool = getPool();
+
+    const sql = `
+      DELETE FROM refresh_tokens
+      WHERE expiresAt < NOW()
+    `;
+
+    const [result] = await pool.execute(sql);
+
+    console.log(`[AuthService] Cleaned ${result.affectedRows} expired tokens`);
+    return result.affectedRows;
   } catch (error) {
     throw new Error(`Failed to clean expired tokens: ${error.message}`);
+  }
+};
+
+/**
+ * Find token by ID
+ */
+export const findById = async (tokenId) => {
+  try {
+    const pool = getPool();
+
+    const sql = `
+      SELECT * FROM refresh_tokens
+      WHERE id = ?
+      LIMIT 1
+    `;
+
+    const [rows] = await pool.execute(sql, [tokenId]);
+
+    return rows.length > 0 ? rows[0] : null;
+  } catch (error) {
+    throw new Error(`Failed to find token by ID: ${error.message}`);
   }
 };
 
@@ -125,4 +194,5 @@ export default {
   revokeAllUserTokens,
   deleteToken,
   cleanExpiredTokens,
+  findById,
 };

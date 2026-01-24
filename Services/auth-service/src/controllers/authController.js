@@ -7,16 +7,20 @@ import * as authService from '../services/authService.js';
  */
 export const createTokens = async (req, res, next) => {
   try {
+    console.log('[AuthController] createTokens called with body:', req.body);
     const { user } = req.body;
 
     if (!user || !user._id) {
+      console.log('[AuthController] Invalid user object:', user);
       return res.status(StatusCodes.BAD_REQUEST).json({
         success: false,
         message: 'User object is required',
       });
     }
 
+    console.log('[AuthController] Creating tokens for user:', user._id);
     const tokens = await authService.createTokenPair(user);
+    console.log('[AuthController] Tokens created successfully');
 
     res.status(StatusCodes.CREATED).json({
       success: true,
@@ -24,6 +28,7 @@ export const createTokens = async (req, res, next) => {
       data: tokens,
     });
   } catch (error) {
+    console.error('[AuthController] Error in createTokens:', error);
     next(error);
   }
 };

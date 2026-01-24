@@ -1,31 +1,38 @@
-import 'dotenv/config';
+import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+// Load .env file
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
 export const config = {
   app: {
-    nodeEnv: process.env.AUTH_NODE_ENV || 'development',
-    port: Number(process.env.AUTH_PORT) || 3005,
-    host: process.env.AUTH_HOST || 'localhost',
+    nodeEnv: process.env.AUTH_NODE_ENV,
+    port: Number(process.env.AUTH_PORT),
+    host: process.env.AUTH_HOST,
   },
   database: {
-    host: process.env.MYSQL_HOST || 'localhost',
-    port: Number(process.env.MYSQL_PORT) || 3306,
-    user: process.env.MYSQL_USER || 'root',
+    host: process.env.MYSQL_HOST,
+    port: Number(process.env.MYSQL_PORT),
+    user: process.env.MYSQL_USER,
     password: process.env.MYSQL_PASSWORD,
-    database: process.env.MYSQL_DATABASE || 'ecommerce_auth',
+    database: process.env.MYSQL_DATABASE,
     dialect: 'mysql',
     logging: process.env.LOG_LEVEL === 'debug' ? console.log : false,
   },
   jwt: {
     secretKey: process.env.JWT_SECRET_KEY,
-    accessTokenExpiry: process.env.JWT_ACCESS_TOKEN_EXPIRY || '15m',
-    refreshTokenExpiry: process.env.JWT_REFRESH_TOKEN_EXPIRY || '7d',
+    accessTokenExpiry: process.env.JWT_ACCESS_TOKEN_EXPIRY,
+    refreshTokenExpiry: process.env.JWT_REFRESH_TOKEN_EXPIRY,
   },
   services: {
-    userService: process.env.USER_SERVICE_URL || 'http://localhost:8000',
+    userService: process.env.USER_SERVICE_URL,
   },
   logging: {
-    level: process.env.LOG_LEVEL || 'debug',
+    level: process.env.LOG_LEVEL,
   },
 };
+console.log(config);
 
 export default config;
