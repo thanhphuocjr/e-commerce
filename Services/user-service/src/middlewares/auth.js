@@ -5,6 +5,7 @@ import { ObjectId } from 'mongodb';
 import AppError from '../utils/AppError.js';
 import asyncHandler from '../utils/asyncHandler.js';
 import { GET_DB } from '../config/mongodb.js';
+import { env } from '../config/environment.js';
 
 // Middleware xác thực JWT
 export const authenticate = asyncHandler(async (req, res, next) => {
@@ -22,7 +23,7 @@ export const authenticate = asyncHandler(async (req, res, next) => {
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, env.JWT_SECRET_KEY || env.JWT_SECRET);
 
     const user = await GET_DB()
       .collection('users')

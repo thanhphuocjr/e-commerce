@@ -13,28 +13,35 @@ Router.get('/register', (req, res) => {
 Router.post(
   '/register',
   validate(userValidation.register),
-  userController.register
+  userController.register,
 );
 
 Router.post(
   '/forgot-password',
   validate(userValidation.forgotPassword),
-  userController.forgotPassword
+  userController.forgotPassword,
 );
 
 Router.post(
   '/reset-password',
   validate(userValidation.resetPassword),
-  userController.resetPassword
+  userController.resetPassword,
 );
 
 Router.post('/login', validate(userValidation.login), userController.login);
+
+// Validate refresh token - endpoint cho Gateway
+Router.post(
+  '/validate-refresh-token',
+  validate(userValidation.refreshToken),
+  userController.validateRefreshToken,
+);
 
 //Token
 Router.post(
   '/refresh',
   validate(userValidation.refreshToken),
-  userController.refreshToken
+  userController.refreshToken,
 );
 
 Router.post('/logout', validate(userValidation.logout), userController.logout);
@@ -47,7 +54,7 @@ Router.get('/profile', userController.getProfile);
 Router.patch(
   '/change-password',
   validate(userValidation.changePassword),
-  userController.changePassword
+  userController.changePassword,
 );
 Router.post('/logout-all', userController.logoutAllDevices);
 
@@ -57,13 +64,13 @@ Router.use(authorize('admin'));
 Router.get(
   '/',
   validate(userValidation.getUsersList),
-  userController.getUsersList
+  userController.getUsersList,
 );
 
 Router.post(
   '/',
   validate(userValidation.createUser),
-  userController.createUser
+  userController.createUser,
 );
 
 Router.get('/stats', userController.getStats);
@@ -71,30 +78,30 @@ Router.get('/stats', userController.getStats);
 Router.get(
   '/:id',
   validate(userValidation.getUserById),
-  userController.getUserById
+  userController.getUserById,
 );
 
 Router.patch(
   '/:id',
   validate(userValidation.updateUser),
-  userController.updateUser
+  userController.updateUser,
 );
 
 Router.delete(
   '/:id',
   validate(userValidation.getUserById), //Dung lai dua phan getUserById
-  userController.deleteUser
+  userController.deleteUser,
 );
 
 Router.delete(
   '/permanent/:id',
   validate(userValidation.getUserById),
-  userController.permanentDeleteUser
+  userController.permanentDeleteUser,
 );
 
 Router.patch(
   '/restore/:id',
   validate(userValidation.getUserById),
-  userController.restoreUser
+  userController.restoreUser,
 );
 export const userRoute = Router;

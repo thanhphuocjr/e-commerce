@@ -27,8 +27,24 @@ class UserController {
     });
   });
 
+  // Validate Refresh Token - để Gateway sử dụng
+  validateRefreshToken = asyncHandler(async (req, res) => {
+    const { refreshToken } = req.body;
+
+    if (!refreshToken) {
+      throw new AppError('Refresh token is required', 400);
+    }
+
+    const result = await userService.validateRefreshToken(refreshToken);
+
+    res.status(StatusCodes.OK).json({
+      success: true,
+      message: 'Refresh token is valid',
+      data: result,
+    });
+  });
+
   getProfile = asyncHandler(async (req, res) => {
-    // console.log(req.user._id);
     const userId = req.user._id;
     const result = await userService.getProfile(userId);
 
@@ -47,7 +63,7 @@ class UserController {
     const result = await userService.changePassword(
       userId,
       currentPassword,
-      newPassword
+      newPassword,
     );
     res.status(200).json({
       success: true,
@@ -190,7 +206,8 @@ class UserController {
       throw new AppError('Refresh token is required', 400);
     }
 
-    const result = await userService.refreshAccessToken(refreshToken);
+    // Giữ lại cho compatibility, nhưng nên deprecated
+    const result = await userService.validateRefreshToken(refreshToken);
 
     res.status(StatusCodes.OK).json({
       success: true,

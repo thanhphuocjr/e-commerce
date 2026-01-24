@@ -2,18 +2,14 @@ import { StatusCodes } from 'http-status-codes';
 import { ObjectId } from 'mongodb';
 import AppError from '../utils/AppError.js';
 import { GET_DB } from '../config/mongodb.js';
-import jwt from 'jsonwebtoken';
 import nodemailer from 'nodemailer';
 import { env } from '../config/environment.js';
 import * as userModel from '../models/mongodb/userModel.js';
-import * as tokenHelper from '../utils/TokenHelper.js';
 import crypto from 'crypto';
 import * as refreshTokenRepository from '../repositories/user/mongodb/refreshTokenRepository.js';
 import { getUserRepository } from '../factories/userRepoFactory.js';
-import { LoginResponseDTO } from '../dto/users/loginResponseDto.js';
 import { ProfileResponseDTO } from '../dto/users/profileResponseDto.js';
 import { UserResponseDTO } from '../dto/users/userResponseDto.js';
-import { RefreshTokenDTO } from '../dto/users/refreshAccessTokenDto.js';
 import { UserListResponseDTO } from '../dto/users/userListResponseDto.js';
 
 const userRepository = getUserRepository();
@@ -40,21 +36,23 @@ class UserService {
       throw new AppError(
         error.message || 'Register have some problems!',
         error.status || StatusCodes.UNPROCESSABLE_ENTITY,
-        error
+        error,
       );
     }
   }
 
-  //Login DTO
+  //Login - chỉ xác thực user, trả về user info
+  //Token sẽ được tạo ở Gateway
   async login(email, password) {
     try {
       const user = await userRepository.findOneByEmail(email);
       if (!user) throw new AppError('Account does not exists!', 401);
-      // console.log(user);
+
       if (user._destroy) throw new AppError('Account has been deleted!', 401);
+
       const isValidPassword = await userModel.comparePassword(
         password,
-        user.password
+        user.password,
       );
 
       if (!isValidPassword) throw new AppError('Password is not correct!', 401);
@@ -67,35 +65,10 @@ class UserService {
         console.log('Update lastLogin failed!', updateError);
       }
 
-      // accessToken
-      const accessToken = jwt.sign(
-        {
-          _id: user._id,
-          email: user.email,
-          role: user.role,
-        },
-        env.JWT_SECRET,
-        { expiresIn: env.JWT_EXPIRE }
-      );
-
-      //Refresh token dai han
-      const refreshToken = tokenHelper.generateRefreshToken();
-      const refreshTokenExpiry = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7days
-
-      await refreshTokenRepository.createNew({
-        userId: user._id.toString(),
-        token: refreshToken,
-        expiresAt: refreshTokenExpiry,
-      });
-
       const updateUser = await userRepository.setActiveStatus(user._id);
-      console.log(updateUser);
-      return new LoginResponseDTO(
-        updateUser,
-        accessToken,
-        refreshToken,
-        env.JWT_EXPIRE
-      );
+
+      // Chỉ trả về user info, Gateway sẽ xử lý token
+      return new UserResponseDTO(updateUser);
     } catch (error) {
       console.log('Login error details: ', error);
       if (error instanceof AppError) throw error;
@@ -103,48 +76,35 @@ class UserService {
     }
   }
 
-  //RefreshToken DTO
-  async refreshAccessToken(refreshToken) {
+  //RefreshToken - Gateway sẽ gọi hàm này để tạo access token mới
+  async validateRefreshToken(refreshToken) {
     try {
       if (!refreshToken) throw new AppError('Refresh token is required', 400);
+
       const tokenDoc = await refreshTokenRepository.findByToken(refreshToken);
       if (!tokenDoc) {
         throw new AppError('Invalid or expired refresh token', 401);
       }
+
       const user = await userRepository.findOneById(tokenDoc.userId);
       if (!user || user.status !== 'active') {
         await refreshTokenRepository.deleteByToken(refreshToken);
         throw new AppError('User not found or inactive', 401);
       }
 
-      const newAccessToken = jwt.sign(
-        {
-          _id: user._id,
-          email: user.email,
-          role: user.role,
-        },
-        process.env.JWT_SECRET,
-        { expiresIn: env.JWT_EXPIRE }
-      );
-
-      //Token rotation:
-      const newRefreshToken = tokenHelper.generateRefreshToken();
-      const refreshTokenExpiry = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-
-      await refreshTokenRepository.deleteByToken(refreshToken);
-      await refreshTokenRepository.createNew({
-        userId: user._id.toString(),
-        token: newRefreshToken,
-        expiresAt: refreshTokenExpiry,
-      });
-      return RefreshTokenDTO(newAccessToken, newRefreshToken, env.JWT_EXPIRE);
+      // Trả về user info, Gateway sẽ tạo access token mới
+      return new UserResponseDTO(user);
     } catch (error) {
       if (error instanceof AppError) throw error;
-      throw new AppError('Server error when refreshing token!', 500, error);
+      throw new AppError(
+        'Server error when validating refresh token!',
+        500,
+        error,
+      );
     }
   }
 
-  //Logout
+  //Logout - xóa refresh token
   async logout(refreshToken) {
     try {
       if (refreshToken) {
@@ -200,7 +160,7 @@ class UserService {
 
       const isValidPassword = await userModel.comparePassword(
         currentPassword,
-        user.password
+        user.password,
       );
       if (!isValidPassword) {
         throw new AppError('Mat khau hien tai khong dung', 400);
