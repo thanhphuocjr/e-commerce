@@ -5,35 +5,67 @@ import { v4 as uuidv4 } from 'uuid';
  * Create new refresh token record
  */
 export const createRefreshToken = async (userId, token, expiresAt) => {
+  let connection;
   try {
     const pool = getPool();
     const id = uuidv4();
-    const now = Date.now();
+
+    // Convert all timestamps to MySQL DATETIME format for consistency
+    const nowDateTime = new Date().toISOString().slice(0, 19).replace('T', ' ');
+
+    const expiresAtFormatted = new Date(expiresAt)
+      .toISOString()
+      .slice(0, 19)
+      .replace('T', ' ');
+
+    console.log('[RefreshTokenRepository] Creating token with:', {
+      id,
+      userId,
+      token: token.substring(0, 20) + '...',
+      expiresAtFormatted,
+      createdAt: nowDateTime,
+    });
 
     const sql = `
       INSERT INTO refresh_tokens (id, userId, token, expiresAt, isRevoked, createdAt, updatedAt)
-      VALUES (?, ?, ?, ?, false, ?, ?)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
     `;
 
     const [result] = await pool.execute(sql, [
       id,
       userId,
       token,
-      expiresAt,
-      now,
-      now,
+      expiresAtFormatted,
+      0,
+      nowDateTime,
+      nowDateTime,
     ]);
+
+    console.log('[RefreshTokenRepository] Insert result:', {
+      affectedRows: result.affectedRows,
+      insertId: result.insertId,
+    });
+
+    if (result.affectedRows === 0) {
+      throw new Error('Insert failed: no rows affected');
+    }
+
+    console.log('[RefreshTokenRepository] Token saved successfully');
 
     return {
       id,
       userId,
       token,
-      expiresAt,
+      expiresAt: expiresAtFormatted,
       isRevoked: false,
-      createdAt: now,
-      updatedAt: now,
+      createdAt: nowDateTime,
+      updatedAt: nowDateTime,
     };
   } catch (error) {
+    console.error('[RefreshTokenRepository] Error creating refresh token:', {
+      message: error.message,
+      stack: error.stack,
+    });
     throw new Error(`Failed to create refresh token: ${error.message}`);
   }
 };
@@ -87,14 +119,15 @@ export const revokeToken = async (token) => {
   try {
     const pool = getPool();
 
+    const nowDateTime = new Date().toISOString().slice(0, 19).replace('T', ' ');
+
     const sql = `
       UPDATE refresh_tokens
       SET isRevoked = true, updatedAt = ?
       WHERE token = ?
     `;
 
-    const now = Date.now();
-    const [result] = await pool.execute(sql, [now, token]);
+    const [result] = await pool.execute(sql, [nowDateTime, token]);
 
     return result.affectedRows;
   } catch (error) {
@@ -109,14 +142,15 @@ export const revokeAllUserTokens = async (userId) => {
   try {
     const pool = getPool();
 
+    const nowDateTime = new Date().toISOString().slice(0, 19).replace('T', ' ');
+
     const sql = `
       UPDATE refresh_tokens
       SET isRevoked = true, updatedAt = ?
       WHERE userId = ?
     `;
 
-    const now = Date.now();
-    const [result] = await pool.execute(sql, [now, userId]);
+    const [result] = await pool.execute(sql, [nowDateTime, userId]);
 
     return result.affectedRows;
   } catch (error) {

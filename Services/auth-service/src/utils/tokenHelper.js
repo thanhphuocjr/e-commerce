@@ -34,14 +34,17 @@ export const createRefreshToken = () => {
  */
 export const createAndSaveRefreshToken = async (userId) => {
   try {
+    console.log('[TokenHelper] Creating refresh token for user:', userId);
     const token = createRefreshToken();
     const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
 
+    console.log('[TokenHelper] Saving refresh token to repository...');
     const savedToken = await refreshTokenRepository.createRefreshToken(
       userId,
       token,
       expiresAt,
     );
+    console.log('[TokenHelper] Refresh token saved successfully');
 
     return {
       token: savedToken.token,
@@ -49,6 +52,7 @@ export const createAndSaveRefreshToken = async (userId) => {
       expiresAt: savedToken.expiresAt,
     };
   } catch (error) {
+    console.error('[TokenHelper] Error creating refresh token:', error.message);
     throw new Error(`Failed to create refresh token: ${error.message}`);
   }
 };

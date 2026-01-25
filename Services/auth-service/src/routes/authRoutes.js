@@ -6,6 +6,13 @@ const router = Router();
 
 export const createAuthRoutes = () => {
   /* ===================== PUBLIC ===================== */
+  router.get('/healthy', (req, res) => {
+    return res.status(200).json({
+      status: 'ok',
+      service: 'auth-service',
+      timeStamp: new Date().toISOString(),
+    });
+  });
 
   // POST /v1/auth/create-tokens
   router.post('/create-tokens', authController.createTokens);

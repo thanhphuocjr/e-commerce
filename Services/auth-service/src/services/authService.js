@@ -16,11 +16,15 @@ export const createTokenPair = async (user) => {
       throw new Error('Invalid user object');
     }
 
+    console.log('[AuthService] Creating access token...');
     // Create access token
     const accessToken = createAccessToken(user);
+    console.log('[AuthService] Access token created');
 
+    console.log('[AuthService] Creating refresh token...');
     // Create and save refresh token
     const refreshTokenData = await createAndSaveRefreshToken(user._id);
+    console.log('[AuthService] Refresh token created:', refreshTokenData);
 
     return {
       accessToken,
@@ -28,6 +32,7 @@ export const createTokenPair = async (user) => {
       expiresIn: '15m',
     };
   } catch (error) {
+    console.error('[AuthService] Error in createTokenPair:', error.message);
     throw new Error(`Failed to create token pair: ${error.message}`);
   }
 };

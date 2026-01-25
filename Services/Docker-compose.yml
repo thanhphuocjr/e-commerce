@@ -28,7 +28,7 @@ services:
       MYSQL_HOST: mysql-auth
       MYSQL_USER: root
       MYSQL_PASSWORD: Anhphuoc1@
-      MYSQL_DATABASE: auth-service
+      MYSQL_DATABASE: auth-service                            
 
     depends_on:
       mysql-auth:

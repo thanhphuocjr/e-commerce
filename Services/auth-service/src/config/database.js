@@ -75,11 +75,12 @@ export const createRefreshTokenTable = async () => {
         token VARCHAR(255) NOT NULL UNIQUE,
         expiresAt DATETIME NOT NULL,
         isRevoked BOOLEAN DEFAULT false,
-        createdAt BIGINT DEFAULT 0,
-        updatedAt BIGINT DEFAULT 0,
+        createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         INDEX idx_user_id (userId),
         INDEX idx_token (token),
-        INDEX idx_expires_at (expiresAt)
+        INDEX idx_expires_at (expiresAt),
+        INDEX idx_created_at (createdAt)
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
     `;
 

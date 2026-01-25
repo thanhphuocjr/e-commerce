@@ -15,16 +15,10 @@ export const createUserRoutes = () => {
   // Quy trình: Gateway -> User Service (xác thực) -> Auth Service (tạo token)
   router.post('/login', async (req, res, next) => {
     try {
-      // Gọi User Service để xác thực user
-      console.log('Da di den day 1');
       const userResponse = await userServiceClient.post(
         '/v1/users/login',
         req.body,
       );
-      console.log(userResponse.data);
-      console.log('Da di den day 2');
-
-      // Gọi Auth Service để tạo token
       const tokenResponse = await authServiceClient.post(
         '/v1/auth/create-tokens',
         {
@@ -35,6 +29,7 @@ export const createUserRoutes = () => {
           },
         },
       );
+      console.log('Auth service response:', tokenResponse.data);
 
       res.json({
         success: userResponse.success,
@@ -45,6 +40,10 @@ export const createUserRoutes = () => {
         },
       });
     } catch (error) {
+      console.error(
+        'Error in login route:',
+        error.response?.data || error.message,
+      );
       next(error);
     }
   });
