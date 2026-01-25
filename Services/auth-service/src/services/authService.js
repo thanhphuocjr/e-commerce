@@ -6,13 +6,14 @@ import {
   refreshAccessToken,
 } from '../utils/tokenHelper.js';
 import * as refreshTokenRepository from '../repositories/refreshTokenRepository.js';
+import jwt from 'jsonwebtoken';
 
 /**
  * Create token pair (access + refresh token)
  */
 export const createTokenPair = async (user) => {
   try {
-    if (!user || !user._id) {
+    if (!user || !user.id) {
       throw new Error('Invalid user object');
     }
 
@@ -23,7 +24,7 @@ export const createTokenPair = async (user) => {
 
     console.log('[AuthService] Creating refresh token...');
     // Create and save refresh token
-    const refreshTokenData = await createAndSaveRefreshToken(user._id);
+    const refreshTokenData = await createAndSaveRefreshToken(user.id);
     console.log('[AuthService] Refresh token created:', refreshTokenData);
 
     return {
@@ -42,10 +43,7 @@ export const createTokenPair = async (user) => {
  */
 export const validateAccessToken = (token) => {
   try {
-    const decoded = require('jsonwebtoken').verify(
-      token,
-      process.env.JWT_SECRET_KEY,
-    );
+    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
     return { valid: true, user: decoded };
   } catch (error) {
     return { valid: false, error: error.message };

@@ -7,13 +7,13 @@ import * as refreshTokenRepository from '../repositories/refreshTokenRepository.
  * Create Access Token (JWT)
  */
 export const createAccessToken = (user) => {
-  if (!user || !user._id) {
+  if (!user || !user.id) {
     throw new Error('Invalid user object for token generation');
   }
 
   return jwt.sign(
     {
-      _id: user._id,
+      id: user.id,
       email: user.email,
       role: user.role,
     },

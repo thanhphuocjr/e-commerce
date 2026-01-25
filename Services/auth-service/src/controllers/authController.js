@@ -10,7 +10,7 @@ export const createTokens = async (req, res, next) => {
     console.log('[AuthController] createTokens called with body:', req.body);
     const { user } = req.body;
 
-    if (!user || !user._id) {
+    if (!user || !user.id) {
       console.log('[AuthController] Invalid user object:', user);
       return res.status(StatusCodes.BAD_REQUEST).json({
         success: false,
@@ -18,7 +18,7 @@ export const createTokens = async (req, res, next) => {
       });
     }
 
-    console.log('[AuthController] Creating tokens for user:', user._id);
+    console.log('[AuthController] Creating tokens for user:', user.id);
     const tokens = await authService.createTokenPair(user);
     console.log('[AuthController] Tokens created successfully');
 
@@ -126,7 +126,7 @@ export const revokeToken = async (req, res, next) => {
  */
 export const revokeAllTokens = async (req, res, next) => {
   try {
-    const userId = req.user?._id;
+    const userId = req.user?.id;
 
     if (!userId) {
       return res.status(StatusCodes.UNAUTHORIZED).json({
