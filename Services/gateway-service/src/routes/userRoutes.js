@@ -23,7 +23,7 @@ export const createUserRoutes = () => {
         '/v1/auth/create-tokens',
         {
           user: {
-            _id: userResponse.data.id,
+            id: userResponse.data.id,
             email: userResponse.data.email,
             role: userResponse.data.role,
           },

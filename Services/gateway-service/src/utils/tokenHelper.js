@@ -10,7 +10,7 @@ import config from '../config/environment.js';
 export const generateAccessToken = (user) => {
   return jwt.sign(
     {
-      _id: user._id,
+      _id: user.id,
       email: user.email,
       role: user.role,
     },
