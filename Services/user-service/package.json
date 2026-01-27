@@ -30,9 +30,11 @@
     "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.18.0",
-    "nodemailer": "^7.0.5"
-  }, 
-  "type":"module",
+    "mysql2": "^3.16.2",
+    "nodemailer": "^7.0.5",
+    "uuid": "^13.0.0"
+  },
+  "type": "module",
   "devDependencies": {
     "@babel/cli": "^7.22.10",
     "@babel/core": "^7.22.10",

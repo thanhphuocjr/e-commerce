@@ -28,10 +28,47 @@ services:
       MYSQL_HOST: mysql-auth
       MYSQL_USER: root
       MYSQL_PASSWORD: Anhphuoc1@
-      MYSQL_DATABASE: auth-service                            
+      MYSQL_DATABASE: auth-service
 
     depends_on:
       mysql-auth:
+        condition: service_healthy
+    networks:
+      - ecommerce-net
+
+  mysql-user:
+    image: mysql:8.0
+    container_name: mysql-user
+    environment:
+      MYSQL_ROOT_PASSWORD: Anhphuoc1@
+      MYSQL_DATABASE: user-service
+    ports:
+      - '3308:3306'
+    volumes:
+      - mysql-user-data:/var/lib/mysql
+    networks:
+      - ecommerce-net
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
+      timeout: 20s
+      retries: 10
+
+  user-service:
+    build:
+      context: ./user-service
+    container_name: user-service
+    ports:
+      - '8000:8000'
+    env_file:
+      - ./user-service/.env
+    environment:
+      MYSQL_HOST: mysql-user
+      MYSQL_PORT: 3306
+      MYSQL_USER: root
+      MYSQL_PASSWORD: Anhphuoc1@
+      MYSQL_DATABASE: user-service
+    depends_on:
+      mysql-user:
         condition: service_healthy
     networks:
       - ecommerce-net
@@ -50,20 +87,10 @@ services:
     networks:
       - ecommerce-net
 
-  user-service:
-    build:
-      context: ./user-service
-    container_name: user-service
-    ports:
-      - '8000:8000'
-    env_file:
-      - ./user-service/.env
-    networks:
-      - ecommerce-net
-
 networks:
   ecommerce-net:
     driver: bridge
 
 volumes:
   mysql-auth-data:
+  mysql-user-data:
