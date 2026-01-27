@@ -30,22 +30,6 @@ Router.post(
 
 Router.post('/login', validate(userValidation.login), userController.login);
 
-// Validate refresh token - endpoint cho Gateway
-Router.post(
-  '/validate-refresh-token',
-  validate(userValidation.refreshToken),
-  userController.validateRefreshToken,
-);
-
-//Token
-Router.post(
-  '/refresh',
-  validate(userValidation.refreshToken),
-  userController.refreshToken,
-);
-
-Router.post('/logout', validate(userValidation.logout), userController.logout);
-
 //protected routes (login)
 Router.use(authenticate); // Can xac thuc truoc khi vao,
 
@@ -56,7 +40,6 @@ Router.patch(
   validate(userValidation.changePassword),
   userController.changePassword,
 );
-Router.post('/logout-all', userController.logoutAllDevices);
 
 //Admin route
 Router.use(authorize('admin'));

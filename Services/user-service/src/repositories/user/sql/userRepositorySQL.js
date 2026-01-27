@@ -3,6 +3,10 @@ import crypto from 'crypto';
 import { getPool } from '../../../config/mysql.js';
 import AppError from '../../../utils/AppError.js';
 import {
+  formatDateForSQL,
+  getCurrentDateTimeSQL,
+} from '../../../utils/dateFormatter.js';
+import {
   USER_VALIDATION_SCHEMA,
   validateBeforeCreate,
   hashPassword,
@@ -35,11 +39,13 @@ export class UserRepositorySQL extends UserRepositoryInterface {
         validData.avatar || null,
         validData.role || 'user',
         validData.status || 'inactive',
-        validData.lastLogin || null,
+        validData.lastLogin ? formatDateForSQL(validData.lastLogin) : null,
         validData.resetPasswordToken || null,
-        validData.resetPasswordExpires || null,
-        new Date(),
-        new Date(),
+        validData.resetPasswordExpires
+          ? formatDateForSQL(validData.resetPasswordExpires)
+          : null,
+        getCurrentDateTimeSQL(),
+        getCurrentDateTimeSQL(),
         null,
         false,
       ];
@@ -133,7 +139,18 @@ export class UserRepositorySQL extends UserRepositoryInterface {
       Object.keys(updateData).forEach((key) => {
         if (key !== 'id' && key !== 'createdAt') {
           updateFields.push(`${key} = ?`);
-          values.push(updateData[key]);
+          // Format date fields for MySQL
+          if (
+            key === 'lastLogin' ||
+            key === 'resetPasswordExpires' ||
+            key === 'deletedAt'
+          ) {
+            values.push(
+              updateData[key] ? formatDateForSQL(updateData[key]) : null,
+            );
+          } else {
+            values.push(updateData[key]);
+          }
         }
       });
 
@@ -142,7 +159,7 @@ export class UserRepositorySQL extends UserRepositoryInterface {
       }
 
       updateFields.push('updatedAt = ?');
-      values.push(new Date());
+      values.push(getCurrentDateTimeSQL());
       values.push(userId);
 
       const sql = `UPDATE users SET ${updateFields.join(', ')} WHERE id = ? AND isDestroyed = false`;
@@ -168,7 +185,7 @@ export class UserRepositorySQL extends UserRepositoryInterface {
 
       const sql =
         'UPDATE users SET isDestroyed = true, deletedAt = ?, updatedAt = ? WHERE id = ? AND isDestroyed = false';
-      const now = new Date();
+      const now = getCurrentDateTimeSQL();
       await pool.execute(sql, [now, now, userId]);
 
       return { ...existingUser, isDestroyed: true, deletedAt: now };
@@ -214,7 +231,7 @@ export class UserRepositorySQL extends UserRepositoryInterface {
 
       const sql =
         'UPDATE users SET isDestroyed = false, deletedAt = NULL, updatedAt = ? WHERE id = ?';
-      await pool.execute(sql, [new Date(), userId]);
+      await pool.execute(sql, [getCurrentDateTimeSQL(), userId]);
 
       return await this.findOneById(userId);
     } catch (error) {
@@ -312,11 +329,11 @@ export class UserRepositorySQL extends UserRepositoryInterface {
     try {
       const pool = getPool();
       const token = crypto.randomBytes(32).toString('hex');
-      const expires = new Date(Date.now() + 60 * 60 * 1000);
+      const expires = formatDateForSQL(new Date(Date.now() + 60 * 60 * 1000));
 
       const sql =
         'UPDATE users SET resetPasswordToken = ?, resetPasswordExpires = ?, updatedAt = ? WHERE email = ?';
-      await pool.execute(sql, [token, expires, new Date(), email]);
+      await pool.execute(sql, [token, expires, getCurrentDateTimeSQL(), email]);
 
       const user = await this.findOneByEmail(email);
       return { token, user };
@@ -344,7 +361,7 @@ export class UserRepositorySQL extends UserRepositoryInterface {
       const pool = getPool();
       const sql =
         'UPDATE users SET resetPasswordToken = NULL, resetPasswordExpires = NULL, updatedAt = ? WHERE id = ?';
-      await pool.execute(sql, [new Date(), userId]);
+      await pool.execute(sql, [getCurrentDateTimeSQL(), userId]);
       return await this.findOneById(userId);
     } catch (error) {
       throw new AppError('clearResetToken has problems', 500, error);
@@ -357,7 +374,7 @@ export class UserRepositorySQL extends UserRepositoryInterface {
       const pool = getPool();
       const sql =
         'UPDATE users SET status = "active", updatedAt = ? WHERE id = ? AND isDestroyed = false';
-      await pool.execute(sql, [new Date(), id]);
+      await pool.execute(sql, [getCurrentDateTimeSQL(), id]);
       return await this.findOneById(id);
     } catch (error) {
       throw new AppError('setActiveStatus has problems', 500, error);
@@ -370,7 +387,7 @@ export class UserRepositorySQL extends UserRepositoryInterface {
       const pool = getPool();
       const sql =
         'UPDATE users SET status = "inactive", updatedAt = ? WHERE id = ? AND isDestroyed = false';
-      await pool.execute(sql, [new Date(), id]);
+      await pool.execute(sql, [getCurrentDateTimeSQL(), id]);
       return await this.findOneById(id);
     } catch (error) {
       throw new AppError('setInActiveStatus has problems', 500, error);

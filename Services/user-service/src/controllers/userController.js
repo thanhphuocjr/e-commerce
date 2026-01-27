@@ -27,25 +27,8 @@ class UserController {
     });
   });
 
-  // Validate Refresh Token - để Gateway sử dụng
-  validateRefreshToken = asyncHandler(async (req, res) => {
-    const { refreshToken } = req.body;
-
-    if (!refreshToken) {
-      throw new AppError('Refresh token is required', 400);
-    }
-
-    const result = await userService.validateRefreshToken(refreshToken);
-
-    res.status(StatusCodes.OK).json({
-      success: true,
-      message: 'Refresh token is valid',
-      data: result,
-    });
-  });
-
   getProfile = asyncHandler(async (req, res) => {
-    const userId = req.user._id;
+    const userId = req.user.id;
     const result = await userService.getProfile(userId);
 
     res.status(200).json({
@@ -56,7 +39,7 @@ class UserController {
   });
 
   changePassword = asyncHandler(async (req, res) => {
-    const userId = req.user._id.toString();
+    const userId = req.user.id.toString();
     const updateData = req.body;
 
     const { currentPassword, newPassword } = req.body;
@@ -136,7 +119,7 @@ class UserController {
   deleteUser = asyncHandler(async (req, res) => {
     const id = req.params.id;
 
-    const currentUserId = req.user._id.toString();
+    const currentUserId = req.user.id.toString();
 
     if (id === currentUserId) {
       throw new AppError('Không thể xoá chính mình', 400);
@@ -173,7 +156,7 @@ class UserController {
   permanentDeleteUser = asyncHandler(async (req, res) => {
     const id = req.params.id;
 
-    const currentUserId = req.user._id.toString();
+    const currentUserId = req.user.id.toString();
 
     if (id === currentUserId) {
       throw new AppError('Không thể xoá chính mình', 400);
@@ -197,46 +180,6 @@ class UserController {
     const { token, newPassword } = req.body;
     const result = await userService.resetPassword(token, newPassword);
     res.status(StatusCodes.OK).json({ success: true, ...result });
-  });
-
-  refreshToken = asyncHandler(async (req, res) => {
-    const { refreshToken } = req.body;
-
-    if (!refreshToken) {
-      throw new AppError('Refresh token is required', 400);
-    }
-
-    // Giữ lại cho compatibility, nhưng nên deprecated
-    const result = await userService.validateRefreshToken(refreshToken);
-
-    res.status(StatusCodes.OK).json({
-      success: true,
-      message: 'Token refreshed successfully',
-      data: result,
-    });
-  });
-
-  logout = asyncHandler(async (req, res) => {
-    const { refreshToken } = req.body;
-
-    await userService.logout(refreshToken);
-
-    res.status(StatusCodes.OK).json({
-      success: true,
-      message: 'Logged out successfully',
-    });
-  });
-
-  // Logout All Devices (xóa tất cả refresh token của user)
-  logoutAllDevices = asyncHandler(async (req, res) => {
-    const userId = req.user._id.toString();
-
-    await userService.logoutAllDevices(userId);
-
-    res.status(StatusCodes.OK).json({
-      success: true,
-      message: 'Logged out from all devices successfully',
-    });
   });
 }
 

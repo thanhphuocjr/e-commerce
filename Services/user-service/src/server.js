@@ -24,10 +24,32 @@ const START_SERVER = () => {
   app.use(errorHandlingMiddleware);
 
   app.listen(env.APP_PORT, '0.0.0.0', () => {
-    console.log(`🚀 Server running on port: ${env.APP_PORT}`);
-    console.log(
-      `3.Hello ${env.AUTHOR} Dev, userService are running at http://${env.APP_HOST}:${env.APP_PORT}/`,
-    );
+    const dbType = env.DATABASE_TYPE === 'sql' ? 'MySQL' : 'MongoDB';
+    const dbHost =
+      env.DATABASE_TYPE === 'sql'
+        ? `${env.MYSQL_HOST}:${env.MYSQL_PORT}`
+        : 'Cloud Atlas';
+
+    console.log(`
+╔═══════════════════════════════════════════════════════════╗
+║          👥 USER SERVICE IS RUNNING 👥                    ║
+╠═══════════════════════════════════════════════════════════╣
+║ Environment: ${(env.BUILD_MODE || 'dev').padEnd(47)}     ║
+║ Port:       ${env.APP_PORT.toString().padEnd(47)}        ║
+║ Database:   ${dbType.padEnd(47)}                         ║
+║ Host:       ${dbHost.padEnd(47)}                         ║
+║ Author:     ${(env.AUTHOR || 'Developer').padEnd(47)}   ║
+╠═══════════════════════════════════════════════════════════╣
+║ API Endpoints:                                            ║
+║ - POST   /v1/users              Create user               ║
+║ - GET    /v1/users              List users (paginated)    ║
+║ - GET    /v1/users/:id          Get single user           ║
+║ - PUT    /v1/users/:id          Update user               ║
+║ - DELETE /v1/users/:id          Delete user               ║
+║                                                           ║
+║ Base URL: http://${env.APP_HOST}:${env.APP_PORT}/v1      ║
+╚═══════════════════════════════════════════════════════════╝
+    `);
   });
 
   exitHook(() => {

@@ -1,22 +1,19 @@
 import { StatusCodes } from 'http-status-codes';
-import { ObjectId } from 'mongodb';
 import AppError from '../utils/AppError.js';
 import { GET_DB } from '../config/mongodb.js';
 import nodemailer from 'nodemailer';
 import { env } from '../config/environment.js';
 import * as userModel from '../models/mongodb/userModel.js';
-import crypto from 'crypto';
-import * as refreshTokenRepository from '../repositories/user/mongodb/refreshTokenRepository.js';
 import { getUserRepository } from '../factories/userRepoFactory.js';
 import { ProfileResponseDTO } from '../dto/users/profileResponseDto.js';
 import { UserResponseDTO } from '../dto/users/userResponseDto.js';
 import { UserListResponseDTO } from '../dto/users/userListResponseDto.js';
+import { formatDateForSQL } from '../utils/dateFormatter.js';
 
 const userRepository = getUserRepository();
 
 class UserService {
   async register(userData) {
-    // eslint-disable-next-line no-useless-catch
     try {
       const { email, password, fullName } = userData;
       const existingUser = await userRepository.findOneByEmail(email);
@@ -48,7 +45,8 @@ class UserService {
       const user = await userRepository.findOneByEmail(email);
       if (!user) throw new AppError('Account does not exists!', 401);
 
-      if (user._destroy) throw new AppError('Account has been deleted!', 401);
+      if (user.isDestroyed)
+        throw new AppError('Account has been deleted!', 401);
 
       const isValidPassword = await userModel.comparePassword(
         password,
@@ -58,14 +56,14 @@ class UserService {
       if (!isValidPassword) throw new AppError('Password is not correct!', 401);
 
       try {
-        await userRepository.updateDataById(user._id, {
-          lastLogin: Date.now(),
+        await userRepository.updateDataById(user.id, {
+          lastLogin: formatDateForSQL(Date.now()),
         });
       } catch (updateError) {
         console.log('Update lastLogin failed!', updateError);
       }
 
-      const updateUser = await userRepository.setActiveStatus(user._id);
+      const updateUser = await userRepository.setActiveStatus(user.id);
 
       // Chỉ trả về user info, Gateway sẽ xử lý token
       return new UserResponseDTO(updateUser);
@@ -73,65 +71,6 @@ class UserService {
       console.log('Login error details: ', error);
       if (error instanceof AppError) throw error;
       throw new AppError('Server error when logging in!', 500);
-    }
-  }
-
-  //RefreshToken - Gateway sẽ gọi hàm này để tạo access token mới
-  async validateRefreshToken(refreshToken) {
-    try {
-      if (!refreshToken) throw new AppError('Refresh token is required', 400);
-
-      const tokenDoc = await refreshTokenRepository.findByToken(refreshToken);
-      if (!tokenDoc) {
-        throw new AppError('Invalid or expired refresh token', 401);
-      }
-
-      const user = await userRepository.findOneById(tokenDoc.userId);
-      if (!user || user.status !== 'active') {
-        await refreshTokenRepository.deleteByToken(refreshToken);
-        throw new AppError('User not found or inactive', 401);
-      }
-
-      // Trả về user info, Gateway sẽ tạo access token mới
-      return new UserResponseDTO(user);
-    } catch (error) {
-      if (error instanceof AppError) throw error;
-      throw new AppError(
-        'Server error when validating refresh token!',
-        500,
-        error,
-      );
-    }
-  }
-
-  //Logout - xóa refresh token
-  async logout(refreshToken) {
-    try {
-      if (refreshToken) {
-        const tokenDoc = await refreshTokenRepository.findByToken(refreshToken);
-
-        if (tokenDoc) {
-          await userRepository.setInActiveStatus(tokenDoc.userId);
-          await refreshTokenRepository.deleteByToken(refreshToken);
-        }
-      }
-
-      return { message: 'Logged out Successfully!' };
-    } catch (error) {
-      if (error instanceof AppError) throw error;
-      throw new AppError('Server error when logging out', 500, error);
-    }
-  }
-
-  //Logout All Devices
-  async logoutAllDevices(userId) {
-    try {
-      await refreshTokenRepository.deleteByUserId(userId);
-      await userRepository.setInActiveStatus(userId);
-      return { message: 'Logged out from all devices successfully!' };
-    } catch (error) {
-      if (error instanceof AppError) throw error;
-      throw new AppError('Server error when logging out from all devices!');
     }
   }
 
@@ -165,7 +104,7 @@ class UserService {
       if (!isValidPassword) {
         throw new AppError('Mat khau hien tai khong dung', 400);
       }
-      await userRepository.updateDataById(user._id, { password: newPassword });
+      await userRepository.updateDataById(user.id, { password: newPassword });
       return { message: 'Change password successfully!' };
     } catch (error) {
       if (error instanceof AppError) throw error;
@@ -309,8 +248,8 @@ class UserService {
     const user = await userRepository.findByResetToken(token);
     if (!user) throw new AppError('Token không hợp lệ hoặc đã hết hạn', 400);
 
-    await userRepository.updateDataById(user._id, { password: newPassword });
-    await userRepository.clearResetToken(user._id);
+    await userRepository.updateDataById(user.id, { password: newPassword });
+    await userRepository.clearResetToken(user.id);
 
     return { message: 'Successfully reset password!' };
   }
