@@ -121,9 +121,13 @@ export const createUserRoutes = () => {
   // GET /api/users/profile
   router.get('/profile', authMiddleware, async (req, res, next) => {
     try {
-      const token = req.headers.authorization?.replace('Bearer ', '');
-      userServiceClient.setAuthToken(token);
-      const response = await userServiceClient.get('v1/users/profile');
+      const response = await userServiceClient.get('/v1/users/profile', {
+        headers: {
+          'x-user-id': req.user.id,
+          'x-user-email': req.user.email,
+          'x-user-role': req.user.role,
+        },
+      });
       res.json(response);
     } catch (error) {
       next(error);
@@ -133,12 +137,16 @@ export const createUserRoutes = () => {
   // PATCH /api/users/change-password
   router.patch('/change-password', authMiddleware, async (req, res, next) => {
     try {
-      const token = req.headers.authorization?.replace('Bearer ', '');
-      userServiceClient.setAuthToken(token);
-
       const response = await userServiceClient.patch(
         '/v1/users/change-password',
         req.body,
+        {
+          headers: {
+            'x-user-id': req.user.id,
+            'x-user-email': req.user.email,
+            'x-user-role': req.user.role,
+          },
+        },
       );
       res.json(response);
     } catch (error) {

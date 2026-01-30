@@ -4,6 +4,7 @@ import userValidation from '../../validations/userValidation.js';
 import validate from '../../middlewares/validation.js';
 import { authenticate, authorize } from '../../middlewares/auth.js';
 import userController from '../../controllers/userController.js';
+import { internalAuth } from '../../middlewares/internalAuth.js';
 const Router = express.Router();
 
 Router.get('/register', (req, res) => {
@@ -31,7 +32,8 @@ Router.post(
 Router.post('/login', validate(userValidation.login), userController.login);
 
 //protected routes (login)
-Router.use(authenticate); // Can xac thuc truoc khi vao,
+
+Router.use(internalAuth);
 
 Router.get('/profile', userController.getProfile);
 
