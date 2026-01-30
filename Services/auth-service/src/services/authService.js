@@ -7,6 +7,8 @@ import {
 } from '../utils/tokenHelper.js';
 import * as refreshTokenRepository from '../repositories/refreshTokenRepository.js';
 import jwt from 'jsonwebtoken';
+import config from '../config/environment.js';
+import axios from 'axios';
 
 /**
  * Create token pair (access + refresh token)
@@ -53,7 +55,7 @@ export const validateAccessToken = (token) => {
 /**
  * Verify and refresh access token
  */
-export const handleRefreshToken = async (refreshToken, user) => {
+export const handleRefreshToken = async (refreshToken) => {
   try {
     // Verify refresh token
     const verification = await verifyRefreshToken(refreshToken);
@@ -61,9 +63,19 @@ export const handleRefreshToken = async (refreshToken, user) => {
     if (!verification.valid) {
       throw new Error(verification.message);
     }
+    const id = verification.data.userId;
 
+    const response = await axios.get(
+      `http://user-service:8000/v1/users/internal/${id}`,
+      {
+        headers: {
+          'x-internal-token': config.internal.INTERNAL_SERVICE_TOKEN,
+        },
+      },
+    );
+    console.log('user:', response.data);
     // Create new access token
-    const newAccessToken = createAccessToken(user);
+    const newAccessToken = createAccessToken(response.data.data);
 
     return {
       accessToken: newAccessToken,

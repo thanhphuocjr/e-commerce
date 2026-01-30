@@ -87,22 +87,11 @@ export const createUserRoutes = () => {
         });
       }
 
-      // Validate refresh token và lấy user info từ User Service
-      const userResponse = await userServiceClient.post(
-        '/v1/users/validate-refresh-token',
-        { refreshToken },
-      );
-
       // Gọi Auth Service để tạo access token mới
       const tokenResponse = await authServiceClient.post(
         '/v1/auth/refresh-token',
         {
           refreshToken,
-          user: {
-            _id: userResponse.data.id,
-            email: userResponse.data.email,
-            role: userResponse.data.role,
-          },
         },
       );
 

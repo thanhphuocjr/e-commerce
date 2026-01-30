@@ -253,5 +253,19 @@ class UserService {
 
     return { message: 'Successfully reset password!' };
   }
+
+  async getInternalUserById(id) {
+    const user = await userRepository.findOneById(id);
+    if (!user) {
+      throw new AppError('User not found', 404);
+    }
+
+    return {
+      id: user.id,
+      email: user.email,
+      role: user.role,
+      status: user.status,
+    };
+  }
 }
 export default new UserService();

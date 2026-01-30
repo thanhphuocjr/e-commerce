@@ -32,6 +32,9 @@ export const config = {
   logging: {
     level: process.env.LOG_LEVEL,
   },
+  internal: {
+    INTERNAL_SERVICE_TOKEN: process.env.INTERNAL_SERVICE_TOKEN,
+  },
 };
 console.log(config);
 

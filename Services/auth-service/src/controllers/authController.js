@@ -73,16 +73,16 @@ export const verifyAccessToken = async (req, res, next) => {
  */
 export const refreshAccessToken = async (req, res, next) => {
   try {
-    const { refreshToken, user } = req.body;
+    const { refreshToken } = req.body;
 
-    if (!refreshToken || !user) {
+    if (!refreshToken) {
       return res.status(StatusCodes.BAD_REQUEST).json({
         success: false,
         message: 'Refresh token and user are required',
       });
     }
 
-    const result = await authService.handleRefreshToken(refreshToken, user);
+    const result = await authService.handleRefreshToken(refreshToken);
 
     res.status(StatusCodes.OK).json({
       success: true,

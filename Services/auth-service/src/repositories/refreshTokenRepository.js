@@ -116,24 +116,30 @@ export const findByUserId = async (userId) => {
  * Soft delete token (logout)
  */
 export const revokeToken = async (token) => {
-  try {
-    const pool = getPool();
+  const pool = getPool();
 
-    const nowDateTime = new Date().toISOString().slice(0, 19).replace('T', ' ');
+  const [rows] = await pool.execute(
+    `SELECT id, isRevoked FROM refresh_tokens WHERE token = ? LIMIT 1`,
+    [token],
+  );
 
-    const sql = `
-      UPDATE refresh_tokens
-      SET isRevoked = true, updatedAt = ?
-      WHERE token = ?
-    `;
-
-    const [result] = await pool.execute(sql, [nowDateTime, token]);
-
-    return result.affectedRows;
-  } catch (error) {
-    throw new Error(`Failed to revoke token: ${error.message}`);
+  if (rows.length === 0) {
+    return { success: false, reason: 'TOKEN_NOT_FOUND' };
   }
+
+  if (rows[0].isRevoked) {
+    return { success: false, reason: 'TOKEN_ALREADY_REVOKED' };
+  }
+
+  const now = new Date().toISOString().slice(0, 19).replace('T', ' ');
+  await pool.execute(
+    `UPDATE refresh_tokens SET isRevoked = true, updatedAt = ? WHERE token = ?`,
+    [now, token],
+  );
+
+  return { success: true };
 };
+
 
 /**
  * Revoke all tokens for user (logout all devices)

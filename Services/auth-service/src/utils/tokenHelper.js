@@ -91,6 +91,7 @@ export const verifyRefreshToken = async (token) => {
       return { valid: false, message: 'Token revoked' };
     }
 
+    console.log('data: ', tokenRecord);
     return { valid: true, data: tokenRecord };
   } catch (error) {
     return { valid: false, message: error.message };

@@ -181,6 +181,15 @@ class UserController {
     const result = await userService.resetPassword(token, newPassword);
     res.status(StatusCodes.OK).json({ success: true, ...result });
   });
+
+  getInternalUserById = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const user = await userService.getInternalUserById(id);
+    res.status(200).json({
+      success: true,
+      data: user,
+    });
+  });
 }
 
 export default new UserController();
