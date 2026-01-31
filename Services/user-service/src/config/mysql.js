@@ -102,33 +102,6 @@ export const createUserTable = async () => {
   }
 };
 
-export const createRefreshTokenTable = async () => {
-  try {
-    const pool = getPool();
-    const sql = `
-      CREATE TABLE IF NOT EXISTS refresh_tokens (
-        id VARCHAR(36) PRIMARY KEY,
-        userId VARCHAR(255) NOT NULL,
-        token VARCHAR(500) NOT NULL UNIQUE,
-        expiresAt DATETIME NOT NULL,
-        isRevoked BOOLEAN DEFAULT false,
-        createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
-        updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-        INDEX idx_user_id (userId),
-        INDEX idx_token (token),
-        INDEX idx_expires_at (expiresAt),
-        INDEX idx_created_at (createdAt),
-        FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
-    `;
-
-    await pool.execute(sql);
-    console.log('[DB] refresh_tokens table created or already exists');
-  } catch (error) {
-    console.error('[DB] Failed to create refresh_tokens table:', error.message);
-    throw error;
-  }
-};
 
 export const getPool = () => {
   if (!pool) {
@@ -149,7 +122,6 @@ export default {
   testConnection,
   createDatabase,
   createUserTable,
-  createRefreshTokenTable,
   getPool,
   closePool,
 };

@@ -88,7 +88,6 @@ const START_SERVER = () => {
 
       console.log('4.Creating tables...');
       await mysqlDB.createUserTable();
-      await mysqlDB.createRefreshTokenTable();
 
       console.log('5.MySQL is ready!');
       START_SERVER();

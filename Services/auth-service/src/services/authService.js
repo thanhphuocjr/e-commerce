@@ -73,7 +73,6 @@ export const handleRefreshToken = async (refreshToken) => {
         },
       },
     );
-    console.log('user:', response.data);
     // Create new access token
     const newAccessToken = createAccessToken(response.data.data);
 

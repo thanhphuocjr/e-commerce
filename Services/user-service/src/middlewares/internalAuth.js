@@ -21,8 +21,6 @@ export const headerAuth = (req, res, next) => {
 };
 
 export const internalAuth = (req, res, next) => {
-  console.log('[internalAuth] headers:', req.headers);
-
   const token = req.headers['x-internal-token'];
 
   if (!token) {
@@ -35,6 +33,5 @@ export const internalAuth = (req, res, next) => {
     return res.status(403).json({ message: 'Invalid internal token' });
   }
 
-  console.log('[internalAuth] ✅ Passed');
   next();
 };
