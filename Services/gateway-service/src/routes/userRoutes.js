@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { authMiddleware } from '../middleware/auth.js';
+import { authMiddleware, authorize } from '../middleware/auth.js';
 import { ServiceClient } from '../utils/serviceClient.js';
 import config from '../config/environment.js';
 
@@ -129,6 +129,158 @@ export const createUserRoutes = () => {
       const response = await userServiceClient.patch(
         '/v1/users/change-password',
         req.body,
+        {
+          headers: {
+            'x-user-id': req.user.id,
+            'x-user-email': req.user.email,
+            'x-user-role': req.user.role,
+          },
+        },
+      );
+      res.json(response);
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  /* ===================== ADMIN ROUTES ===================== */
+
+  // Apply admin authorization for all routes below
+  router.use(authMiddleware);
+  router.use(authorize('admin'));
+
+  // GET /api/users - Get all users with filters
+  router.get('/', async (req, res, next) => {
+    try {
+      const response = await userServiceClient.get('/v1/users', {
+        headers: {
+          'x-user-id': req.user.id,
+          'x-user-email': req.user.email,
+          'x-user-role': req.user.role,
+        },
+        params: req.query,
+      });
+      res.json(response);
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  // POST /api/users - Create new user (admin)
+  router.post('/', async (req, res, next) => {
+    try {
+      const response = await userServiceClient.post('/v1/users', req.body, {
+        headers: {
+          'x-user-id': req.user.id,
+          'x-user-email': req.user.email,
+          'x-user-role': req.user.role,
+        },
+      });
+      res.json(response);
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  // GET /api/users/stats - Get user statistics
+  router.get('/stats', async (req, res, next) => {
+    try {
+      const response = await userServiceClient.get('/v1/users/stats', {
+        headers: {
+          'x-user-id': req.user.id,
+          'x-user-email': req.user.email,
+          'x-user-role': req.user.role,
+        },
+      });
+      res.json(response);
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  // GET /api/users/:id - Get user by ID
+  router.get('/:id', async (req, res, next) => {
+    try {
+      const response = await userServiceClient.get(
+        `/v1/users/${req.params.id}`,
+        {
+          headers: {
+            'x-user-id': req.user.id,
+            'x-user-email': req.user.email,
+            'x-user-role': req.user.role,
+          },
+        },
+      );
+      res.json(response);
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  // PATCH /api/users/:id - Update user
+  router.patch('/:id', async (req, res, next) => {
+    try {
+      const response = await userServiceClient.patch(
+        `/v1/users/${req.params.id}`,
+        req.body,
+        {
+          headers: {
+            'x-user-id': req.user.id,
+            'x-user-email': req.user.email,
+            'x-user-role': req.user.role,
+          },
+        },
+      );
+      res.json(response);
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  // DELETE /api/users/:id - Soft delete user
+  router.delete('/:id', async (req, res, next) => {
+    try {
+      const response = await userServiceClient.delete(
+        `/v1/users/${req.params.id}`,
+        {
+          headers: {
+            'x-user-id': req.user.id,
+            'x-user-email': req.user.email,
+            'x-user-role': req.user.role,
+          },
+        },
+      );
+      res.json(response);
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  // PATCH /api/users/restore/:id - Restore soft deleted user
+  router.patch('/restore/:id', async (req, res, next) => {
+    try {
+      const response = await userServiceClient.patch(
+        `/v1/users/restore/${req.params.id}`,
+        {},
+        {
+          headers: {
+            'x-user-id': req.user.id,
+            'x-user-email': req.user.email,
+            'x-user-role': req.user.role,
+          },
+        },
+      );
+      res.json(response);
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  // DELETE /api/users/permanent/:id - Permanent delete user
+  router.delete('/permanent/:id', async (req, res, next) => {
+    try {
+      const response = await userServiceClient.delete(
+        `/v1/users/permanent/${req.params.id}`,
         {
           headers: {
             'x-user-id': req.user.id,

@@ -35,7 +35,7 @@ Router.get('/internal/:id', internalAuth, userController.getInternalUserById);
 
 //protected routes (login)
 
-Router.use(headerAuth);
+// Router.use(headerAuth);
 
 Router.get('/profile', userController.getProfile);
 
@@ -46,7 +46,15 @@ Router.patch(
 );
 
 //Admin route
-Router.use(authorize('admin'));
+
+
+
+
+
+
+
+
+
 
 Router.get(
   '/',

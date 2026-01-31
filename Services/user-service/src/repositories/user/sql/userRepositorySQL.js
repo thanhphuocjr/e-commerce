@@ -240,7 +240,6 @@ export class UserRepositorySQL extends UserRepositoryInterface {
     }
   }
 
-  // Find with filters
   async findUsersWithFilters({
     page = 1,
     limit = 10,
@@ -253,26 +252,35 @@ export class UserRepositorySQL extends UserRepositoryInterface {
   }) {
     try {
       const pool = getPool();
-      let whereConditions = ['isDestroyed = false'];
+
+      // Validate và sanitize inputs
+      const pageNum = Math.max(1, parseInt(page, 10) || 1);
+      const limitNum = Math.min(Math.max(1, parseInt(limit, 10) || 10), 100);
+      const offset = (pageNum - 1) * limitNum;
+
+      const whereConditions = ['isDestroyed = 0'];
       const params = [];
 
-      // Build WHERE conditions
       if (fullName) {
         whereConditions.push('fullName LIKE ?');
         params.push(`%${fullName}%`);
       }
+
       if (email) {
         whereConditions.push('email LIKE ?');
         params.push(`%${email}%`);
       }
+
       if (phone) {
         whereConditions.push('phone LIKE ?');
         params.push(`%${phone}%`);
       }
+
       if (status) {
         whereConditions.push('status = ?');
         params.push(status);
       }
+
       if (role) {
         whereConditions.push('role = ?');
         params.push(role);
@@ -280,47 +288,81 @@ export class UserRepositorySQL extends UserRepositoryInterface {
 
       const whereClause = whereConditions.join(' AND ');
 
-      // Parse sort string
+      // Allowed sort fields (whitelist)
+      const allowedSortFields = [
+        'createdAt',
+        'updatedAt',
+        'fullName',
+        'email',
+        'role',
+        'status',
+        'lastLogin',
+      ];
+
       let orderBy = 'createdAt DESC';
+
       if (sort) {
-        const sortParts = sort.split(',');
-        const orderParts = sortParts
-          .map((field) => {
-            const [key, order] = field.split(':');
-            const direction = order?.toUpperCase() === 'ASC' ? 'ASC' : 'DESC';
-            return `${key.trim()} ${direction}`;
+        const orders = sort
+          .split(',')
+          .map((item) => {
+            const [field, dir] = item.split(':');
+            // Chỉ cho phép các field được whitelist
+            if (!allowedSortFields.includes(field)) return null;
+            const direction = dir?.toUpperCase() === 'ASC' ? 'ASC' : 'DESC';
+            return `${field} ${direction}`;
           })
-          .join(', ');
-        if (orderParts) orderBy = orderParts;
+          .filter(Boolean);
+
+        if (orders.length > 0) {
+          orderBy = orders.join(', ');
+        }
       }
 
-      // Get total count
-      const countSql = `SELECT COUNT(*) as total FROM users WHERE ${whereClause}`;
+      // COUNT query
+      const countSql = `SELECT COUNT(*) AS total FROM users WHERE ${whereClause}`;
       const [[{ total }]] = await pool.execute(countSql, params);
 
-      // Get paginated results
-      const offset = (page - 1) * limit;
+      // DATA query
+      // Build LIMIT và OFFSET trực tiếp vào SQL (an toàn vì đã validate là số)
       const dataSql = `
-        SELECT id, email, fullName, phone, avatar, role, status, lastLogin, createdAt, updatedAt, isDestroyed
-        FROM users
-        WHERE ${whereClause}
-        ORDER BY ${orderBy}
-        LIMIT ? OFFSET ?
-      `;
-      const dataParams = [...params, parseInt(limit), offset];
-      const [users] = await pool.execute(dataSql, dataParams);
+      SELECT 
+        id, 
+        email, 
+        fullName, 
+        phone, 
+        avatar, 
+        role, 
+        status, 
+        lastLogin, 
+        createdAt, 
+        updatedAt
+      FROM users
+      WHERE ${whereClause}
+      ORDER BY ${orderBy}
+      LIMIT ${limitNum} OFFSET ${offset}
+    `;
+
+      // Chỉ truyền params cho WHERE clause, không có LIMIT/OFFSET
+      const [users] = await pool.execute(dataSql, params);
 
       return {
         users,
         pagination: {
-          currentPage: parseInt(page),
-          totalPages: Math.ceil(total / limit),
+          currentPage: pageNum,
+          itemsPerPage: limitNum,
           totalItems: total,
-          itemsPerPage: parseInt(limit),
+          totalPages: Math.ceil(total / limitNum),
         },
       };
     } catch (error) {
-      throw new AppError('findUsersWithFilters has problems', 500, error);
+      console.error('findUsersWithFilters error details:', {
+        message: error.message,
+        code: error.code,
+        errno: error.errno,
+        sqlMessage: error.sqlMessage,
+        sql: error.sql,
+      });
+      throw new AppError('findUsersWithFilters failed', 500, error);
     }
   }
 
