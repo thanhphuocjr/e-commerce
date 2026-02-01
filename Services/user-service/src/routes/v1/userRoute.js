@@ -35,7 +35,7 @@ Router.get('/internal/:id', internalAuth, userController.getInternalUserById);
 
 //protected routes (login)
 
-// Router.use(headerAuth);
+Router.use(headerAuth);
 
 Router.get('/profile', userController.getProfile);
 
@@ -44,16 +44,6 @@ Router.patch(
   validate(userValidation.changePassword),
   userController.changePassword,
 );
-
-//Admin route
-
-
-
-
-
-
-
-
 
 
 Router.get(
@@ -76,18 +66,21 @@ Router.get(
   userController.getUserById,
 );
 
+//
 Router.patch(
   '/:id',
   validate(userValidation.updateUser),
   userController.updateUser,
 );
 
+// .,.
 Router.delete(
   '/:id',
-  validate(userValidation.getUserById), //Dung lai dua phan getUserById
+  validate(userValidation.getUserById),
   userController.deleteUser,
 );
 
+// ,,,
 Router.delete(
   '/permanent/:id',
   validate(userValidation.getUserById),

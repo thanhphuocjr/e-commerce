@@ -94,8 +94,8 @@ class UserController {
   });
 
   getUserById = asyncHandler(async (req, res) => {
-    const idUser = req.params.id;
-    const result = await userService.getUserById(idUser);
+    const { id } = req.params;
+    const result = await userService.getUserById(id);
 
     res.status(200).json({
       success: true,
@@ -105,7 +105,7 @@ class UserController {
   });
 
   updateUser = asyncHandler(async (req, res) => {
-    const id = req.params.id;
+    const { id } = req.params;
     const updateData = req.body;
 
     const result = await userService.updateUser(id, updateData);
@@ -117,7 +117,7 @@ class UserController {
   });
 
   deleteUser = asyncHandler(async (req, res) => {
-    const id = req.params.id;
+    const { id } = req.params;
 
     const currentUserId = req.user.id.toString();
 
@@ -154,7 +154,7 @@ class UserController {
   }
 
   permanentDeleteUser = asyncHandler(async (req, res) => {
-    const id = req.params.id;
+    const { id } = req.params;
 
     const currentUserId = req.user.id.toString();
 

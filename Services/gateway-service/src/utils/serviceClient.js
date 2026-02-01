@@ -46,6 +46,15 @@ export class ServiceClient {
     }
   }
 
+  async patch(path, data, config = {}) {
+    try {
+      const response = await this.client.patch(path, data, config);
+      return response.data;
+    } catch (error) {
+      throw this.handleError(error);
+    }
+  }
+
   async delete(path, config = {}) {
     try {
       const response = await this.client.delete(path, config);

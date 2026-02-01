@@ -202,15 +202,6 @@ class UserService {
 
   async restoreUser(id) {
     try {
-      const user = await userRepository.findOneById(id);
-      if (!user) {
-        throw new AppError('Không tìm thấy user', 404);
-      }
-
-      if (!user._destroy) {
-        throw new AppError('User chưa bị xóa, không cần khôi phục', 400);
-      }
-
       return await userRepository.restoreUser(id);
     } catch (error) {
       if (error instanceof AppError) throw error;

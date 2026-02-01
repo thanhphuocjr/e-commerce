@@ -1,5 +1,10 @@
 import Joi from 'joi';
-import { OBJECT_ID_RULE, OBJECT_ID_RULE_MESSAGE } from '../utils/validators.js';
+import {
+  OBJECT_ID_RULE,
+  OBJECT_ID_RULE_MESSAGE,
+  UUID_V4_RULE,
+  UUID_V4_MESSAGE,
+} from '../utils/validators.js';
 
 const userValidation = {
   register: {
@@ -13,7 +18,7 @@ const userValidation = {
         .min(8)
         .max(50)
         .pattern(
-          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
         )
         .required()
         .messages({
@@ -88,8 +93,8 @@ const userValidation = {
 
   getUserById: {
     params: Joi.object({
-      id: Joi.string().pattern(OBJECT_ID_RULE).required().messages({
-        'string.pattern.base': OBJECT_ID_RULE_MESSAGE,
+      id: Joi.string().pattern(UUID_V4_RULE).required().messages({
+        'string.pattern.base': UUID_V4_MESSAGE,
         'any.required': 'ID is required',
       }),
     }),
@@ -97,20 +102,13 @@ const userValidation = {
 
   updateUser: {
     body: Joi.object({
-      fullName: Joi.string().min(2).max(100).messages({
-        'string.min': 'Full name must be at least 2 characters long',
-        'string.max': 'Full name must not exceed 100 characters',
-      }),
-      role: Joi.string().valid('admin', 'user').messages({
-        'any.only': 'Role must be either admin or user',
-      }),
-      status: Joi.string().valid('active', 'inactive', 'blocked').messages({
-        'any.only': 'Status must be active, inactive, or blocked',
-      }),
+      fullName: Joi.string().min(2).max(100),
+      role: Joi.string().valid('admin', 'user'),
+      status: Joi.string().valid('active', 'inactive', 'blocked'),
     }),
     params: Joi.object({
-      id: Joi.string().pattern(OBJECT_ID_RULE).required().messages({
-        'string.pattern.base': OBJECT_ID_RULE_MESSAGE,
+      id: Joi.string().pattern(UUID_V4_RULE).required().messages({
+        'string.pattern.base': UUID_V4_MESSAGE,
         'any.required': 'ID is required',
       }),
     }),
@@ -205,7 +203,7 @@ const userValidation = {
         .min(8)
         .max(50)
         .pattern(
-          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
         )
         .required()
         .messages({

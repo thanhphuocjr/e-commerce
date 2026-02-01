@@ -84,6 +84,17 @@ export class UserRepositorySQL extends UserRepositoryInterface {
     }
   }
 
+  async findOneById_ADMIN(id) {
+    try {
+      const pool = getPool();
+      const sql = 'SELECT * FROM users WHERE id = ?';
+      const [rows] = await pool.execute(sql, [id]);
+      return rows.length > 0 ? rows[0] : null;
+    } catch (error) {
+      throw new AppError('findOneById has problems', 500, error);
+    }
+  }
+
   // Get stats
   async getStats() {
     try {
@@ -223,7 +234,7 @@ export class UserRepositorySQL extends UserRepositoryInterface {
   async restoreUser(userId) {
     try {
       const pool = getPool();
-      const existingUser = await this.findOneById(userId);
+      const existingUser = await this.findOneById_ADMIN(userId);
 
       if (!existingUser || !existingUser.isDestroyed) {
         throw new AppError('Không tìm thấy user hoặc không bị xóa', 404);
