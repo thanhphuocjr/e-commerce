@@ -74,7 +74,7 @@ export class UserRepositoryMongo extends UserRepositoryInterface {
         .findOneAndUpdate(
           { _id: new ObjectId(userId) },
           { $set: updateData },
-          { returnDocument: 'after' }
+          { returnDocument: 'after' },
         );
     } catch (error) {
       throw new AppError('updateDataById has problems', 500, error);
@@ -102,7 +102,7 @@ export class UserRepositoryMongo extends UserRepositoryInterface {
               updatedAt: Date.now(),
             },
           },
-          { returnDocument: 'after' }
+          { returnDocument: 'after' },
         );
     } catch (error) {
       if (error instanceof AppError) throw error;
@@ -144,7 +144,7 @@ export class UserRepositoryMongo extends UserRepositoryInterface {
             $set: { _destroy: false, updatedAt: Date.now() },
             $unset: { deletedAt: '' },
           },
-          { returnDocument: 'after' }
+          { returnDocument: 'after' },
         );
     } catch (error) {
       if (error instanceof AppError) throw error;
@@ -228,7 +228,7 @@ export class UserRepositoryMongo extends UserRepositoryInterface {
       .findOneAndUpdate(
         { email },
         { $set: { resetPasswordToken: token, resetPasswordExpires: expires } },
-        { returnDocument: 'after' }
+        { returnDocument: 'after' },
       );
     return { token, user: result };
   }
@@ -249,7 +249,7 @@ export class UserRepositoryMongo extends UserRepositoryInterface {
       .collection(USER_COLLECTION_NAME)
       .updateOne(
         { _id: new ObjectId(userId) },
-        { $set: { resetPasswordToken: null, resetPasswordExpires: null } }
+        { $set: { resetPasswordToken: null, resetPasswordExpires: null } },
       );
   }
   async setActiveStatus(id) {
@@ -258,7 +258,7 @@ export class UserRepositoryMongo extends UserRepositoryInterface {
       .findOneAndUpdate(
         { _id: new ObjectId(id) },
         { $set: { status: 'active' } },
-        { returnDocument: 'after' }
+        { returnDocument: 'after' },
       );
   }
   async setInActiveStatus(id) {
@@ -267,7 +267,7 @@ export class UserRepositoryMongo extends UserRepositoryInterface {
       .findOneAndUpdate(
         { _id: new ObjectId(id) },
         { $set: { status: 'inactive' } },
-        { returnDocument: 'after' }
+        { returnDocument: 'after' },
       );
   }
 }

@@ -7,5 +7,4 @@ class ApiError extends Error {
 }
 
 export default ApiError;
-// hoặc nếu bạn dùng commonjs:
-// module.exports = ApiError;
+

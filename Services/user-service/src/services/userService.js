@@ -38,8 +38,7 @@ class UserService {
     }
   }
 
-  //Login - chỉ xác thực user, trả về user info
-  //Token sẽ được tạo ở Gateway
+  //Login
   async login(email, password) {
     try {
       const user = await userRepository.findOneByEmail(email);
@@ -114,11 +113,9 @@ class UserService {
 
   async getUsersList(queryParams) {
     try {
-      console.log('QueryParams: ', queryParams);
       const users = await userRepository.findUsersWithFilters(queryParams);
       return UserListResponseDTO.fromRepo(users);
     } catch (error) {
-      console.error('getUsers error: ', error);
       if (error instanceof AppError) throw error;
       throw new AppError('Loi server khi Get list users!');
     }
@@ -228,8 +225,8 @@ class UserService {
     await transporter.sendMail({
       from: env.EMAIL_USER,
       to: email,
-      subject: 'Đặt lại mật khẩu',
-      html: `<p>Click here to reset your password on Spotify_Web:</p> <hr/> <br/> Link: <a href="${resetLink}">${resetLink}</a>`,
+      subject: 'Reset Password',
+      html: `<p>Click here to reset your password on LengKeng Store:</p> <hr/> <br/> Link: <a href="${resetLink}">${resetLink}</a>`,
     });
 
     return { message: 'Sended link reset password to your email!' };

@@ -11,6 +11,43 @@ export const createUserRoutes = () => {
 
   /* ===================== AUTH (PUBLIC) ===================== */
 
+  // POST /api/users/register
+  router.post('/register', async (req, res, next) => {
+    try {
+      const response = await userServiceClient.post(
+        '/v1/users/register',
+        req.body,
+      );
+      res.json(response);
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  router.post('/forgot-password', async (req, res, next) => {
+    try {
+      const response = await userServiceClient.post(
+        '/v1/users/forgot-password',
+        req.body,
+      );
+      res.json(response);
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  router.post('/reset-password', async (req, res, next) => {
+    try {
+      const response = await userServiceClient.post(
+        '/v1/users/reset-password',
+        req.body,
+      );
+      res.json(response);
+    } catch (error) {
+      next(error);
+    }
+  });
+
   // POST /api/users/login
   // Quy trình: Gateway -> User Service (xác thực) -> Auth Service (tạo token)
   router.post('/login', async (req, res, next) => {
@@ -29,7 +66,6 @@ export const createUserRoutes = () => {
           },
         },
       );
-      console.log('Auth service response:', tokenResponse.data);
 
       res.json({
         success: userResponse.success,
@@ -44,19 +80,6 @@ export const createUserRoutes = () => {
         'Error in login route:',
         error.response?.data || error.message,
       );
-      next(error);
-    }
-  });
-
-  // POST /api/users/register
-  router.post('/register', async (req, res, next) => {
-    try {
-      const response = await userServiceClient.post(
-        '/v1/users/register',
-        req.body,
-      );
-      res.json(response);
-    } catch (error) {
       next(error);
     }
   });
