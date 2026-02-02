@@ -6,32 +6,53 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
-export const config = {
+const required = (key: string): string => {
+  const value = process.env[key];
+  if (!value) {
+    throw new Error(`Missing environment variable : ${key}`);
+  }
+  return value;
+};
+
+const requiredNumber = (key: string): number => {
+  const value = required(key);
+  const num = Number(value);
+  if (Number.isNaN(num)) {
+    throw new Error(`❌ Environment variable ${key} must be a number`);
+  }
+  return num;
+};
+
+/* ========= config ========= */
+
+const config = {
   app: {
-    nodeEnv: process.env.PRODUCT_NODE_ENV,
-    port: Number(process.env.PRODUCT_PORT),
-    host: process.env.PRODUCT_HOST,
+    nodeEnv: required('PRODUCT_NODE_ENV'),
+    port: requiredNumber('PRODUCT_PORT'),
+    host: required('PRODUCT_HOST'),
   },
+
   database: {
-    host: process.env.MYSQL_HOST,
-    port: Number(process.env.MYSQL_PORT),
-    user: process.env.MYSQL_USER,
-    password: process.env.MYSQL_PASSWORD,
-    database: process.env.MYSQL_DATABASE,
-    dialect: 'mysql',
+    host: required('MYSQL_HOST'),
+    port: requiredNumber('MYSQL_PORT'),
+    user: required('MYSQL_USER'),
+    password: required('MYSQL_PASSWORD'),
+    database: required('MYSQL_DATABASE'),
+    dialect: 'mysql' as const,
     logging: process.env.LOG_LEVEL === 'debug' ? console.log : false,
   },
+
   jwt: {
-    secretKey: process.env.JWT_SECRET_KEY,
-    accessTokenExpiry: process.env.JWT_ACCESS_TOKEN_EXPIRY,
-    refreshTokenExpiry: process.env.JWT_REFRESH_TOKEN_EXPIRY,
+    secretKey: required('JWT_SECRET_KEY'),
+    accessTokenExpiry: required('JWT_ACCESS_TOKEN_EXPIRY'),
+    refreshTokenExpiry: required('JWT_REFRESH_TOKEN_EXPIRY'),
   },
+
   services: {},
+
   logging: {
-    level: process.env.LOG_LEVEL,
+    level: process.env.LOG_LEVEL ?? 'info',
   },
 };
 
-console.log(config);
 export default config;
-

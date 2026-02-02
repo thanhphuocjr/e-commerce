@@ -2,7 +2,7 @@ import express from 'express';
 import type { Request, Response } from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-
+import config from './config/environment.js';
 import helmet from 'helmet';
 
 const app = express();
@@ -18,6 +18,7 @@ app.use(
     allowedHeaders: ['Content-Type', 'Authorization'],
   }),
 );
+
 
 // Middleware
 
