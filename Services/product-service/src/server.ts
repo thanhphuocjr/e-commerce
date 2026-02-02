@@ -8,7 +8,7 @@ import helmet from 'helmet';
 const app = express();
 const PORT = 8001;
 
-app.use(helmet);
+app.use(helmet());
 
 app.use(
   cors({
@@ -35,5 +35,5 @@ app.get('/health', (req: Request, res: Response) => {
 // app.use('/v1/auth', createProductRoute);
 
 app.listen(PORT, () => {
-  console.log('Server Product is running');
+  console.log('Server Product is running.....');
 });
