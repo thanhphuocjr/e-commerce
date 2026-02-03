@@ -36,6 +36,6 @@ export const config = {
     INTERNAL_SERVICE_TOKEN: process.env.INTERNAL_SERVICE_TOKEN,
   },
 };
-console.log(config);
+
 
 export default config;
