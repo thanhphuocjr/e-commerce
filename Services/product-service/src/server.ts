@@ -5,6 +5,17 @@ import cookieParser from 'cookie-parser';
 import config from './config/environment.js';
 import helmet from 'helmet';
 
+import {
+  initDatabase,
+  createDatabase,
+  testConnection,
+  createTables,
+  closePool,
+  dropTables,
+} from './config/database.js';
+
+import { reseedDatabase } from './utils/seed.js';
+
 const app = express();
 const PORT = 8001;
 
@@ -18,7 +29,6 @@ app.use(
     allowedHeaders: ['Content-Type', 'Authorization'],
   }),
 );
-
 
 // Middleware
 
@@ -38,3 +48,5 @@ app.get('/health', (req: Request, res: Response) => {
 app.listen(PORT, () => {
   console.log('Server Product is running.....');
 });
+
+// app.use('/v1/products/',)

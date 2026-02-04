@@ -1,6 +1,8 @@
 import mysql from 'mysql2/promise';
 import config from '../config/environment.js';
 
+const SEED_LIMIT = 300;
+
 interface DummyProduct {
   id: number;
   title: string;
@@ -49,7 +51,7 @@ interface DummyJsonResponse {
 }
 
 export const fetchProductsFromAPI = async (
-  limit: number = 100,
+  limit: number = SEED_LIMIT,
 ): Promise<DummyProduct[]> => {
   try {
     console.log(
@@ -85,7 +87,7 @@ export const seedDatabase = async () => {
     console.log('[SEED] Starting database seeding...');
 
     // Fetch products from API
-    const products = await fetchProductsFromAPI(100);
+    const products = await fetchProductsFromAPI(SEED_LIMIT);
 
     // Start transaction
     await connection.beginTransaction();
@@ -187,8 +189,8 @@ export const seedDatabase = async () => {
           product.meta.barcode,
           product.meta.qrCode,
           product.thumbnail,
-          product.meta.createdAt,
-          product.meta.updatedAt,
+          convertToMySQLDateTime(product.meta.createdAt),
+          convertToMySQLDateTime(product.meta.updatedAt),
         ],
       );
 
@@ -224,7 +226,7 @@ export const seedDatabase = async () => {
             productId,
             review.rating,
             review.comment,
-            review.date,
+            convertToMySQLDateTime(review.date),
             review.reviewerName,
             review.reviewerEmail,
           ],
@@ -257,6 +259,12 @@ export const seedDatabase = async () => {
     await connection.end();
   }
 };
+
+// Helper function to convert ISO datetime to MySQL format
+function convertToMySQLDateTime(isoString: string): string {
+  const date = new Date(isoString);
+  return date.toISOString().slice(0, 19).replace('T', ' ');
+}
 
 // Helper functions to get IDs
 async function getCategoryId(
@@ -331,3 +339,5 @@ export const reseedDatabase = async () => {
   await clearDatabase();
   await seedDatabase();
 };
+
+reseedDatabase();
