@@ -4,6 +4,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import config from './config/environment.js';
 import helmet from 'helmet';
+import router from './routes/index.js';
 
 import {
   initDatabase,
@@ -14,7 +15,7 @@ import {
   dropTables,
 } from './config/database.js';
 
-import { reseedDatabase } from './utils/seed.js';
+// import { reseedDatabase } from './utils/seed.js';
 
 const app = express();
 const PORT = 8001;
@@ -38,15 +39,13 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(cookieParser());
 
 //Health check
-
+app.use('/v1/products', router);
 app.get('/health', (req: Request, res: Response) => {
   res.send('Product Service is running with TypeScript');
 });
 
-// app.use('/v1/auth', createProductRoute);
+
 
 app.listen(PORT, () => {
   console.log('Server Product is running.....');
 });
-
-// app.use('/v1/products/',)
