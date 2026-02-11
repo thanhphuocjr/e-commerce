@@ -85,14 +85,14 @@ export interface ProductWithDetails extends Product {
 }
 
 export interface ProductFilter {
-  category?: string;
-  brand?: string;
-  minPrice?: number;
-  maxPrice?: number;
-  minRating?: number;
-  inStock?: boolean;
-  search?: string;
-  tags?: string[];
+  category?: string | undefined;
+  brand?: string | undefined;
+  minPrice?: number | undefined;
+  maxPrice?: number | undefined;
+  minRating?: number | undefined;
+  inStock?: boolean | undefined;
+  search?: string | undefined;
+  tags?: string[] | undefined;
 }
 
 export interface PaginationParams {

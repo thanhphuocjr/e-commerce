@@ -9,7 +9,9 @@ import type {
 } from '../models/types.js';
 
 export class ProductService {
-  private pool = getPool();
+  private get pool() {
+    return getPool();
+  }
 
   /**
    * Lấy danh sách sản phẩm với filter và pagination

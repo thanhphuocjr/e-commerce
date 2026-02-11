@@ -340,4 +340,4 @@ export const reseedDatabase = async () => {
   await seedDatabase();
 };
 
-reseedDatabase();
+

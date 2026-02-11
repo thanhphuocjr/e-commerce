@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import productRouter from './product.route.js';
 
 const router = Router();
 console.log('[ROUTES] product router loaded');
@@ -11,7 +12,7 @@ router.get('/health', (req, res) => {
 });
 
 // Mount routes
-// router.use('/products', productRoutes);
+router.use('/products', productRouter);
 // router.use('/categories', categoryRoutes);
 // router.use('/brands', brandRoutes);
 // router.use('/tags', tagRoutes);
