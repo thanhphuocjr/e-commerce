@@ -104,9 +104,9 @@ export class ProductService {
       ${whereClause}
       GROUP BY p.id
       ORDER BY p.${sortBy} ${sortOrder}
-      LIMIT ? OFFSET ?
+      LIMIT ${limit} OFFSET ${offset}
     `,
-      [...params, limit, offset],
+      [...params],
     );
 
     const data = rows.map((row: any) => ({
@@ -462,9 +462,8 @@ export class ProductService {
       GROUP BY p.id
       HAVING review_count > 0
       ORDER BY avg_rating DESC, review_count DESC
-      LIMIT ?
+      LIMIT ${limit}
     `,
-      [limit],
     );
 
     return rows;
@@ -486,9 +485,8 @@ export class ProductService {
       LEFT JOIN brands b ON p.brand_id = b.id
       WHERE p.stock > 0
       ORDER BY p.created_at DESC
-      LIMIT ?
+      LIMIT ${limit}
     `,
-      [limit],
     );
 
     return rows;
@@ -522,9 +520,8 @@ export class ProductService {
       LEFT JOIN brands b ON p.brand_id = b.id
       WHERE p.discount_percentage > 0 AND p.stock > 0
       ORDER BY p.discount_percentage DESC
-      LIMIT ? OFFSET ?
+      LIMIT ${limit} OFFSET ${offset}
     `,
-      [limit, offset],
     );
 
     return {
@@ -556,9 +553,9 @@ export class ProductService {
       LEFT JOIN brands b ON p.brand_id = b.id
       WHERE p.stock > 0 AND p.stock <= ?
       ORDER BY p.stock ASC
-      LIMIT ?
+      LIMIT ${limit}
     `,
-      [threshold, limit],
+      [threshold],
     );
 
     return rows;
