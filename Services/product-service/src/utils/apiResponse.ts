@@ -3,10 +3,15 @@ import type { Response } from 'express';
 export class ApiResponse {
   // Success response (200)
 
-  static success(res: Response, data: any, meta?: any, message?: string) {
+  static success(
+    res: Response,
+    data: any,
+    message: string = 'Success!',
+    meta: Record<string, any> = {},
+  ) {
     return res.status(200).json({
       success: true,
-      message: message || 'Success!',
+      message,
       data,
       ...meta,
     });
