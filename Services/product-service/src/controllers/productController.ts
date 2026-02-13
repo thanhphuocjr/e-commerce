@@ -56,7 +56,7 @@ export class ProductController {
 
       const result = await this.productService.getProducts(filter, pagination);
 
-      return ApiResponse.success(res, result.data, {
+      return ApiResponse.success(res, result.data, 'Success', {
         pagination: {
           ...result.pagination,
           hasNext: result.pagination.page < result.pagination.totalPages,
@@ -124,7 +124,7 @@ export class ProductController {
         throw new ApiError(404, 'PRODUCT_NOT_FOUND', 'Product not found');
       }
 
-      return ApiResponse.success(res, product, 'Product updated successfully');
+      return ApiResponse.success(res, product, 'Success');
     } catch (error) {
       next(error);
     }
@@ -216,9 +216,12 @@ export class ProductController {
   ) => {
     try {
       const { limit = 10 } = req.query;
-      const products = await this.productService.getTopRatedProducts(
-        parseInt(limit as string),
-      );
+
+      const parsedLimit =
+        typeof limit === 'string' && !isNaN(Number(limit)) ? Number(limit) : 10;
+
+      const products =
+        await this.productService.getTopRatedProducts(parsedLimit);
 
       return ApiResponse.success(res, products);
     } catch (error) {
@@ -260,7 +263,7 @@ export class ProductController {
         limit: parseInt(limit as string),
       });
 
-      return ApiResponse.success(res, result.data, {
+      return ApiResponse.success(res, result.data, 'Success', {
         pagination: {
           ...result.pagination,
           hasNext: result.pagination.page < result.pagination.totalPages,

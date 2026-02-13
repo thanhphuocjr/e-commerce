@@ -12,7 +12,7 @@ router.get('/health', (req, res) => {
 });
 
 // Mount routes
-router.use('/products', productRouter);
+router.use('/product', productRouter);
 // router.use('/categories', categoryRoutes);
 // router.use('/brands', brandRoutes);
 // router.use('/tags', tagRoutes);

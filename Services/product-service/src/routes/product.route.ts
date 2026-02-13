@@ -18,9 +18,11 @@ productRouter.get('/:id', asyncHandler(productController.getProductById));
 productRouter.post('/', asyncHandler(productController.createProduct)); // Admin only
 productRouter.put('/:id', asyncHandler(productController.updateProduct)); // Admin only
 productRouter.patch('/:id', asyncHandler(productController.patchProduct)); // Admin only
+
 productRouter.delete('/:id', asyncHandler(productController.deleteProduct)); // Admin only
 
 // Related routes
 productRouter.get('/:id/similar', asyncHandler(productController.getSimilarProducts));
 
 export default productRouter;
+

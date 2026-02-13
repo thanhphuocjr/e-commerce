@@ -44,10 +44,6 @@ await reseedDatabase();
 
 //Health check
 app.use('/v1/products', router);
-app.get('/health', (req: Request, res: Response) => {
-  res.send('Product Service is running with TypeScript');
-});
-
 app.listen(PORT, () => {
   console.log('Server Product is running.....');
 });
