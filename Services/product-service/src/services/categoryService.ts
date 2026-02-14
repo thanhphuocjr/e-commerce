@@ -3,7 +3,9 @@ import { getPool } from '../config/database.js';
 import type { Category } from '../models/types.js';
 
 export class CategoryService {
-  private pool = getPool();
+  private get pool() {
+    return getPool();
+  }
 
   /**
    * Lấy tất cả danh mục
@@ -165,9 +167,9 @@ export class CategoryService {
       LEFT JOIN brands b ON p.brand_id = b.id
       WHERE p.category_id = ?
       ORDER BY p.created_at DESC
-      LIMIT ? OFFSET ?
+      LIMIT ${limit} OFFSET ${offset}
     `,
-      [categoryId, limit, offset],
+      [categoryId],
     );
 
     return {

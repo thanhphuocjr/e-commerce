@@ -39,8 +39,8 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(cookieParser());
 
 await initDatabase();
-await createDatabase();
-await reseedDatabase();
+// await createDatabase();
+// await reseedDatabase();
 
 //Health check
 app.use('/v1/products', router);

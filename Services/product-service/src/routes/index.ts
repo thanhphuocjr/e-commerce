@@ -1,5 +1,6 @@
 import { Router } from 'express';
-import productRouter from './product.route.js';
+import productRoute from './product.route.js';
+import categoryRoute from './category.route.js';
 
 const router = Router();
 console.log('[ROUTES] product router loaded');
@@ -12,8 +13,8 @@ router.get('/health', (req, res) => {
 });
 
 // Mount routes
-router.use('/product', productRouter);
-// router.use('/categories', categoryRoutes);
+router.use('/product', productRoute);
+router.use('/categories', categoryRoute);
 // router.use('/brands', brandRoutes);
 // router.use('/tags', tagRoutes);
 // router.use('/reviews', reviewRoutes);
