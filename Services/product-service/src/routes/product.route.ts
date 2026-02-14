@@ -6,11 +6,26 @@ const productRouter = Router();
 const productController = new ProductController();
 
 // Special routes first (before :id)
-productRouter.get('/featured', asyncHandler(productController.getTopRatedProducts));
-productRouter.get('/top-rated', asyncHandler(productController.getTopRatedProducts));
-productRouter.get('/new-arrivals', asyncHandler(productController.getNewArrivals));
-productRouter.get('/on-sale', asyncHandler(productController.getProductsOnSale));
-productRouter.get('/low-stock', asyncHandler(productController.getLowStockProducts)); // Admin only
+productRouter.get(
+  '/featured',
+  asyncHandler(productController.getTopRatedProducts),
+);
+productRouter.get(
+  '/top-rated',
+  asyncHandler(productController.getTopRatedProducts),
+);
+productRouter.get(
+  '/new-arrivals',
+  asyncHandler(productController.getNewArrivals),
+);
+productRouter.get(
+  '/on-sale',
+  asyncHandler(productController.getProductsOnSale),
+);
+productRouter.get(
+  '/low-stock',
+  asyncHandler(productController.getLowStockProducts),
+); // Admin only
 
 // CRUD routes
 productRouter.get('/', asyncHandler(productController.getProducts));
@@ -22,7 +37,9 @@ productRouter.patch('/:id', asyncHandler(productController.patchProduct)); // Ad
 productRouter.delete('/:id', asyncHandler(productController.deleteProduct)); // Admin only
 
 // Related routes
-productRouter.get('/:id/similar', asyncHandler(productController.getSimilarProducts));
+productRouter.get(
+  '/:id/similar',
+  asyncHandler(productController.getSimilarProducts),
+);
 
 export default productRouter;
-
