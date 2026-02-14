@@ -433,9 +433,9 @@ export class ProductService {
       LEFT JOIN brands b ON p2.brand_id = b.id
       WHERE p1.id = ? AND p2.stock > 0
       ORDER BY ABS(p2.price - p1.price), p2.rating DESC
-      LIMIT ?
+      LIMIT ${limit}
     `,
-      [productId, limit],
+      [productId],
     );
 
     return rows;
