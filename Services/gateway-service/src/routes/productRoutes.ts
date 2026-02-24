@@ -11,4 +11,6 @@ export const createProductRoutes = () => {
   );
 
   const authServiceClient = new ServiceClient(config.services.authService);
+
+  
 };
