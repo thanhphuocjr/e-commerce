@@ -1,4 +1,3 @@
-// services/CategoryService.ts
 import { getPool } from '../config/database.js';
 import type { Category } from '../models/types.js';
 

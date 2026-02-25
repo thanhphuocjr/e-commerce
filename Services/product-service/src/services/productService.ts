@@ -1,4 +1,3 @@
-// services/ProductService.ts
 import { getPool } from '../config/database.js';
 import type {
   Product,

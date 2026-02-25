@@ -1,6 +1,4 @@
-import { get } from 'node:http';
 import { getPool } from '../config/database.js';
-
 import type { Brand } from '../models/types.js';
 
 export class BrandService {
