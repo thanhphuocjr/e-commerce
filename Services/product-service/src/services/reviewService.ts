@@ -22,9 +22,8 @@ export class ReviewService {
       FROM reviews r
       JOIN products p ON r.product_id = p.id
       ORDER BY r.review_date DESC
-      LIMIT ? OFFSET ?
+      LIMIT ${limit} OFFSET ${offset}
     `,
-      [limit, offset],
     );
 
     return {
@@ -76,9 +75,9 @@ export class ReviewService {
       FROM reviews r
       ${whereClause}
       ORDER BY r.review_date DESC
-      LIMIT ? OFFSET ?
+      LIMIT ${limit} OFFSET ${offset}
     `,
-      [...params, limit, offset],
+      [...params],
     );
 
     // Get rating distribution
@@ -267,9 +266,8 @@ export class ReviewService {
       FROM reviews r
       JOIN products p ON r.product_id = p.id
       ORDER BY r.review_date DESC
-      LIMIT ?
+       LIMIT ${limit} 
     `,
-      [limit],
     );
     return rows;
   }

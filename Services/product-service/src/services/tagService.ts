@@ -82,9 +82,9 @@ export class TagService {
       LEFT JOIN brands b ON p.brand_id = b.id
       WHERE pt.tag_id = ?
       ORDER BY p.created_at DESC
-      LIMIT ? OFFSET ?
+      LIMIT ${limit} OFFSET ${offset}
     `,
-      [tagId, limit, offset],
+      [tagId],
     );
 
     return {
