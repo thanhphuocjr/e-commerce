@@ -18,3 +18,4 @@ imageRoutes.put(
 ); // Admin only
 
 export default imageRoutes;
+ 
