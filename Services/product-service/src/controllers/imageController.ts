@@ -29,7 +29,7 @@ export class ImageController {
   createImages = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { productId } = req.params;
-      const { images } = req.body; // Array of image URLs
+      const { images } = req.body; 
 
       if (!images || !Array.isArray(images)) {
         throw new ApiError(400, 'INVALID_INPUT', 'Images array is required');
