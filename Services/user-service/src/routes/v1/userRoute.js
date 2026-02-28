@@ -66,21 +66,19 @@ Router.get(
   userController.getUserById,
 );
 
-//
+
 Router.patch(
   '/:id',
   validate(userValidation.updateUser),
   userController.updateUser,
 );
 
-// .,.
 Router.delete(
   '/:id',
   validate(userValidation.getUserById),
   userController.deleteUser,
 );
 
-// ,,,
 Router.delete(
   '/permanent/:id',
   validate(userValidation.getUserById),
