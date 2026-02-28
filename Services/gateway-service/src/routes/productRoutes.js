@@ -10,12 +10,12 @@ export const createProductRoutes = () => {
   const productServiceClient = new ServiceClient(
     config.services.productService,
   );
-  const authServiceClient = new ServiceClient(config.services.authService);
+  // const authServiceClient = new ServiceClient(config.services.authService);
 
   // PRODUCT_SERVICE
   router.get('/featured', async (req, res, next) => {
     try {
-      const response = await productServiceClient.get('/v1/products/featured');
+      const response = await productServiceClient.get('/v1/products/product/featured');
       res.json(response);
     } catch (error) {
       next(error);
@@ -24,7 +24,7 @@ export const createProductRoutes = () => {
 
   router.get('/top-rated', async (req, res, next) => {
     try {
-      const response = await productServiceClient.get('/v1/products/top-rated');
+      const response = await productServiceClient.get('/v1/products/product/top-rated');
       res.json(response);
     } catch (error) {
       next(error);
@@ -34,7 +34,7 @@ export const createProductRoutes = () => {
   router.get('/new-arrivals', async (req, res, next) => {
     try {
       const response = await productServiceClient.get(
-        '/v1/products/new-arrivals',
+        '/v1/products/product/new-arrivals',
       );
       res.json(response);
     } catch (error) {
@@ -42,9 +42,9 @@ export const createProductRoutes = () => {
     }
   });
 
-  router.get('on-sale', async (req, res, next) => {
+  router.get('/on-sale', async (req, res, next) => {
     try {
-      const response = await productServiceClient.get('v1/products/on-sale');
+      const response = await productServiceClient.get('/v1/products/product/on-sale');
       res.json(response);
     } catch (error) {
       next(error);
@@ -54,7 +54,7 @@ export const createProductRoutes = () => {
   // Get all products with filters
   router.get('/', async (req, res, next) => {
     try {
-      const response = await productServiceClient.get('/v1/products', {
+      const response = await productServiceClient.get('/v1/products/product', {
         params: req.query,
       });
       res.json(response);
@@ -66,7 +66,7 @@ export const createProductRoutes = () => {
   router.get('/:id', async (req, res, next) => {
     try {
       const response = await productServiceClient.get(
-        `/v1/products/${req.params.id}`,
+        `/v1/products/product/${req.params.id}`,
       );
       res.json(response);
     } catch (error) {
@@ -77,7 +77,7 @@ export const createProductRoutes = () => {
   router.get('/:id/similar', async (req, res, next) => {
     try {
       const response = await productServiceClient.get(
-        `/v1/products/${req.params.id}/similar`,
+        `/v1/products/product/${req.params.id}/similar`,
       );
       res.json(response);
     } catch (error) {
@@ -95,7 +95,7 @@ export const createProductRoutes = () => {
   router.get('/low-stock', async (req, res, next) => {
     try {
       const response = await productServiceClient.get(
-        '/v1/products/low-stock',
+        '/v1/products/product/low-stock',
         {
           headers: {
             'x-user-id': req.user.id,
@@ -114,7 +114,7 @@ export const createProductRoutes = () => {
   router.post('/', async (req, res, next) => {
     try {
       const response = await productServiceClient.post(
-        '/v1/products',
+        '/v1/products/product/',
         req.body,
         {
           headers: {
@@ -134,7 +134,7 @@ export const createProductRoutes = () => {
   router.put('/:id', async (req, res, next) => {
     try {
       const response = await productServiceClient.put(
-        `/v1/products/${req.params.id}`,
+        `/v1/products/product/${req.params.id}`,
         req.body,
         {
           headers: {
@@ -154,7 +154,7 @@ export const createProductRoutes = () => {
   router.patch('/:id', async (req, res, next) => {
     try {
       const response = await productServiceClient.patch(
-        `/v1/products/${req.params.id}`,
+        `/v1/products/product/${req.params.id}`,
         req.body,
         {
           headers: {
@@ -174,7 +174,7 @@ export const createProductRoutes = () => {
   router.delete('/:id', async (req, res, next) => {
     try {
       const response = await productServiceClient.delete(
-        `/v1/products/${req.params.id}`,
+        `/v1/products/product/${req.params.id}`,
         {
           headers: {
             'x-user-id': req.user.id,
