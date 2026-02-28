@@ -46,6 +46,7 @@ const config = {
     secretKey: required('JWT_SECRET_KEY'),
     accessTokenExpiry: required('JWT_ACCESS_TOKEN_EXPIRY'),
     refreshTokenExpiry: required('JWT_REFRESH_TOKEN_EXPIRY'),
+    internalToken: required('INTERNAL_SERVICE_TOKEN'),
   },
 
   services: {},

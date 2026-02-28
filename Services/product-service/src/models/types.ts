@@ -111,3 +111,10 @@ export interface PaginatedResult<T> {
     totalPages: number;
   };
 }
+
+// Header
+export interface User {
+  id: string;
+  email?: string | string[] | undefined;
+  role?: string | string[] | undefined;
+}

@@ -14,3 +14,7 @@ yarn-error.log*
 *.swo
 dist
 coverage
+
+# Docker
+.dockerignore
+.Dockerfile

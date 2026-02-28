@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from 'express';
-import { TagService } from '../services/TagService.js';
+import { TagService } from '../services/tagService.js';
 import { ApiResponse } from '../utils/apiResponse.js';
 import { ApiError } from '../utils/apiError.js';
 
