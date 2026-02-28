@@ -10,7 +10,13 @@ import { rateLimiter } from './middleware/rateLimiter.js';
 import { requestLogger } from './middleware/requestLogger.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { createUserRoutes } from './routes/userRoutes.js';
-import { createProductRoutes } from './routes/productRoutes.js';
+import { createProductRoutes } from './routes/productRoutes/productRoutes.js';
+import { createBrandRoutes } from './routes/productRoutes/brandRoutes.js';
+import { createTagRoutes } from './routes/productRoutes/tagRoutes.js';
+import { createReviewRoutes } from './routes/productRoutes/reviewRoutes.js';
+import { createImageRoutes } from './routes/productRoutes/imageRoutes.js';
+import { createSearchRoutes } from './routes/productRoutes/searchRoutes.js';
+import { createCategoryRoutes } from './routes/productRoutes/categoryRoutes.js';
 // import { createOrderRoutes } from '.routes/orderRoutes';
 
 const app = express();
@@ -48,7 +54,16 @@ app.get('/health', (req, res) => {
 
 // API routes
 app.use('/api/users', createUserRoutes());
+
+//PRODUCTS
 app.use('/api/products', createProductRoutes());
+app.use('/api/brands', createBrandRoutes());
+app.use('/api/tags', createTagRoutes());
+app.use('/api/reviews', createReviewRoutes());
+app.use('/api/images', createImageRoutes());
+app.use('/api/categories', createCategoryRoutes());
+app.use('/api/search', createSearchRoutes());
+
 // app.use('/api/orders', createOrderRoutes());
 
 // 404 handler

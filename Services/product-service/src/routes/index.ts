@@ -26,6 +26,7 @@ router.use('/reviews', reviewRoutes);
 router.use('/images', imageRoutes);
 router.use('/search', searchRoutes);
 
+
 // export default router;
 
 export default router;
