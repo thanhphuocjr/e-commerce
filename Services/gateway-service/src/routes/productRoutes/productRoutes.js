@@ -1,8 +1,7 @@
 import { Router } from 'express';
-import { authMiddleware, authorize } from '../middleware/auth';
-import { ServiceClient } from '../utils/serviceClient';
-
-import config from '../config/environment';
+import { authMiddleware, authorize } from '../../middleware/auth';
+import { ServiceClient } from '../../utils/serviceClient';
+import config from '../../config/environment';
 
 const router = Router();
 
@@ -15,7 +14,9 @@ export const createProductRoutes = () => {
   // PRODUCT_SERVICE
   router.get('/featured', async (req, res, next) => {
     try {
-      const response = await productServiceClient.get('/v1/products/product/featured');
+      const response = await productServiceClient.get(
+        '/v1/products/product/featured',
+      );
       res.json(response);
     } catch (error) {
       next(error);
@@ -24,7 +25,9 @@ export const createProductRoutes = () => {
 
   router.get('/top-rated', async (req, res, next) => {
     try {
-      const response = await productServiceClient.get('/v1/products/product/top-rated');
+      const response = await productServiceClient.get(
+        '/v1/products/product/top-rated',
+      );
       res.json(response);
     } catch (error) {
       next(error);
@@ -44,7 +47,9 @@ export const createProductRoutes = () => {
 
   router.get('/on-sale', async (req, res, next) => {
     try {
-      const response = await productServiceClient.get('/v1/products/product/on-sale');
+      const response = await productServiceClient.get(
+        '/v1/products/product/on-sale',
+      );
       res.json(response);
     } catch (error) {
       next(error);
