@@ -107,6 +107,18 @@ services:
     depends_on:
       mysql-product:
         condition: service_healthy
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'node',
+          '-e',
+          "require('http').get('http://localhost:8001/v1/products/health', (res) => process.exit(res.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1));",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 40s
     networks:
       - ecommerce-net
 
@@ -119,9 +131,12 @@ services:
     env_file:
       - ./gateway-service/.env
     depends_on:
-      - user-service
-      - auth-service
-      - product-service
+      user-service:
+        condition: service_started
+      auth-service:
+        condition: service_started
+      product-service:
+        condition: service_healthy
     networks:
       - ecommerce-net
 

@@ -1,14 +1,12 @@
-import React from "react";
-import "./ProductTabs.scss";
-import PropTypes from "prop-types";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-import Box from "@mui/material/Box";
-import TabDescription from "../Tab_Description/TabDescription";
-import TabDetails from "../Tab_Details/TabDetails";
-import TabReviews from "../Tab_Reviews/TabReviews";
-
-
+import React from 'react';
+import './ProductTabs.scss';
+import PropTypes from 'prop-types';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import Box from '@mui/material/Box';
+import TabDescription from '../Tab_Description/TabDescription';
+import TabDetails from '../Tab_Details/TabDetails';
+import TabReviews from '../Tab_Reviews/TabReviews';
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -35,11 +33,11 @@ CustomTabPanel.propTypes = {
 function a11yProps(index) {
   return {
     id: `simple-tab-${index}`,
-    "aria-controls": `simple-tabpanel-${index}`,
+    'aria-controls': `simple-tabpanel-${index}`,
   };
 }
 
-const ProductTabs = () => {
+const ProductTabs = ({ product, reviewsData }) => {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
@@ -47,26 +45,29 @@ const ProductTabs = () => {
   };
 
   return (
-    <Box sx={{ width: "100%" }}>
-      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          aria-label="basic tabs example"
-        >
+    <Box sx={{ width: '100%' }}>
+      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+        <Tabs value={value} onChange={handleChange} aria-label="product tabs">
           <Tab label="Description" {...a11yProps(0)} />
           <Tab label="Product details" {...a11yProps(1)} />
           <Tab label="Reviews" {...a11yProps(2)} />
         </Tabs>
       </Box>
+
       <CustomTabPanel value={value} index={0}>
-        <TabDescription />
+        <TabDescription title={product?.title} description={product?.description} />
       </CustomTabPanel>
+
       <CustomTabPanel value={value} index={1}>
-        <TabDetails />
+        <TabDetails product={product} />
       </CustomTabPanel>
+
       <CustomTabPanel value={value} index={2}>
-        <TabReviews />
+        <TabReviews
+          productTitle={product?.title}
+          reviews={reviewsData?.items || []}
+          summary={reviewsData?.summary}
+        />
       </CustomTabPanel>
     </Box>
   );

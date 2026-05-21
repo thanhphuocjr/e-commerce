@@ -3,39 +3,31 @@
   border-radius: 20px;
   padding: 20px;
 
-  .private_review {
-    background-color: white;
-    height: 450px;
-    border-radius: 20px;
-    padding: 20px;
+  .reviewSummary {
+    display: flex;
+    align-items: center;
+  }
 
-    .rating {
-      .rate {
-        display: block;
-        width: 25%;
-      }
-      textarea {
-        display: block;
-        width: 60% !important;
-        height: 200px;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 20px;
-        background-color: #f7f8fd;
-        font-size: 15px;
-      }
-      Button {
-        width: 100px;
-        height: 38px;
-        border-radius: 20px;
-        padding: 15px;
-        background-color: var(--color_black);
-        color: white;
-        font-size: 15px;
-        &:hover {
-          background-color: var(--color_green);
-        }
-      }
+  .public_review {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .reviewCard {
+    background-color: white;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 14px;
+    padding: 14px;
+
+    p {
+      color: #444;
+      font-size: 14px;
+    }
+
+    &.empty {
+      color: #666;
+      font-style: italic;
     }
   }
 }

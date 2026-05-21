@@ -1,9 +1,8 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { createContext } from 'react';
 import PrivateRoute from './Components/PrivateRoute/PrivateRoute';
-import { createContext, useEffect, useState } from 'react';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import axios from 'axios';
 import Home from './Pages/Home/Home';
 import Header from './Components/Header/Header';
 import Footer from './Components/Footer/Footer';
@@ -18,24 +17,9 @@ import Profile from './Pages/Profile/Profile';
 import ScrollToTop from './Components/ScrollToTop/ScrollToTop';
 import AdminDashboard from './Pages/Admin/Admin';
 
-const MyContext = createContext();
+const MyContext = createContext({ countryList: [] });
 
 function App() {
-  const [countryList, setCountryList] = useState([]);
-
-  const getCountry = async (url) => {
-    const responsive = await axios.get(url).then((res) => {
-      setCountryList(res.data.data);
-    });
-  };
-
-  useEffect(() => {
-    getCountry('https://countriesnow.space/api/v0.1/countries/');
-  }, []);
-
-  const values = { countryList };
-
-  // Layout cho user
   function UserLayout({ children }) {
     return (
       <>
@@ -46,7 +30,6 @@ function App() {
     );
   }
 
-  // Layout cho admin
   function AdminLayout({ children }) {
     return <div className="admin-layout">{children}</div>;
   }
@@ -54,99 +37,112 @@ function App() {
   return (
     <BrowserRouter>
       <ScrollToTop />
-      <MyContext.Provider value={values}>
-        <Routes>
-          {/* User routes */}
-          <Route
-            path="/"
-            element={
-              <UserLayout>
-                <Home />
-              </UserLayout>
-            }
-          />
-          <Route
-            path="/cat/:id"
-            element={
-              <UserLayout>
-                <Listing />
-              </UserLayout>
-            }
-          />
-          <Route
-            path="/cart"
-            element={
-              <PrivateRoute>
-                <UserLayout>
-                  <Cart />
-                </UserLayout>
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/product/:id"
-            element={
-              <UserLayout>
-                <ProductDetail />
-              </UserLayout>
-            }
-          />
-          <Route
-            path="/profile"
-            element={
-              <PrivateRoute>
-                <UserLayout>
-                  <Profile />
-                </UserLayout>
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/signIn"
-            element={
-              <UserLayout>
-                <SignIn />
-              </UserLayout>
-            }
-          />
-          <Route
-            path="/forgot-password"
-            element={
-              <UserLayout>
-                <ForgotPassword />
-              </UserLayout>
-            }
-          />
-          <Route
-            path="/reset-password"
-            element={
-              <UserLayout>
-                <ResetPassword />
-              </UserLayout>
-            }
-          />
-          <Route
-            path="/change-password"
-            element={
-              <PrivateRoute>
-                <UserLayout>
-                  <ChangePassword />
-                </UserLayout>
-              </PrivateRoute>
-            }
-          />
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <UserLayout>
+              <Home />
+            </UserLayout>
+          }
+        />
 
-          {/* Admin routes (không có Header/Footer) */}
-          <Route
-            path="/admin"
-            element={
-              <AdminLayout>
-                <AdminDashboard />
-              </AdminLayout>
-            }
-          />
-        </Routes>
-      </MyContext.Provider>
+        <Route
+          path="/products"
+          element={
+            <UserLayout>
+              <Listing />
+            </UserLayout>
+          }
+        />
+
+        <Route
+          path="/cat/:id"
+          element={
+            <UserLayout>
+              <Listing />
+            </UserLayout>
+          }
+        />
+
+        <Route
+          path="/cart"
+          element={
+            <PrivateRoute>
+              <UserLayout>
+                <Cart />
+              </UserLayout>
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/product/:id"
+          element={
+            <UserLayout>
+              <ProductDetail />
+            </UserLayout>
+          }
+        />
+
+        <Route
+          path="/profile"
+          element={
+            <PrivateRoute>
+              <UserLayout>
+                <Profile />
+              </UserLayout>
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/signIn"
+          element={
+            <UserLayout>
+              <SignIn />
+            </UserLayout>
+          }
+        />
+
+        <Route
+          path="/forgot-password"
+          element={
+            <UserLayout>
+              <ForgotPassword />
+            </UserLayout>
+          }
+        />
+
+        <Route
+          path="/reset-password"
+          element={
+            <UserLayout>
+              <ResetPassword />
+            </UserLayout>
+          }
+        />
+
+        <Route
+          path="/change-password"
+          element={
+            <PrivateRoute>
+              <UserLayout>
+                <ChangePassword />
+              </UserLayout>
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/admin"
+          element={
+            <AdminLayout>
+              <AdminDashboard />
+            </AdminLayout>
+          }
+        />
+      </Routes>
     </BrowserRouter>
   );
 }
