@@ -181,7 +181,7 @@ const ForgotPassword = () => {
                   style={{
                     backgroundColor: '#f5c842',
                     border: 'none',
-                    color: '#000',
+                    color: 'white',
                   }}
                 >
                   {isLoading ? (
@@ -194,7 +194,7 @@ const ForgotPassword = () => {
                       Sending...
                     </>
                   ) : (
-                    'Forgot Password'
+                    <>Forgot Password </>
                   )}
                 </button>
 

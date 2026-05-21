@@ -72,6 +72,7 @@ const LoginForm = ({ setAlert }) => {
     try {
       const response = await apiLogin(formData.email, formData.password);
 
+      
       if (response.data.accessToken && response.data.refreshToken) {
         sessionStorage.setItem('accessToken', response.data.accessToken);
         sessionStorage.setItem('user', JSON.stringify(response.data.user));

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:8000/v1';
+const API_BASE_URL = 'http://localhost:5001/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -114,7 +114,7 @@ export const apiGetProfile = async () => {
 export const apiChangePassword = async (
   currentPassword,
   newPassword,
-  confirmPassword
+  confirmPassword,
 ) => {
   const response = await api.patch('/users/change-password', {
     currentPassword,
@@ -173,7 +173,7 @@ api.interceptors.response.use(
       originalRequest.url.endsWith('/users/login') ||
       (originalRequest.baseURL &&
         (originalRequest.baseURL + originalRequest.url).includes(
-          '/users/login'
+          '/users/login',
         ));
 
     if (error.response && error.response.status === 401 && isLoginRequest) {
@@ -225,7 +225,7 @@ api.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  }
+  },
 );
 
 // ======================

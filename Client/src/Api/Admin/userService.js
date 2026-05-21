@@ -2,7 +2,7 @@
 import axios from 'axios';
 import { getToken } from '../auth';
 
-const API_URL = 'http://localhost:8000/v1/users';
+const API_URL = 'http://localhost:5001/api/users';
 
 // Tạo instance axios có sẵn baseURL + token
 const axiosInstance = axios.create({
@@ -18,7 +18,7 @@ axiosInstance.interceptors.request.use(
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
 const userService = {

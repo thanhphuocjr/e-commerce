@@ -184,9 +184,9 @@ const ResetPassword = () => {
       const result = await apiResetPassword(
         token,
         formData.password,
-        formData.confirmPassword
+        formData.confirmPassword,
       );
-      console.log(result)
+      console.log(result);
       console.log('Resetting password with token:', token);
       console.log('New password:', formData.password);
 
@@ -323,7 +323,7 @@ const ResetPassword = () => {
                       </small>
                       {(() => {
                         const { requirements } = validatePassword(
-                          formData.password
+                          formData.password,
                         );
                         return (
                           <div className="requirements-list">
@@ -431,7 +431,7 @@ const ResetPassword = () => {
                   style={{
                     backgroundColor: '#f5c842',
                     border: 'none',
-                    color: '#000',
+                    color: 'white',
                   }}
                 >
                   {isLoading ? (
