@@ -260,6 +260,34 @@ export const seedDatabase = async () => {
   }
 };
 
+export const seedDatabaseIfEmpty = async () => {
+  const connection = await mysql.createConnection({
+    host: config.database.host,
+    port: config.database.port,
+    user: config.database.user,
+    password: config.database.password,
+    database: config.database.database,
+  });
+
+  try {
+    const [rows]: any = await connection.execute(
+      'SELECT COUNT(*) AS count FROM products',
+    );
+    const productCount = Number(rows[0]?.count || 0);
+
+    if (productCount > 0) {
+      console.log(
+        `[SEED] Skipping seed because products table already has ${productCount} rows`,
+      );
+      return;
+    }
+  } finally {
+    await connection.end();
+  }
+
+  await seedDatabase();
+};
+
 // Helper function to convert ISO datetime to MySQL format
 function convertToMySQLDateTime(isoString: string): string {
   const date = new Date(isoString);
@@ -339,5 +367,4 @@ export const reseedDatabase = async () => {
   await clearDatabase();
   await seedDatabase();
 };
-
 

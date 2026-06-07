@@ -1,0 +1,218 @@
+name: ecommerce
+
+services:
+  client:
+    build:
+      context: ./Client
+      args:
+        REACT_APP_GATEWAY_API_URL: ${REACT_APP_GATEWAY_API_URL:-/api}
+        REACT_APP_API_TIMEOUT: ${REACT_APP_API_TIMEOUT:-10000}
+    ports:
+      - "${HTTP_PORT:-80}:80"
+    depends_on:
+      gateway-service:
+        condition: service_started
+    restart: unless-stopped
+    networks:
+      - ecommerce-net
+
+  mysql-auth:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: ${AUTH_MYSQL_ROOT_PASSWORD:?Set AUTH_MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${AUTH_MYSQL_DATABASE:-auth-service}
+    volumes:
+      - mysql-auth-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -p$${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+    networks:
+      - ecommerce-net
+
+  auth-service:
+    build:
+      context: ./Services/auth-service
+    environment:
+      AUTH_NODE_ENV: production
+      AUTH_PORT: 3005
+      AUTH_HOST: 0.0.0.0
+      MYSQL_HOST: mysql-auth
+      MYSQL_PORT: 3306
+      MYSQL_USER: root
+      MYSQL_PASSWORD: ${AUTH_MYSQL_ROOT_PASSWORD:?Set AUTH_MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${AUTH_MYSQL_DATABASE:-auth-service}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY:?Set JWT_SECRET_KEY}
+      JWT_ACCESS_TOKEN_EXPIRY: ${JWT_ACCESS_TOKEN_EXPIRY:-15m}
+      JWT_REFRESH_TOKEN_EXPIRY: ${JWT_REFRESH_TOKEN_EXPIRY:-7d}
+      USER_SERVICE_URL: http://user-service:8000
+      INTERNAL_SERVICE_TOKEN: ${INTERNAL_SERVICE_TOKEN:?Set INTERNAL_SERVICE_TOKEN}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+    depends_on:
+      mysql-auth:
+        condition: service_healthy
+    expose:
+      - "3005"
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://127.0.0.1:3005/health', (res) => process.exit(res.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1));"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    restart: unless-stopped
+    networks:
+      - ecommerce-net
+
+  mysql-user:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: ${USER_MYSQL_ROOT_PASSWORD:?Set USER_MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${USER_MYSQL_DATABASE:-user-service}
+    volumes:
+      - mysql-user-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -p$${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+    networks:
+      - ecommerce-net
+
+  user-service:
+    build:
+      context: ./Services/user-service
+    environment:
+      USER_NODE_ENV: production
+      APP_HOST: 0.0.0.0
+      APP_PORT: 8000
+      BUILD_MODE: production
+      AUTHOR: ${APP_AUTHOR:-E-Commerce}
+      DATABASE_TYPE: sql
+      MYSQL_HOST: mysql-user
+      MYSQL_PORT: 3306
+      MYSQL_USER: root
+      MYSQL_PASSWORD: ${USER_MYSQL_ROOT_PASSWORD:?Set USER_MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${USER_MYSQL_DATABASE:-user-service}
+      JWT_SECRET: ${JWT_SECRET_KEY:?Set JWT_SECRET_KEY}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY:?Set JWT_SECRET_KEY}
+      JWT_EXPIRE: ${JWT_ACCESS_TOKEN_EXPIRY:-15m}
+      JWT_ACCESS_TOKEN_EXPIRY: ${JWT_ACCESS_TOKEN_EXPIRY:-15m}
+      JWT_REFRESH_TOKEN_EXPIRY: ${JWT_REFRESH_TOKEN_EXPIRY:-7d}
+      INTERNAL_SERVICE_TOKEN: ${INTERNAL_SERVICE_TOKEN:?Set INTERNAL_SERVICE_TOKEN}
+      EMAIL_USER: ${EMAIL_USER:-}
+      EMAIL_PASS: ${EMAIL_PASS:-}
+      CLIENT_URL: ${CLIENT_PUBLIC_URL:-http://localhost}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+    depends_on:
+      mysql-user:
+        condition: service_healthy
+    expose:
+      - "8000"
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://127.0.0.1:8000/v1/status', (res) => process.exit(res.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1));"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    restart: unless-stopped
+    networks:
+      - ecommerce-net
+
+  mysql-product:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: ${PRODUCT_MYSQL_ROOT_PASSWORD:?Set PRODUCT_MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${PRODUCT_MYSQL_DATABASE:-product-service}
+    volumes:
+      - mysql-product-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -p$${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+    networks:
+      - ecommerce-net
+
+  product-service:
+    build:
+      context: ./Services/product-service
+    environment:
+      PRODUCT_NODE_ENV: production
+      PRODUCT_PORT: 8001
+      PRODUCT_HOST: 0.0.0.0
+      MYSQL_HOST: mysql-product
+      MYSQL_PORT: 3306
+      MYSQL_USER: root
+      MYSQL_PASSWORD: ${PRODUCT_MYSQL_ROOT_PASSWORD:?Set PRODUCT_MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${PRODUCT_MYSQL_DATABASE:-product-service}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY:?Set JWT_SECRET_KEY}
+      JWT_ACCESS_TOKEN_EXPIRY: ${JWT_ACCESS_TOKEN_EXPIRY:-15m}
+      JWT_REFRESH_TOKEN_EXPIRY: ${JWT_REFRESH_TOKEN_EXPIRY:-7d}
+      INTERNAL_SERVICE_TOKEN: ${INTERNAL_SERVICE_TOKEN:?Set INTERNAL_SERVICE_TOKEN}
+      PRODUCT_SEED_MODE: ${PRODUCT_SEED_MODE:-never}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+    depends_on:
+      mysql-product:
+        condition: service_healthy
+    expose:
+      - "8001"
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://127.0.0.1:8001/v1/products/health', (res) => process.exit(res.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1));"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 40s
+    restart: unless-stopped
+    networks:
+      - ecommerce-net
+
+  gateway-service:
+    build:
+      context: ./Services/gateway-service
+    environment:
+      GATEWAY_NODE_ENV: production
+      GATEWAY_PORT: 5001
+      GATEWAY_CLIENT_URL: ${CLIENT_PUBLIC_URL:-http://localhost}
+      CLIENT_URL: ${CLIENT_PUBLIC_URL:-http://localhost}
+      USER_SERVICE_URL: http://user-service:8000
+      AUTH_SERVICE_URL: http://auth-service:3005
+      PRODUCT_SERVICE_URL: http://product-service:8001
+      ORDER_SERVICE_URL: http://order-service:8002
+      PAYMENT_SERVICE_URL: http://payment-service:8003
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY:?Set JWT_SECRET_KEY}
+      JWT_ACCESS_TOKEN_EXPIRY: ${JWT_ACCESS_TOKEN_EXPIRY:-15m}
+      JWT_REFRESH_TOKEN_EXPIRY: ${JWT_REFRESH_TOKEN_EXPIRY:-7d}
+      RATE_LIMIT_WINDOW_MS: ${RATE_LIMIT_WINDOW_MS:-900000}
+      RATE_LIMIT_MAX_REQUESTS: ${RATE_LIMIT_MAX_REQUESTS:-100}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+    depends_on:
+      auth-service:
+        condition: service_healthy
+      user-service:
+        condition: service_healthy
+      product-service:
+        condition: service_healthy
+    expose:
+      - "5001"
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://127.0.0.1:5001/health', (res) => process.exit(res.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1));"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    restart: unless-stopped
+    networks:
+      - ecommerce-net
+
+networks:
+  ecommerce-net:
+    driver: bridge
+
+volumes:
+  mysql-auth-data:
+  mysql-user-data:
+  mysql-product-data:

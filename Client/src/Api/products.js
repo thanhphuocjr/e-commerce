@@ -1,18 +1,9 @@
 import axios from 'axios';
-
-const rawBaseUrl =
-  process.env.REACT_APP_GATEWAY_API_URL ||
-  process.env.REACT_APP_API_BASE_URL ||
-  process.env.REACT_APP_API_URL ||
-  'http://localhost:5001/api';
-
-const API_BASE_URL = rawBaseUrl.endsWith('/v1')
-  ? rawBaseUrl.replace(/\/v1\/?$/, '')
-  : rawBaseUrl;
+import { API_BASE_URL, API_TIMEOUT } from './config';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
-  timeout: Number(process.env.REACT_APP_API_TIMEOUT) || 10000,
+  timeout: API_TIMEOUT,
   headers: {
     'Content-Type': 'application/json',
   },

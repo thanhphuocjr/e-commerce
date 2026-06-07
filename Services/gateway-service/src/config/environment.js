@@ -1,9 +1,5 @@
 import dotenv from 'dotenv';
 dotenv.config();
-console.log('ENV CHECK:', {
-  GATEWAY_PORT: process.env.GATEWAY_PORT,
-  USER_SERVICE_URL: process.env.USER_SERVICE_URL,
-});
 
 const config = {
   app: {
@@ -36,6 +32,5 @@ const config = {
     level: process.env.LOG_LEVEL || 'debug',
   },
 };
-console.log(config);
 
 export default config;

@@ -104,6 +104,7 @@ services:
       MYSQL_USER: root
       MYSQL_PASSWORD: Anhphuoc1@
       MYSQL_DATABASE: product-service
+      PRODUCT_SEED_MODE: reseed
     depends_on:
       mysql-product:
         condition: service_healthy
@@ -113,7 +114,7 @@ services:
           'CMD',
           'node',
           '-e',
-          "require('http').get('http://localhost:8001/v1/products/health', (res) => process.exit(res.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1));",
+          "require('http').get('http://127.0.0.1:8001/v1/products/health', (res) => process.exit(res.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1));",
         ]
       interval: 10s
       timeout: 5s

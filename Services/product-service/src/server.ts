@@ -15,10 +15,9 @@ import {
   testConnection,
   createTables,
   closePool,
-  dropTables,
 } from './config/database.js';
 
-import { reseedDatabase } from './utils/seed.js';
+import { reseedDatabase, seedDatabaseIfEmpty } from './utils/seed.js';
 
 const START_SERVER = () => {
   const app = express();
@@ -95,8 +94,17 @@ const START_SERVER = () => {
     console.log('4.Creating tables...');
     await createTables();
 
-    console.log('5.Seeding database...');
-    await reseedDatabase();
+    const seedMode = (process.env.PRODUCT_SEED_MODE || 'never').toLowerCase();
+
+    if (seedMode === 'empty') {
+      console.log('5.Seeding database if empty...');
+      await seedDatabaseIfEmpty();
+    } else if (seedMode === 'reseed') {
+      console.log('5.Re-seeding database...');
+      await reseedDatabase();
+    } else {
+      console.log('5.Skipping database seed...');
+    }
 
     console.log('6.MySQL is ready!');
     START_SERVER();
