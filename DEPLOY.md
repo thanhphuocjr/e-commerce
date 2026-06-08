@@ -13,13 +13,9 @@ cd e-commerce
 
 Nếu chưa có domain, dùng IP server cho `CLIENT_PUBLIC_URL`.
 
-## 2. Tạo env production
+## 2. Cấu hình `.env`
 
-```bash
-cp .env.production.example .env.production
-```
-
-Sửa `.env.production`:
+Sửa `.env`:
 
 ```env
 CLIENT_PUBLIC_URL=http://your-domain.com
@@ -28,6 +24,8 @@ INTERNAL_SERVICE_TOKEN=replace_with_a_long_random_internal_token
 AUTH_MYSQL_ROOT_PASSWORD=replace_with_auth_mysql_password
 USER_MYSQL_ROOT_PASSWORD=replace_with_user_mysql_password
 PRODUCT_MYSQL_ROOT_PASSWORD=replace_with_product_mysql_password
+BOOKING_MYSQL_ROOT_PASSWORD=replace_with_booking_mysql_password
+PAYMENT_MYSQL_ROOT_PASSWORD=replace_with_payment_mysql_password
 ```
 
 Tạo secret nhanh:
@@ -47,19 +45,19 @@ PRODUCT_SEED_MODE=empty
 ## 3. Build và chạy
 
 ```bash
-docker compose --env-file .env.production -f docker-compose.prod.yml up -d --build
+docker compose --env-file .env -f docker-compose.prod.yml up -d --build
 ```
 
 Xem trạng thái:
 
 ```bash
-docker compose --env-file .env.production -f docker-compose.prod.yml ps
+docker compose --env-file .env -f docker-compose.prod.yml ps
 ```
 
 Xem log:
 
 ```bash
-docker compose --env-file .env.production -f docker-compose.prod.yml logs -f
+docker compose --env-file .env -f docker-compose.prod.yml logs -f
 ```
 
 ## 4. Kiểm tra
@@ -82,13 +80,13 @@ Nếu chưa trỏ domain, thay `your-domain.com` bằng IP server.
 
 ```bash
 git pull
-docker compose --env-file .env.production -f docker-compose.prod.yml up -d --build
+docker compose --env-file .env -f docker-compose.prod.yml up -d --build
 ```
 
 ## 6. Dừng app
 
 ```bash
-docker compose --env-file .env.production -f docker-compose.prod.yml down
+docker compose --env-file .env -f docker-compose.prod.yml down
 ```
 
 Lệnh trên không xóa database vì dữ liệu nằm trong Docker volumes. Chỉ dùng `docker compose down -v` khi bạn thật sự muốn xóa toàn bộ dữ liệu MySQL.

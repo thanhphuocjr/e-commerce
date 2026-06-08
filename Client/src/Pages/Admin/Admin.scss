@@ -60,3 +60,57 @@
     }
   }
 }
+
+@media (max-width: 900px) {
+  .admin-dashboard {
+    height: auto;
+    min-height: 100vh;
+
+    .header {
+      height: auto;
+      min-height: 60px;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 10px 12px;
+    }
+
+    .body {
+      flex-direction: column;
+
+      .sideBar {
+        width: 100%;
+        max-height: 260px;
+        border-right: 0;
+        border-bottom: 1px solid #ddd;
+      }
+
+      .mainContent {
+        overflow-x: auto;
+      }
+    }
+  }
+}
+
+@media (max-width: 575px) {
+  .admin-dashboard {
+    .header {
+      .name {
+        font-size: 14px;
+      }
+
+      .text {
+        font-size: 12px;
+      }
+    }
+
+    .body {
+      .sideBar {
+        max-height: 220px;
+      }
+
+      .mainContent {
+        padding: 8px;
+      }
+    }
+  }
+}

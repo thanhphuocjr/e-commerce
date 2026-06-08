@@ -4,8 +4,11 @@ import Button from '@mui/material/Button';
 import './ProductItem.scss';
 import { BsArrowsFullscreen } from 'react-icons/bs';
 import { CiHeart } from 'react-icons/ci';
+import { FaCartPlus } from 'react-icons/fa6';
 import ProductModal from '../ProductModal/ProductModal';
 import { useNavigate } from 'react-router-dom';
+import { addToCart } from '../../Api/cart';
+import { getToken } from '../../Api/auth';
 
 const toNumber = (value, fallback = 0) => {
   const numericValue = Number(value);
@@ -16,6 +19,7 @@ const ProductItem = ({ product, itemView = 'four' }) => {
   const navigate = useNavigate();
   const [isOpenProductModal, setIsOpenProductModal] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const [cartMessage, setCartMessage] = useState('');
 
   const imageUrl = useMemo(() => {
     if (product?.thumbnail) {
@@ -42,6 +46,19 @@ const ProductItem = ({ product, itemView = 'four' }) => {
 
   const isInStock =
     Number(product.stock || 0) > 0 && product.availability_status !== 'Out of Stock';
+
+  const handleQuickAdd = (event) => {
+    event.stopPropagation();
+
+    if (!getToken()) {
+      navigate('/signIn');
+      return;
+    }
+
+    addToCart(product, 1);
+    setCartMessage('Added to cart');
+    window.setTimeout(() => setCartMessage(''), 1600);
+  };
 
   return (
     <>
@@ -87,6 +104,17 @@ const ProductItem = ({ product, itemView = 'four' }) => {
             {isOnSale && <div className="oldPrice">${originalPrice.toFixed(2)}</div>}
             <div className="newPrice text-danger ml-2">${salePrice.toFixed(2)}</div>
           </div>
+
+          <Button
+            className="addToCartBtn"
+            disabled={!isInStock}
+            onClick={handleQuickAdd}
+          >
+            <FaCartPlus />
+            <span>{isInStock ? 'Add to cart' : 'Out of stock'}</span>
+          </Button>
+
+          {cartMessage && <span className="cartMessage">{cartMessage}</span>}
         </div>
       </div>
 

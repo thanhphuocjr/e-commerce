@@ -13,7 +13,8 @@
   .header {
     padding: 5px 0px;
     width: 100%;
-    height: 70px;
+    min-height: 70px;
+    height: auto;
     align-items: center;
     display: flex;
     .container {
@@ -21,12 +22,12 @@
       .logoWrapper {
         // border: 1px solid black;
         cursor: pointer;
-        width: 400px;
+        width: 180px;
         height: 60px;
         overflow: hidden;
         img {
           margin-top: 5px;
-          scale: 3.5;
+          scale: 2.45;
           width: 100%;
           height: 100%;
           object-fit: contain;
@@ -35,7 +36,8 @@
         }
       }
       .part2 {
-        // background-color: green;
+        flex-wrap: nowrap;
+        gap: 12px;
       }
       .part3 {
         button {
@@ -77,6 +79,108 @@
               color: white;
               font-size: 13px;
             }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 1199px) {
+  .headerWrapper {
+    .header {
+      .container {
+        max-width: 96%;
+
+        .logoWrapper {
+          width: 150px;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 991px) {
+  .headerWrapper {
+    .top-strip {
+      padding: 6px 10px;
+    }
+
+    .header {
+      min-height: auto;
+      padding: 10px 0;
+
+      .container {
+        max-width: 100%;
+
+        .row {
+          align-items: center;
+          gap: 10px;
+        }
+
+        .logoWrapper {
+          width: auto;
+          flex: 0 0 132px;
+          max-width: 132px;
+          height: 48px;
+
+          img {
+            scale: 2.25;
+            margin-top: 2px;
+          }
+        }
+
+        .part2 {
+          flex: 1 1 0;
+          max-width: none;
+          padding-left: 0;
+          flex-wrap: wrap;
+        }
+
+        .part3 {
+          margin-left: auto !important;
+
+          .cartTab {
+            .price {
+              display: none;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 575px) {
+  .headerWrapper {
+    .top-strip p {
+      font-size: 11px;
+      line-height: 1.35;
+    }
+
+    .header {
+      .container {
+        .row {
+          margin: 0;
+        }
+
+        .logoWrapper {
+          flex: 0 0 112px;
+          max-width: 112px;
+          height: 42px;
+          padding: 0;
+        }
+
+        .part2 {
+          padding: 0;
+          gap: 8px;
+        }
+
+        .part3 {
+          button {
+            width: 36px;
+            height: 36px;
+            min-width: 36px;
           }
         }
       }

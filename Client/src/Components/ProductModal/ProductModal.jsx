@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import './ProductModal.scss';
 import Dialog from '@mui/material/Dialog';
 import Button from '@mui/material/Button';
@@ -8,6 +8,9 @@ import ProductImageSlider from '../ProductImageSlider/ProductImageSlider';
 import { FaCartPlus } from 'react-icons/fa6';
 import { CiHeart } from 'react-icons/ci';
 import QuantityBox from '../QuantityBox/QuantityBox';
+import { addToCart } from '../../Api/cart';
+import { getToken } from '../../Api/auth';
+import { useNavigate } from 'react-router-dom';
 
 const getPrice = (value, fallback = 0) => {
   const numericValue = Number(value);
@@ -15,6 +18,15 @@ const getPrice = (value, fallback = 0) => {
 };
 
 const ProductModal = ({ open, product, handleCloseProductModal }) => {
+  const navigate = useNavigate();
+  const [quantity, setQuantity] = useState(1);
+  const [cartMessage, setCartMessage] = useState('');
+
+  useEffect(() => {
+    setQuantity(1);
+    setCartMessage('');
+  }, [product?.id, open]);
+
   const images = useMemo(() => {
     const imageList = Array.isArray(product?.images)
       ? product.images
@@ -39,6 +51,18 @@ const ProductModal = ({ open, product, handleCloseProductModal }) => {
   const rating = getPrice(product.avg_rating, getPrice(product.rating));
   const isInStock =
     Number(product.stock || 0) > 0 && product.availability_status !== 'Out of Stock';
+  const maxQuantity = Math.max(1, Number(product.stock || 1));
+
+  const handleAddToCart = () => {
+    if (!getToken()) {
+      handleCloseProductModal();
+      navigate('/signIn');
+      return;
+    }
+
+    addToCart(product, quantity);
+    setCartMessage(`${quantity} item(s) added to cart.`);
+  };
 
   return (
     <Dialog
@@ -90,13 +114,24 @@ const ProductModal = ({ open, product, handleCloseProductModal }) => {
 
           <div className="row set w-100 mb-3">
             <div className="choice d-flex col-4">
-              <QuantityBox />
+              <QuantityBox
+                value={quantity}
+                onChange={setQuantity}
+                max={maxQuantity}
+                disabled={!isInStock}
+              />
             </div>
-            <Button className="purchase col-4 ml-5" disabled={!isInStock}>
+            <Button
+              className="purchase col-4 ml-5"
+              disabled={!isInStock}
+              onClick={handleAddToCart}
+            >
               <FaCartPlus />
               <span className="ml-2">Add to cart</span>
             </Button>
           </div>
+
+          {cartMessage && <span className="cartMessage">{cartMessage}</span>}
 
           <div className="others row w-100 mt-4">
             <Button className="whish_list inline-block mr-4 d-flex align-items-center">

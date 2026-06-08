@@ -201,6 +201,20 @@
 @media (max-width: 768px) {
   .homeProducts {
     .container {
+      .row {
+        gap: 20px;
+      }
+
+      .col-md-3,
+      .col-md-9 {
+        flex: 0 0 100%;
+        max-width: 100%;
+      }
+
+      .homeSidePromos {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
       .promoCard {
         min-height: 220px;
 
@@ -226,6 +240,69 @@
   .bannerSec {
     flex-direction: column;
   }
+
+  .productRow2 {
+    .productItem {
+      width: calc(50% - 5px);
+    }
+  }
+}
+
+@media (max-width: 575px) {
+  .homeProducts {
+    padding: 18px 0;
+
+    .container {
+      .homeSidePromos {
+        grid-template-columns: 1fr;
+      }
+
+      .promoCard {
+        min-height: 205px;
+        padding: 16px;
+
+        .promoCopy {
+          h4 {
+            font-size: 20px;
+          }
+        }
+      }
+
+      .d-flex.align-items-center.mt-5.mb-3 {
+        align-items: flex-start !important;
+        gap: 10px;
+
+        .info {
+          width: auto !important;
+          flex: 1;
+        }
+      }
+    }
+  }
+
+  .productRow2 {
+    gap: 12px;
+
+    .productItem {
+      width: 100%;
+    }
+  }
+
+  .newsLetterSection {
+    padding: 46px 0;
+
+    .col-md-6 {
+      img {
+        position: static;
+        width: 70%;
+        margin: 18px auto 0;
+      }
+
+      form {
+        width: 100%;
+      }
+    }
+  }
 }
 
 .newsLetterSection {
@@ -248,7 +325,7 @@
       font-weight: bold;
     }
     p.text-light {
-      color: #fff Im !important;
+      color: #fff !important;
       opacity: 0.5;
       font-size: 15px;
     }
@@ -304,6 +381,36 @@
       }
       button:hover {
         background-color: var(--color_green);
+      }
+    }
+  }
+}
+
+@media (max-width: 575px) {
+  .newsLetterSection {
+    padding: 46px 0;
+
+    .col-md-6 {
+      img {
+        position: static;
+        width: 70%;
+        margin: 18px auto 0;
+      }
+
+      h4 {
+        font-size: 27px;
+      }
+
+      p {
+        font-size: 15px;
+      }
+
+      form {
+        width: 100%;
+
+        input {
+          padding-right: 92px;
+        }
       }
     }
   }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './Header.scss';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Logo from '../../assets/images/Logo/Logo_ntp_ecom.png';
@@ -11,6 +11,13 @@ import Button from '@mui/material/Button';
 import SearchBox from './SearchBox/SearchBox';
 import Navigation from './Navigation/Navigation';
 import { getUserInformation } from '../../Api/auth';
+import { CART_UPDATED_EVENT, getCartSummary } from '../../Api/cart';
+
+const formatCurrency = (value) =>
+  `$${Number(value || 0).toLocaleString('en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })}`;
 
 const Header = () => {
   const navigate = useNavigate();
@@ -19,6 +26,22 @@ const Header = () => {
   const user = getUserInformation();
   const isAuthenticated = Boolean(sessionStorage.getItem('accessToken'));
   const isAdmin = isAuthenticated && user?.role === 'admin';
+  const [cartSummary, setCartSummary] = useState(getCartSummary());
+
+  useEffect(() => {
+    const updateCartSummary = () => {
+      setCartSummary(getCartSummary());
+    };
+
+    updateCartSummary();
+    window.addEventListener(CART_UPDATED_EVENT, updateCartSummary);
+    window.addEventListener('storage', updateCartSummary);
+
+    return () => {
+      window.removeEventListener(CART_UPDATED_EVENT, updateCartSummary);
+      window.removeEventListener('storage', updateCartSummary);
+    };
+  }, [isAuthenticated, user?.id, location.pathname]);
 
   return (
     <div className="headerWrapper">
@@ -54,14 +77,14 @@ const Header = () => {
                   <Button onClick={() => navigate('/admin')}>ADMIN</Button>
                 ) : isAuthenticated ? (
                   <div className="ml-auto cartTab d-flex align-items-center">
-                    <span className="price">$143.97</span>
+                    <span className="price">{formatCurrency(cartSummary.total)}</span>
                     <div className="position-relative ml-2">
                       <Button className="ml-2" onClick={() => navigate('/cart')}>
                         <IoBagOutline />
                       </Button>
 
                       <span className="count d-flex align-items-center justify-content-center">
-                        4
+                        {cartSummary.itemCount}
                       </span>
                     </div>
                   </div>

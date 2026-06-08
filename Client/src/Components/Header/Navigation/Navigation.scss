@@ -29,6 +29,7 @@
       top: 100%;
       background-color: white;
       min-width: 220px;
+      max-width: calc(100vw - 24px);
       border-radius: 0 0 12px 12px;
       opacity: 0;
       transition: all 0.3s;
@@ -275,14 +276,115 @@
 }
 
 @media (max-width: 767px) {
+  .navCartPart1 {
+    justify-content: flex-start;
+    flex: 0 0 auto;
+    width: auto;
+    max-width: none;
+
+    .cartWrapper {
+      .allCartTab {
+        min-width: 138px !important;
+        padding: 8px 14px;
+      }
+
+      .sideBarNav {
+        left: 0;
+        min-width: min(280px, calc(100vw - 28px));
+
+        ul {
+          .sideGroupItem {
+            .sideGroupDropdown {
+              position: static;
+              display: none;
+              min-width: 0;
+              margin: 0 8px 8px;
+              box-shadow: none;
+              border: 1px solid rgba(0, 0, 0, 0.06);
+              opacity: 1;
+              visibility: visible;
+              transform: none;
+            }
+
+            &:hover,
+            &:focus-within {
+              .sideGroupDropdown {
+                display: block;
+                transform: none;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
   .navCartPart2 {
+    flex: 1 1 0;
+    width: auto;
+    max-width: none;
+    padding: 0 0 0 8px;
+
+    .navScroller {
+      min-width: 0;
+    }
+
     .navScrollViewport {
       overflow-x: auto;
       overflow-y: hidden;
+
+      ul {
+        gap: 2px;
+
+        li {
+          padding: 8px 0;
+
+          a,
+          .navGroupTrigger {
+            font-size: 12px;
+            padding: 6px 10px;
+          }
+
+          &.navGroupItem {
+            .navGroupDropdown {
+              display: none;
+            }
+          }
+        }
+      }
     }
 
     .scrollBtn {
       display: none !important;
+    }
+  }
+}
+
+@media (max-width: 575px) {
+  .navCartPart1 {
+    .cartWrapper {
+      .allCartTab {
+        min-width: 126px !important;
+        padding: 8px 12px;
+
+        .text {
+          font-size: 11px;
+        }
+      }
+    }
+  }
+
+  .navCartPart2 {
+    .navScrollViewport {
+      ul {
+        li {
+          a,
+          .navGroupTrigger {
+            font-size: 11px;
+            padding: 6px 8px;
+          }
+        }
+      }
     }
   }
 }

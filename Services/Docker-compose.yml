@@ -123,6 +123,120 @@ services:
     networks:
       - ecommerce-net
 
+  mysql-payment:
+    image: mysql:8.0
+    container_name: mysql-payment
+    environment:
+      MYSQL_ROOT_PASSWORD: ${PAYMENT_MYSQL_ROOT_PASSWORD:-Anhphuoc1@}
+      MYSQL_DATABASE: ${PAYMENT_MYSQL_DATABASE:-payment-service}
+    ports:
+      - '3311:3306'
+    volumes:
+      - mysql-payment-data:/var/lib/mysql
+    networks:
+      - ecommerce-net
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
+      timeout: 20s
+      retries: 10
+
+  payment-service:
+    build:
+      context: ./payment-service
+    container_name: payment-service
+    ports:
+      - '${PAYMENT_PORT:-8003}:8003'
+    environment:
+      PAYMENT_NODE_ENV: ${PAYMENT_NODE_ENV:-development}
+      PAYMENT_HOST: ${PAYMENT_HOST:-0.0.0.0}
+      PAYMENT_PORT: 8003
+      MYSQL_HOST: ${PAYMENT_MYSQL_HOST:-mysql-payment}
+      MYSQL_PORT: ${PAYMENT_MYSQL_PORT:-3306}
+      MYSQL_USER: ${PAYMENT_MYSQL_USER:-root}
+      MYSQL_PASSWORD: ${PAYMENT_MYSQL_PASSWORD:-Anhphuoc1@}
+      MYSQL_DATABASE: ${PAYMENT_MYSQL_DATABASE:-payment-service}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY:-thanhphuocjr}
+      JWT_ACCESS_TOKEN_EXPIRY: ${JWT_ACCESS_TOKEN_EXPIRY:-15m}
+      JWT_REFRESH_TOKEN_EXPIRY: ${JWT_REFRESH_TOKEN_EXPIRY:-7d}
+      LOG_LEVEL: ${LOG_LEVEL:-debug}
+    depends_on:
+      mysql-payment:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'node',
+          '-e',
+          "require('http').get('http://127.0.0.1:8003/health', (res) => process.exit(res.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1));",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    networks:
+      - ecommerce-net
+
+  mysql-booking:
+    image: mysql:8.0
+    container_name: mysql-booking
+    environment:
+      MYSQL_ROOT_PASSWORD: ${BOOKING_MYSQL_ROOT_PASSWORD:-Anhphuoc1@}
+      MYSQL_DATABASE: ${BOOKING_MYSQL_DATABASE:-booking-service}
+    ports:
+      - '3310:3306'
+    volumes:
+      - mysql-booking-data:/var/lib/mysql
+    networks:
+      - ecommerce-net
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
+      timeout: 20s
+      retries: 10
+
+  booking-service:
+    build:
+      context: ./booking-service
+    container_name: booking-service
+    ports:
+      - '${BOOKING_PORT:-8002}:8002'
+    environment:
+      BOOKING_NODE_ENV: ${BOOKING_NODE_ENV:-development}
+      BOOKING_HOST: ${BOOKING_HOST:-0.0.0.0}
+      BOOKING_PORT: 8002
+      MYSQL_HOST: ${BOOKING_MYSQL_HOST:-mysql-booking}
+      MYSQL_PORT: ${BOOKING_MYSQL_PORT:-3306}
+      MYSQL_USER: ${BOOKING_MYSQL_USER:-root}
+      MYSQL_PASSWORD: ${BOOKING_MYSQL_PASSWORD:-Anhphuoc1@}
+      MYSQL_DATABASE: ${BOOKING_MYSQL_DATABASE:-booking-service}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY:-thanhphuocjr}
+      JWT_ACCESS_TOKEN_EXPIRY: ${JWT_ACCESS_TOKEN_EXPIRY:-15m}
+      JWT_REFRESH_TOKEN_EXPIRY: ${JWT_REFRESH_TOKEN_EXPIRY:-7d}
+      PRODUCT_SERVICE_URL: http://product-service:8001
+      PAYMENT_SERVICE_URL: http://payment-service:8003
+      LOG_LEVEL: ${LOG_LEVEL:-debug}
+    depends_on:
+      mysql-booking:
+        condition: service_healthy
+      product-service:
+        condition: service_healthy
+      payment-service:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'node',
+          '-e',
+          "require('http').get('http://127.0.0.1:8002/health', (res) => process.exit(res.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1));",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    networks:
+      - ecommerce-net
+
   gateway-service:
     build:
       context: ./gateway-service
@@ -138,6 +252,10 @@ services:
         condition: service_started
       product-service:
         condition: service_healthy
+      booking-service:
+        condition: service_healthy
+      payment-service:
+        condition: service_healthy
     networks:
       - ecommerce-net
 
@@ -149,3 +267,5 @@ volumes:
   mysql-auth-data:
   mysql-user-data:
   mysql-product-data:
+  mysql-payment-data:
+  mysql-booking-data:

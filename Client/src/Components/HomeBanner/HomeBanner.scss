@@ -5,11 +5,16 @@
   width: min(calc(100% - 24px), 1320px);
   margin: 18px auto 0;
   border-radius: 10px;
-  background: #f8fafc;
+  background:
+    radial-gradient(circle at 88% 12%, rgba(240, 180, 41, 0.22), transparent 30%),
+    linear-gradient(120deg, #fff7e8 0%, #f7fbf3 54%, #eef6ff 100%);
+  box-shadow: 0 18px 38px rgba(15, 23, 42, 0.08);
 
   .slick-list {
     border-radius: 10px;
-    box-shadow: 0 18px 38px rgba(15, 23, 42, 0.08);
+    background:
+      radial-gradient(circle at 88% 12%, rgba(240, 180, 41, 0.22), transparent 30%),
+      linear-gradient(120deg, #fff7e8 0%, #f7fbf3 54%, #eef6ff 100%);
   }
 
   .slick-track {
@@ -17,12 +22,17 @@
     align-items: stretch;
   }
 
+  .slick-slide {
+    height: auto;
+  }
+
   .slick-slide > div {
     height: 100%;
   }
 
   .homeCategorySlide {
-    min-height: 430px;
+    min-height: 520px;
+    height: 520px;
     overflow: hidden;
     display: grid !important;
     grid-template-columns: minmax(0, 1fr) minmax(360px, 46%);
@@ -94,7 +104,9 @@
     align-items: center;
     justify-content: flex-end;
     gap: 16px;
-    min-height: 250px;
+    min-height: 300px;
+    max-height: 360px;
+    overflow: visible;
   }
 
   .slideProduct,
@@ -111,6 +123,7 @@
     align-items: center;
     justify-content: center;
     padding: 14px;
+    flex: 0 0 auto;
 
     img {
       width: 100%;
@@ -134,7 +147,7 @@
   }
 
   .slidePlaceholder {
-    width: min(82%, 420px);
+    width: min(36%, 220px);
     background:
       linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(255, 255, 255, 0.58)),
       repeating-linear-gradient(
@@ -187,7 +200,8 @@
     margin-top: 10px;
 
     .homeCategorySlide {
-      min-height: 520px;
+      min-height: 560px;
+      height: 560px;
       grid-template-columns: 1fr;
       gap: 22px;
       padding: 28px 22px;
@@ -206,6 +220,7 @@
     .slideProducts {
       justify-content: flex-start;
       min-height: 170px;
+      max-height: none;
       gap: 10px;
     }
 
@@ -217,6 +232,65 @@
     .slick-arrow {
       width: 34px;
       height: 34px;
+    }
+  }
+}
+
+@media (max-width: 575px) {
+  .homeBannerSection {
+    width: calc(100% - 12px);
+    border-radius: 8px;
+
+    .slick-list,
+    .homeCategorySlide {
+      border-radius: 8px;
+    }
+
+    .homeCategorySlide {
+      min-height: 500px;
+      height: 500px;
+      padding: 24px 18px;
+      align-content: center;
+    }
+
+    .slideCopy {
+      max-width: 100%;
+
+      h1 {
+        font-size: 30px;
+        line-height: 1.08;
+      }
+
+      p {
+        max-width: 95%;
+      }
+    }
+
+    .slideProducts {
+      width: 100%;
+      justify-content: center;
+      gap: 8px;
+      min-height: 150px;
+    }
+
+    .slideProduct {
+      width: 30%;
+      min-width: 0;
+      padding: 8px;
+      transform: none;
+    }
+
+    .slideProduct2 {
+      width: 34%;
+      transform: none;
+    }
+
+    .slick-prev {
+      left: 8px;
+    }
+
+    .slick-next {
+      right: 8px;
     }
   }
 }

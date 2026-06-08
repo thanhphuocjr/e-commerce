@@ -17,7 +17,8 @@ import { createReviewRoutes } from './routes/productRoutes/reviewRoutes.js';
 import { createImageRoutes } from './routes/productRoutes/imageRoutes.js';
 import { createSearchRoutes } from './routes/productRoutes/searchRoutes.js';
 import { createCategoryRoutes } from './routes/productRoutes/categoryRoutes.js';
-// import { createOrderRoutes } from '.routes/orderRoutes';
+import { createBookingRoutes } from './routes/bookingRoutes.js';
+import { createPaymentRoutes } from './routes/paymentRoutes.js';
 
 const app = express();
 
@@ -64,7 +65,9 @@ app.use('/api/images', createImageRoutes());
 app.use('/api/categories', createCategoryRoutes());
 app.use('/api/search', createSearchRoutes());
 
-// app.use('/api/orders', createOrderRoutes());
+app.use('/api/bookings', createBookingRoutes('/v1/bookings'));
+app.use('/api/orders', createBookingRoutes('/v1/orders'));
+app.use('/api/payments', createPaymentRoutes());
 
 // 404 handler
 app.use((req, res) => {

@@ -20,6 +20,9 @@ const getProductImage = (product) => {
   return '';
 };
 
+const FALLBACK_IMAGE =
+  'https://cdn.dummyjson.com/product-images/groceries/apple/thumbnail.webp';
+
 const formatCategoryName = (name = '') =>
   name
     .replace(/[-_]/g, ' ')
@@ -69,6 +72,31 @@ const HomeBanner = () => {
           return map;
         }, new Map());
 
+        const imagePool = productResponse.items
+          .map((product) => ({
+            id: `fallback-${product.id}`,
+            title: product.title,
+            image: getProductImage(product),
+          }))
+          .filter((product) => product.image);
+
+        const getSlideProducts = (categoryId) => {
+          const categoryProducts = (productsByCategoryId.get(Number(categoryId)) || [])
+            .map((product) => ({
+              id: product.id,
+              title: product.title,
+              image: getProductImage(product),
+            }))
+            .filter((product) => product.image);
+
+          const usedImages = new Set(categoryProducts.map((product) => product.image));
+          const fallbackProducts = imagePool.filter(
+            (product) => !usedImages.has(product.image),
+          );
+
+          return [...categoryProducts, ...fallbackProducts].slice(0, 3);
+        };
+
         const slides = categoryList
           .filter((category) => Number(category.product_count || 0) > 0)
           .map((category) => ({
@@ -76,14 +104,7 @@ const HomeBanner = () => {
             name: category.name,
             title: `${formatCategoryName(category.name)} deals`,
             count: Number(category.product_count || 0),
-            products: (productsByCategoryId.get(Number(category.id)) || [])
-              .map((product) => ({
-                id: product.id,
-                title: product.title,
-                image: getProductImage(product),
-              }))
-              .filter((product) => product.image)
-              .slice(0, 3),
+            products: getSlideProducts(category.id),
           }));
 
         setCategorySlides(slides);
@@ -160,11 +181,19 @@ const HomeBanner = () => {
                     className={`slideProduct slideProduct${index + 1}`}
                     key={`home-slide-product-${product.id}`}
                   >
-                    <img src={product.image} alt={product.title} />
+                    <img
+                      src={product.image}
+                      alt={product.title}
+                      onError={(event) => {
+                        event.currentTarget.src = FALLBACK_IMAGE;
+                      }}
+                    />
                   </div>
                 ))
               ) : (
-                <div className="slidePlaceholder" />
+                <div className="slideProduct slideProduct2">
+                  <img src={FALLBACK_IMAGE} alt="Featured product" />
+                </div>
               )}
             </div>
           </div>

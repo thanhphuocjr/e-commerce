@@ -264,6 +264,17 @@
             &.three {
               width: calc(50% - 10px);
             }
+
+            &.two {
+              width: calc(50% - 10px);
+            }
+
+            &.one {
+              .imgWrapper {
+                width: 36% !important;
+                flex: 0 0 36%;
+              }
+            }
           }
         }
       }
@@ -299,6 +310,33 @@
             &.two {
               width: 100%;
             }
+
+            &.one {
+              flex-direction: column;
+
+              .imgWrapper {
+                width: 100% !important;
+                flex: 0 0 auto;
+                margin-right: 0;
+              }
+            }
+          }
+        }
+
+        .showBy {
+          padding: 12px;
+
+          .gridWrapper {
+            display: none !important;
+          }
+
+          .showByMeta {
+            margin-left: 0 !important;
+            width: 100%;
+          }
+
+          .showByFilter {
+            margin-left: 0 !important;
           }
         }
       }

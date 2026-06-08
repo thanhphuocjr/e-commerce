@@ -16,12 +16,21 @@ $button-gradient: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); */
 * {
   margin: 0px;
   padding: 0px;
+  box-sizing: border-box;
 }
 
 body {
   font-family: 'Lato', sans-serif;
   font-size: 14px;
   color: rgba(0, 0, 0, 0.8);
+  overflow-x: hidden;
+}
+
+img,
+svg,
+video,
+canvas {
+  max-width: 100%;
 }
 
 .bg-blue {
@@ -101,4 +110,35 @@ li {
   font-size: 20px;
   text-transform: uppercase;
   font-weight: 600;
+}
+
+@media (max-width: 991px) {
+  .section {
+    padding: 32px 0 !important;
+  }
+
+  .productRow {
+    .hd {
+      font-size: 21px;
+    }
+  }
+
+  .sticky {
+    position: static;
+  }
+}
+
+@media (max-width: 575px) {
+  .container {
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+  }
+
+  .section {
+    padding: 24px 0 !important;
+  }
+
+  .title {
+    font-size: 18px;
+  }
 }

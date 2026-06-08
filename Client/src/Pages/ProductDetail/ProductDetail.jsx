@@ -24,7 +24,9 @@ import {
   getSimilarProducts,
   getTopRatedProducts,
 } from '../../Api/products';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { addToCart } from '../../Api/cart';
+import { getToken } from '../../Api/auth';
 
 const toNumber = (value, fallback = 0) => {
   const numericValue = Number(value);
@@ -33,6 +35,7 @@ const toNumber = (value, fallback = 0) => {
 
 const ProductDetail = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const [product, setProduct] = useState(null);
   const [similarProducts, setSimilarProducts] = useState([]);
@@ -40,6 +43,8 @@ const ProductDetail = () => {
   const [reviewsData, setReviewsData] = useState({ items: [], summary: null });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [quantity, setQuantity] = useState(1);
+  const [cartMessage, setCartMessage] = useState('');
 
   useEffect(() => {
     let isMounted = true;
@@ -66,6 +71,8 @@ const ProductDetail = () => {
         }
 
         setProduct(productData);
+        setQuantity(1);
+        setCartMessage('');
         setSimilarProducts((similar || []).filter((item) => item.id !== productData.id));
         setRecommendedProducts((topRated || []).filter((item) => item.id !== productData.id));
         setReviewsData(reviews);
@@ -134,6 +141,17 @@ const ProductDetail = () => {
 
   const isInStock =
     Number(product.stock || 0) > 0 && product.availability_status !== 'Out of Stock';
+  const maxQuantity = Math.max(1, Number(product.stock || 1));
+
+  const handleAddToCart = () => {
+    if (!getToken()) {
+      navigate('/signIn');
+      return;
+    }
+
+    addToCart(product, quantity);
+    setCartMessage(`${quantity} item(s) added to cart.`);
+  };
 
   return (
     <section className="productDetail section">
@@ -186,9 +204,18 @@ const ProductDetail = () => {
 
             <div className="row set w-100 mb-5 align-items-center">
               <div className="choice d-flex col-3">
-                <QuantityBox />
+                <QuantityBox
+                  value={quantity}
+                  onChange={setQuantity}
+                  max={maxQuantity}
+                  disabled={!isInStock}
+                />
               </div>
-              <Button className="purchase col-3 ml-5" disabled={!isInStock}>
+              <Button
+                className="purchase col-3 ml-5"
+                disabled={!isInStock}
+                onClick={handleAddToCart}
+              >
                 <FaCartPlus />
                 <span className="ml-2">Add to cart</span>
               </Button>
@@ -203,6 +230,8 @@ const ProductDetail = () => {
                 </div>
               </div>
             </div>
+
+            {cartMessage && <p className="cartMessage">{cartMessage}</p>}
           </div>
         </div>
 

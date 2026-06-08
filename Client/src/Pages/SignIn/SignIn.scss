@@ -438,30 +438,30 @@ $info-color: #1e40af;
   font-family: inherit;
 }
 
-// Bootstrap-like grid system
-.container {
+// Bootstrap-like grid system scoped to auth pages
+.signin-section .container {
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 15px;
 }
 
-.row {
+.signin-section .row {
   display: flex;
   flex-wrap: wrap;
   margin: 0 -15px;
 }
 
-.justify-content-center {
+.signin-section .justify-content-center {
   justify-content: center;
 }
 
-.col-lg-5,
-.col-lg-7,
-.col-md-7,
-.col-md-9,
-.col-sm-9,
-.col-sm-11 {
+.signin-section .col-lg-5,
+.signin-section .col-lg-7,
+.signin-section .col-md-7,
+.signin-section .col-md-9,
+.signin-section .col-sm-9,
+.signin-section .col-sm-11 {
   padding: 0 15px;
   width: 100%;
 }
@@ -498,31 +498,31 @@ $info-color: #1e40af;
 
 // Responsive Design
 @media (min-width: 576px) {
-  .col-sm-9 {
+  .signin-section .col-sm-9 {
     width: 75%;
   }
 
-  .col-sm-11 {
+  .signin-section .col-sm-11 {
     width: 91.666667%;
   }
 }
 
 @media (min-width: 768px) {
-  .col-md-7 {
+  .signin-section .col-md-7 {
     width: 58.333333%;
   }
 
-  .col-md-9 {
+  .signin-section .col-md-9 {
     width: 75%;
   }
 }
 
 @media (min-width: 992px) {
-  .col-lg-5 {
+  .signin-section .col-lg-5 {
     width: 41.666667%;
   }
 
-  .col-lg-7 {
+  .signin-section .col-lg-7 {
     width: 58.333333%;
   }
 }

@@ -66,6 +66,17 @@
           }
         }
       }
+
+      .cartMessage {
+        display: inline-flex;
+        margin-top: -20px;
+        padding: 8px 12px;
+        border-radius: 8px;
+        background: #eef8f1;
+        color: #166534;
+        font-size: 13px;
+        font-weight: 600;
+      }
     }
     .relatedProducts {
       padding: 20px;
@@ -91,4 +102,107 @@
 .productDetail .productSliderWrapper .mainImage .imageSlider {
   width: 100%;
   height: auto;
+}
+
+@media (max-width: 991px) {
+  .productDetail {
+    .container {
+      padding: 10px 14px;
+
+      .info {
+        margin-top: 22px;
+
+        h2 {
+          font-size: 24px;
+        }
+
+        .desc {
+          width: 100%;
+        }
+
+        .set {
+          gap: 12px;
+          margin-bottom: 26px !important;
+
+          .choice,
+          .purchase,
+          .other {
+            flex: 0 0 auto;
+            max-width: none;
+            width: auto;
+            margin-left: 0 !important;
+          }
+
+          .choice {
+            min-width: 120px;
+          }
+
+          .purchase {
+            min-width: 150px !important;
+            padding: 10px 16px;
+          }
+        }
+      }
+
+      .relatedProducts,
+      .recentlyViewed {
+        padding: 12px 0;
+      }
+    }
+  }
+}
+
+@media (max-width: 575px) {
+  .productDetail {
+    .container {
+      .info {
+        h2 {
+          font-size: 21px;
+          line-height: 1.2;
+        }
+
+        ul.list {
+          flex-wrap: wrap;
+          gap: 8px;
+        }
+
+        .priceWrapper {
+          flex-wrap: wrap;
+          gap: 6px;
+
+          .newPrice {
+            margin-left: 0 !important;
+          }
+        }
+
+        .set {
+          flex-direction: column;
+          align-items: stretch !important;
+
+          .choice,
+          .purchase {
+            width: 100%;
+          }
+
+          .choice {
+            justify-content: flex-start;
+            gap: 16px;
+          }
+
+          .purchase {
+            max-width: none;
+          }
+
+          .other {
+            width: 100%;
+            margin-left: 0 !important;
+          }
+        }
+
+        .cartMessage {
+          margin-top: 0;
+        }
+      }
+    }
+  }
 }

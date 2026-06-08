@@ -76,3 +76,28 @@
     }
   }
 }
+
+@media (max-width: 991px) {
+  .productSliderWrapper {
+    .mainImage {
+      .imageSlider {
+        height: 300px;
+      }
+    }
+  }
+}
+
+@media (max-width: 575px) {
+  .productSliderWrapper {
+    .mainImage {
+      .imageSlider {
+        height: 260px;
+      }
+    }
+
+    .thumbnailList {
+      overflow-x: auto;
+      padding: 10px 0;
+    }
+  }
+}

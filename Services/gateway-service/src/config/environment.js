@@ -16,6 +16,7 @@ const config = {
     userService: process.env.USER_SERVICE_URL,
     authService: process.env.AUTH_SERVICE_URL,
     productService: process.env.PRODUCT_SERVICE_URL,
+    bookingService: process.env.BOOKING_SERVICE_URL || process.env.ORDER_SERVICE_URL,
     orderService: process.env.ORDER_SERVICE_URL,
     paymentService: process.env.PAYMENT_SERVICE_URL,
   },
