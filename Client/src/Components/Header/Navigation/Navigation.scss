@@ -41,6 +41,7 @@
         li {
           width: 100%;
           list-style: none;
+          position: relative;
 
           a {
             display: block;
@@ -60,6 +61,77 @@
                 font-size: 12px;
                 margin-right: 10px;
               }
+
+              &.active {
+                background-color: #f1f3ff !important;
+              }
+            }
+          }
+        }
+
+        .sideGroupItem {
+          > button {
+            width: 100%;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--color_black);
+            background-color: white !important;
+            justify-content: flex-start;
+            text-transform: capitalize;
+            padding: 8px 14px;
+
+            svg {
+              font-size: 12px;
+              margin-right: 10px;
+            }
+
+            &.active {
+              background-color: #f1f3ff !important;
+            }
+
+            .groupArrow {
+              margin-left: auto;
+              margin-right: 0;
+              font-size: 10px;
+            }
+          }
+
+          .sideGroupDropdown {
+            position: absolute;
+            top: 0;
+            left: calc(100% - 4px);
+            min-width: 210px;
+            padding: 8px;
+            border-radius: 10px;
+            background: #fff;
+            box-shadow: 0 14px 30px rgba(15, 23, 42, 0.12);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateX(-4px);
+            transition: all 0.18s ease;
+
+            a {
+              display: block;
+              border-radius: 8px;
+              padding: 8px 10px;
+              color: var(--color_black);
+              font-size: 12px;
+              font-weight: 600;
+              text-decoration: none;
+
+              &:hover,
+              &.active {
+                background: #f1f3ff;
+              }
+            }
+          }
+
+          &:hover,
+          &:focus-within {
+            .sideGroupDropdown {
+              opacity: 1;
+              visibility: visible;
+              transform: translateX(0);
             }
           }
         }
@@ -98,7 +170,7 @@
   }
 
   .navScrollViewport {
-    overflow-x: auto;
+    overflow: visible;
     scrollbar-width: none;
     flex: 1;
 
@@ -119,7 +191,8 @@
         padding: 12px 0;
         flex: 0 0 auto;
 
-        a {
+        a,
+        .navGroupTrigger {
           display: flex;
           align-items: center;
           justify-content: center;
@@ -133,6 +206,8 @@
           transition: all 0.2s ease-in-out;
           border-radius: 25px;
           white-space: nowrap;
+          border: 0;
+          background: transparent;
 
           svg {
             font-size: 13px;
@@ -146,6 +221,54 @@
             color: var(--color_black);
           }
         }
+
+        &.navGroupItem {
+          .navGroupTrigger {
+            .groupArrow {
+              margin-left: 5px;
+              margin-right: 0;
+              font-size: 10px;
+            }
+          }
+
+          .navGroupDropdown {
+            position: absolute;
+            top: calc(100% - 2px);
+            left: 50%;
+            min-width: 210px;
+            padding: 8px;
+            border-radius: 10px;
+            background: #fff;
+            box-shadow: 0 16px 34px rgba(15, 23, 42, 0.13);
+            opacity: 0;
+            visibility: hidden;
+            transform: translate(-50%, -6px);
+            transition: all 0.18s ease;
+            z-index: 200;
+
+            a {
+              justify-content: flex-start;
+              border-radius: 8px;
+              padding: 8px 10px;
+              font-size: 12px;
+              text-transform: capitalize;
+
+              &:hover,
+              &.active {
+                background: #f1f3ff;
+              }
+            }
+          }
+
+          &:hover,
+          &:focus-within {
+            .navGroupDropdown {
+              opacity: 1;
+              visibility: visible;
+              transform: translate(-50%, 0);
+            }
+          }
+        }
       }
     }
   }
@@ -153,6 +276,11 @@
 
 @media (max-width: 767px) {
   .navCartPart2 {
+    .navScrollViewport {
+      overflow-x: auto;
+      overflow-y: hidden;
+    }
+
     .scrollBtn {
       display: none !important;
     }

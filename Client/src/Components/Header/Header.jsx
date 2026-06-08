@@ -17,6 +17,8 @@ const Header = () => {
   const location = useLocation();
   const hideNavRoutes = ['/signIn', '/register', '/forgotPassword'];
   const user = getUserInformation();
+  const isAuthenticated = Boolean(sessionStorage.getItem('accessToken'));
+  const isAdmin = isAuthenticated && user?.role === 'admin';
 
   return (
     <div className="headerWrapper">
@@ -42,20 +44,15 @@ const Header = () => {
                 <Button
                   className="circle mr-3"
                   onClick={() => {
-                    const token = sessionStorage.getItem('accessToken');
-                    navigate(token ? '/profile' : '/signIn');
+                    navigate(isAuthenticated ? '/profile' : '/signIn');
                   }}
                 >
-                  {sessionStorage.getItem('accessToken') ? (
-                    <LuUserRoundPen />
-                  ) : (
-                    <FaRegUser />
-                  )}
+                  {isAuthenticated ? <LuUserRoundPen /> : <FaRegUser />}
                 </Button>
 
-                {user?.role === 'admin' ? (
+                {isAdmin ? (
                   <Button onClick={() => navigate('/admin')}>ADMIN</Button>
-                ) : (
+                ) : isAuthenticated ? (
                   <div className="ml-auto cartTab d-flex align-items-center">
                     <span className="price">$143.97</span>
                     <div className="position-relative ml-2">
@@ -68,7 +65,7 @@ const Header = () => {
                       </span>
                     </div>
                   </div>
-                )}
+                ) : null}
               </div>
             </div>
           </div>

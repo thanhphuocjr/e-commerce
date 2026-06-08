@@ -20,7 +20,12 @@ export const getToken = () => {
 };
 export const getUserInformation = () => {
   const user = sessionStorage.getItem('user');
-  return user ? JSON.parse(user) : null;
+  try {
+    return user ? JSON.parse(user) : null;
+  } catch (error) {
+    sessionStorage.removeItem('user');
+    return null;
+  }
 };
 
 export const getRefreshToken = () => {
@@ -164,12 +169,12 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
-    const originalRequest = error.config;
+    const originalRequest = error.config || {};
     console.log('originalRequest :', originalRequest);
 
     const isLoginRequest =
       originalRequest.url === '/users/login' ||
-      originalRequest.url.endsWith('/users/login') ||
+      originalRequest.url?.endsWith('/users/login') ||
       (originalRequest.baseURL &&
         (originalRequest.baseURL + originalRequest.url).includes(
           '/users/login',
@@ -202,11 +207,17 @@ api.interceptors.response.use(
 
         console.log('Try qua apiRefreshTOKEN dau de lay token! ', res);
 
-        const newAccessToken = res.data.accessToken;
-        const newRefreshToken = res.data.refreshToken;
+        const newAccessToken = res.data?.accessToken;
+        const newRefreshToken = res.data?.refreshToken;
+
+        if (!newAccessToken) {
+          throw new Error('Refresh token response did not include accessToken');
+        }
 
         saveToken(newAccessToken);
-        saveRefreshToken(newRefreshToken);
+        if (newRefreshToken) {
+          saveRefreshToken(newRefreshToken);
+        }
 
         processQueue(null, newAccessToken);
         isRefreshing = false;
@@ -218,7 +229,7 @@ api.interceptors.response.use(
         processQueue(err, null);
         isRefreshing = false;
         removeToken();
-        window.location.href = '/signin';
+        window.location.href = '/signIn';
         return Promise.reject(err);
       }
     }

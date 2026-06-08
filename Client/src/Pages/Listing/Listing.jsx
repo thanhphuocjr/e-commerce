@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import './Listing.scss';
 import ProductItem from '../../Components/ProductItem/ProductItem';
 import Sidebar from '../../Components/Sidebar/Sidebar';
@@ -8,16 +8,32 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Pagination from '@mui/material/Pagination';
 
-import { IoIosMenu } from 'react-icons/io';
+import { IoIosArrowRoundForward, IoIosMenu } from 'react-icons/io';
 import { TfiLayoutGrid2, TfiLayoutGrid3, TfiLayoutGrid4 } from 'react-icons/tfi';
 import { FaAngleDown } from 'react-icons/fa6';
 
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import banner1 from '../../assets/images/Banner/Banner-3.jpg';
 import { getCategories, getProducts } from '../../Api/products';
 
 const LIMIT_OPTIONS = [12, 24, 36, 48];
 const GRID_OPTIONS = ['one', 'two', 'three', 'four'];
+const getProductImage = (product) => {
+  if (product?.thumbnail) {
+    return product.thumbnail;
+  }
+
+  if (Array.isArray(product?.images) && product.images.length > 0) {
+    const firstImage = product.images[0];
+    return typeof firstImage === 'string' ? firstImage : firstImage?.url;
+  }
+
+  return '';
+};
+
+const formatCategoryName = (name = '') =>
+  name
+    .replace(/[-_]/g, ' ')
+    .replace(/\b\w/g, (char) => char.toUpperCase());
 
 const Listing = () => {
   const navigate = useNavigate();
@@ -63,6 +79,23 @@ const Listing = () => {
   }, [categories, selectedCategoryId]);
 
   const selectedCategoryName = selectedCategory?.name || undefined;
+  const promoProducts = useMemo(
+    () =>
+      products
+        .map((product) => ({
+          id: product.id,
+          title: product.title,
+          image: getProductImage(product),
+        }))
+        .filter((product) => product.image)
+        .slice(0, 3),
+    [products],
+  );
+  const promoTitle = searchTerm
+    ? `Deals for "${searchTerm}"`
+    : selectedCategoryName
+      ? `${formatCategoryName(selectedCategoryName)} deals`
+      : 'Fresh deals for today';
 
   useEffect(() => {
     if (!id || id === 'all') {
@@ -154,11 +187,29 @@ const Listing = () => {
 
   const open = Boolean(anchorEl);
 
-  const handleCategoryChange = (categoryId) => {
-    const targetPath = categoryId ? `/cat/${categoryId}` : '/products';
-    navigate(`${targetPath}${location.search}`);
+  const handleCategoryChange = useCallback(
+    (categoryId) => {
+      const targetPath = categoryId ? `/cat/${categoryId}` : '/products';
+      navigate(`${targetPath}${location.search}`);
+      setPage(1);
+    },
+    [location.search, navigate],
+  );
+
+  const handlePriceRangeChange = useCallback((value) => {
+    setPriceRange(value);
     setPage(1);
-  };
+  }, []);
+
+  const handleInStockOnlyChange = useCallback((value) => {
+    setInStockOnly(value);
+    setPage(1);
+  }, []);
+
+  const handleMinRatingChange = useCallback((value) => {
+    setMinRating(value);
+    setPage(1);
+  }, []);
 
   const handleLimitChange = (newLimit) => {
     setLimit(newLimit);
@@ -174,26 +225,41 @@ const Listing = () => {
             categories={categories}
             selectedCategoryId={selectedCategoryId}
             onSelectCategory={handleCategoryChange}
+            promoProducts={products}
             priceRange={priceRange}
-            onPriceRangeChange={(value) => {
-              setPriceRange(value);
-              setPage(1);
-            }}
+            onPriceRangeChange={handlePriceRangeChange}
             inStockOnly={inStockOnly}
-            onInStockOnlyChange={(value) => {
-              setInStockOnly(value);
-              setPage(1);
-            }}
+            onInStockOnlyChange={handleInStockOnlyChange}
             minRating={minRating}
-            onMinRatingChange={(value) => {
-              setMinRating(value);
-              setPage(1);
-            }}
+            onMinRatingChange={handleMinRatingChange}
           />
 
           <div className="content_right">
-            <div className="banner">
-              <img className="w-100" src={banner1} alt="listing banner" />
+            <div className="listingPromo">
+              <div className="promoCopy">
+                <span className="promoEyebrow">Limited offers</span>
+                <h1>{promoTitle}</h1>
+                <p>Updated picks, clear prices, and products ready to ship.</p>
+                <Button onClick={() => navigate('/products')}>
+                  Shop now
+                  <IoIosArrowRoundForward />
+                </Button>
+              </div>
+
+              <div className="promoProducts" aria-label="Featured products">
+                {promoProducts.length > 0 ? (
+                  promoProducts.map((product, index) => (
+                    <div
+                      className={`promoProduct promoProduct${index + 1}`}
+                      key={`promo-product-${product.id}`}
+                    >
+                      <img src={product.image} alt={product.title} />
+                    </div>
+                  ))
+                ) : (
+                  <div className="promoPlaceholder" />
+                )}
+              </div>
             </div>
 
             <div className="showBy mt-3 mb-3 d-flex align-items-center">

@@ -7,10 +7,6 @@ import { CiMail } from 'react-icons/ci';
 import { IoIosArrowRoundForward } from 'react-icons/io';
 
 import './Home.scss';
-import banner1 from '../../assets/images/BannerColumn/banner1.jpg';
-import banner2 from '../../assets/images/BannerColumn/banner2.jpg';
-import banner3 from '../../assets/images/BannerColumn/banner3.jpg';
-import banner4 from '../../assets/images/BannerColumn/banner4.jpg';
 import newsLetterImg from '../../assets/images/Items/coupon.png';
 
 import { Navigation, Scrollbar, A11y } from 'swiper/modules';
@@ -22,6 +18,46 @@ import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 import ProductItem from '../../Components/ProductItem/ProductItem';
 import { getNewArrivals, getTopRatedProducts } from '../../Api/products';
+
+const getProductImage = (product) => {
+  if (product?.thumbnail) {
+    return product.thumbnail;
+  }
+
+  if (Array.isArray(product?.images) && product.images.length > 0) {
+    const firstImage = product.images[0];
+    return typeof firstImage === 'string' ? firstImage : firstImage?.url;
+  }
+
+  return '';
+};
+
+const PromoCard = ({ product, eyebrow, title, layout = 'compact', onClick }) => {
+  const imageUrl = getProductImage(product);
+
+  return (
+    <button
+      type="button"
+      className={`promoCard ${layout}`}
+      onClick={() => onClick(product?.id)}
+    >
+      <div className="promoCopy">
+        <span>{eyebrow}</span>
+        <h4>{title}</h4>
+        <p>{product?.title || 'Explore updated deals'}</p>
+        <strong>Shop now</strong>
+      </div>
+
+      <div className="promoMedia">
+        {imageUrl ? (
+          <img src={imageUrl} alt={product.title} />
+        ) : (
+          <div className="promoMediaPlaceholder" />
+        )}
+      </div>
+    </button>
+  );
+};
 
 const Home = () => {
   const navigate = useNavigate();
@@ -57,6 +93,36 @@ const Home = () => {
     navigate('/products');
   };
 
+  const goToProduct = (productId) => {
+    navigate(productId ? `/product/${productId}` : '/products');
+  };
+
+  const sidebarPromos = [
+    {
+      product: topRatedProducts[0],
+      eyebrow: 'Top rated',
+      title: 'Customer favorites',
+    },
+    {
+      product: newArrivalProducts[0],
+      eyebrow: 'New arrival',
+      title: 'Fresh in stock',
+    },
+  ];
+
+  const widePromos = [
+    {
+      product: topRatedProducts[1],
+      eyebrow: 'Best value',
+      title: 'Deals picked for you',
+    },
+    {
+      product: newArrivalProducts[1],
+      eyebrow: 'Just added',
+      title: 'New products ready',
+    },
+  ];
+
   return (
     <>
       <HomeBanner />
@@ -66,11 +132,16 @@ const Home = () => {
           <div className="row">
             <div className="col-md-3">
               <div className="sticky">
-                <div className="banner mt-3">
-                  <img src={banner1} alt="promo banner 1" />
-                </div>
-                <div className="banner mt-3">
-                  <img src={banner2} alt="promo banner 2" />
+                <div className="homeSidePromos mt-3">
+                  {sidebarPromos.map((promo) => (
+                    <PromoCard
+                      key={`home-side-promo-${promo.eyebrow}`}
+                      product={promo.product}
+                      eyebrow={promo.eyebrow}
+                      title={promo.title}
+                      onClick={goToProduct}
+                    />
+                  ))}
                 </div>
               </div>
             </div>
@@ -137,12 +208,16 @@ const Home = () => {
               )}
 
               <div className="d-flex mt-4 mb-5 bannerSec">
-                <div className="banner">
-                  <img src={banner3} alt="promo banner 3" className="cursor w-100" />
-                </div>
-                <div className="banner">
-                  <img src={banner4} alt="promo banner 4" className="cursor w-100" />
-                </div>
+                {widePromos.map((promo) => (
+                  <PromoCard
+                    key={`home-wide-promo-${promo.eyebrow}`}
+                    product={promo.product}
+                    eyebrow={promo.eyebrow}
+                    title={promo.title}
+                    layout="wide"
+                    onClick={goToProduct}
+                  />
+                ))}
               </div>
             </div>
           </div>

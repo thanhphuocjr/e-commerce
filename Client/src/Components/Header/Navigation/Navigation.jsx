@@ -11,6 +11,91 @@ const formatCategoryName = (name = '') =>
     .replace(/[-_]/g, ' ')
     .replace(/\b\w/g, (char) => char.toUpperCase());
 
+const normalizeCategoryName = (name = '') =>
+  name.trim().toLowerCase().replace(/[\s_]+/g, '-');
+
+const CATEGORY_GROUPS = [
+  {
+    key: 'fashion',
+    label: 'Fashion',
+    names: [
+      'mens-shirts',
+      'mens-shoes',
+      'womens-bags',
+      'womens-dresses',
+      'womens-jewellery',
+      'womens-shoes',
+      'tops',
+    ],
+  },
+  {
+    key: 'watches',
+    label: 'Watches',
+    names: ['mens-watches', 'womens-watches'],
+  },
+  {
+    key: 'electronics',
+    label: 'Electronics',
+    names: ['laptops', 'smartphones', 'tablets', 'mobile-accessories'],
+  },
+  {
+    key: 'home-kitchen',
+    label: 'Home & Kitchen',
+    names: ['furniture', 'home-decoration', 'kitchen-accessories'],
+  },
+  {
+    key: 'beauty-care',
+    label: 'Beauty & Care',
+    names: ['beauty', 'fragrances', 'skin-care', 'skincare'],
+  },
+  {
+    key: 'groceries',
+    label: 'Groceries',
+    names: ['groceries'],
+  },
+  {
+    key: 'motors',
+    label: 'Motors',
+    names: ['automotive', 'motorcycle'],
+  },
+  {
+    key: 'accessories',
+    label: 'Accessories',
+    names: ['sunglasses', 'sports-accessories'],
+  },
+];
+
+const buildCategoryGroups = (categories = []) => {
+  const usedCategoryIds = new Set();
+
+  const groupedCategories = CATEGORY_GROUPS.map((group) => ({
+    ...group,
+    categories: group.names
+      .map((categoryName) =>
+        categories.find(
+          (category) =>
+            normalizeCategoryName(category.name) ===
+            normalizeCategoryName(categoryName),
+        ),
+      )
+      .filter(Boolean),
+  })).filter((group) => group.categories.length > 0);
+
+  groupedCategories.forEach((group) => {
+    group.categories.forEach((category) => usedCategoryIds.add(category.id));
+  });
+
+  const otherGroups = categories
+    .filter((category) => !usedCategoryIds.has(category.id))
+    .map((category) => ({
+      key: `category-${category.id}`,
+      label: formatCategoryName(category.name),
+      categories: [category],
+    }));
+
+  return [...groupedCategories, ...otherGroups];
+};
+
 const Navigation = () => {
   const location = useLocation();
   const [isOpenSidebarNav, setIsOpenSidebarNav] = useState(false);
@@ -37,6 +122,11 @@ const Navigation = () => {
     return matched ? Number(matched[1]) : null;
   }, [location.pathname]);
 
+  const categoryGroups = useMemo(
+    () => buildCategoryGroups(categories),
+    [categories],
+  );
+
   const updateScrollButtons = () => {
     const scrollNode = navScrollRef.current;
     if (!scrollNode) {
@@ -55,7 +145,7 @@ const Navigation = () => {
     const handleResize = () => updateScrollButtons();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, [categories.length]);
+  }, [categoryGroups.length]);
 
   const handleScrollNav = (direction) => {
     const scrollNode = navScrollRef.current;
@@ -95,19 +185,57 @@ const Navigation = () => {
                 </Link>
               </li>
 
-              {categories.map((category) => (
-                <li key={`sidebar-category-${category.id}`}>
-                  <Link
-                    to={`/cat/${category.id}`}
-                    onClick={() => setIsOpenSidebarNav(false)}
-                  >
-                    <Button>
+              {categoryGroups.map((group) => {
+                const isGrouped = group.categories.length > 1;
+                const isActiveGroup = group.categories.some(
+                  (category) => Number(selectedCategoryId) === Number(category.id),
+                );
+
+                if (!isGrouped) {
+                  const category = group.categories[0];
+
+                  return (
+                    <li key={`sidebar-category-${category.id}`}>
+                      <Link
+                        to={`/cat/${category.id}`}
+                        onClick={() => setIsOpenSidebarNav(false)}
+                      >
+                        <Button className={isActiveGroup ? 'active' : ''}>
+                          <FaTags />
+                          {formatCategoryName(category.name)}
+                        </Button>
+                      </Link>
+                    </li>
+                  );
+                }
+
+                return (
+                  <li className="sideGroupItem" key={`sidebar-group-${group.key}`}>
+                    <Button className={isActiveGroup ? 'active' : ''}>
                       <FaTags />
-                      {formatCategoryName(category.name)}
+                      {group.label}
+                      <FaAngleRight className="groupArrow" />
                     </Button>
-                  </Link>
-                </li>
-              ))}
+
+                    <div className="sideGroupDropdown">
+                      {group.categories.map((category) => (
+                        <Link
+                          key={`sidebar-group-category-${category.id}`}
+                          to={`/cat/${category.id}`}
+                          onClick={() => setIsOpenSidebarNav(false)}
+                          className={
+                            Number(selectedCategoryId) === Number(category.id)
+                              ? 'active'
+                              : ''
+                          }
+                        >
+                          {formatCategoryName(category.name)}
+                        </Link>
+                      ))}
+                    </div>
+                  </li>
+                );
+              })}
             </ul>
           </div>
         </div>
@@ -141,21 +269,63 @@ const Navigation = () => {
                 </Link>
               </li>
 
-              {categories.map((category) => (
-                <li className="list-inline-item" key={`top-category-${category.id}`}>
-                  <Link
-                    to={`/cat/${category.id}`}
-                    className={
-                      Number(selectedCategoryId) === Number(category.id)
-                        ? 'active'
-                        : ''
-                    }
+              {categoryGroups.map((group) => {
+                const isGrouped = group.categories.length > 1;
+                const isActiveGroup = group.categories.some(
+                  (category) => Number(selectedCategoryId) === Number(category.id),
+                );
+
+                if (!isGrouped) {
+                  const category = group.categories[0];
+
+                  return (
+                    <li
+                      className="list-inline-item"
+                      key={`top-category-${category.id}`}
+                    >
+                      <Link
+                        to={`/cat/${category.id}`}
+                        className={isActiveGroup ? 'active' : ''}
+                      >
+                        <FaTags />
+                        {formatCategoryName(category.name)}
+                      </Link>
+                    </li>
+                  );
+                }
+
+                return (
+                  <li
+                    className="list-inline-item navGroupItem"
+                    key={`top-group-${group.key}`}
                   >
-                    <FaTags />
-                    {formatCategoryName(category.name)}
-                  </Link>
-                </li>
-              ))}
+                    <button
+                      type="button"
+                      className={`navGroupTrigger ${isActiveGroup ? 'active' : ''}`}
+                    >
+                      <FaTags />
+                      {group.label}
+                      <FaAngleDown className="groupArrow" />
+                    </button>
+
+                    <div className="navGroupDropdown">
+                      {group.categories.map((category) => (
+                        <Link
+                          key={`top-group-category-${category.id}`}
+                          to={`/cat/${category.id}`}
+                          className={
+                            Number(selectedCategoryId) === Number(category.id)
+                              ? 'active'
+                              : ''
+                          }
+                        >
+                          {formatCategoryName(category.name)}
+                        </Link>
+                      ))}
+                    </div>
+                  </li>
+                );
+              })}
             </ul>
           </div>
 
